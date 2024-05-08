@@ -1,0 +1,17 @@
+*.db
+*.db-journal
+/.vscode
+/bin
+/ci-dist
+/*config.yaml
+/testdata-download
+/coverage*
+/*.jsonl
+/tool
+/charts/telemetry/charts
+codereport*
+/.gorelease-actual.txt
+
+# Useful for ignoring the build tool
+/.go
+/.act3_token

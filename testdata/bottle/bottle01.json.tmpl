@@ -1,0 +1,36 @@
+{
+    "apiVersion": "data.act3-ace.io/v1alpha5",
+    "kind": "Bottle",
+    "labels": {
+        "type": "testing",
+        "group": "testset",
+        "refname": "bottle01",
+        "myotherkey": "myothervalue2",
+        "numeric": "3.2"
+    },
+    "annotations": {
+        "somekey": "Hello World, This is an annotations and can be anything such as: -*/er345345%^$##()."
+    },
+    "description": "This is bottle 6 folks!\nIt is an older bottle (v1alpha5).",
+    "sources": [],
+    "parts": [
+        {
+            "name": "foo/bar",
+            "size": 45,
+            "digest": "sha256:9a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "label2": "mysecondlabel"
+            }
+        },
+        {
+            "name": "someusage",
+            "size": 450,
+            "digest": "sha256:3a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "mykey": "something-else"
+            }
+        }
+    ]
+}

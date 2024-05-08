@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{ template "head" . }}
+
+  <body>
+    {{ template "navbar" . }}
+    <main class="container">
+      {{ template "artifact-header" . }}
+      <hr>
+      <div>
+        <iframe width="1000" height="1000" 
+          sandbox="allow-scripts allow-same-origin allow-top-navigation-by-user-activation"
+          src="{{ .Globals.Top }}www/artifact/{{ .Values.BottleDigest }}/{{ .Values.Path }}?_type=content" allowfullscreen>
+          Viewer requires iframes
+        </iframe>
+      </div>
+    </main>
+  </body>
+</html>

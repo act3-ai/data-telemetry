@@ -1,0 +1,20 @@
+{
+  "subjectManifest": "{{ FileDigest "testdata/manifest/manifest1.json" "sha256" }}",
+  "subjectBottleid": "{{ FileDigest "testdata/bottle/bottle1.json" "sha256" }}",
+  "signatures": [
+    {
+      "signatureType": "dev.cosignproject.cosign/signature",
+      "signature": {{ ReadFile "testdata/signature/signature.base64" | toString | quote }},
+      "ociDescriptor": {
+        "mediatype": "application/vnd.dev.cosign.simplesigning.v1+json",
+        "size": {{ FileSize "testdata/signature/data-to-sign.txt" }},
+        "digest": "{{ FileDigest "testdata/signature/data-to-sign.txt" "sha256" }}"
+      },
+      "publicKey": {{ ReadFile "testdata/signature/pub.pem" | toString | quote }},
+      "annotations": {
+        "testing": "true",
+        "verify-api": "gitlab"
+      }
+    }
+  ]
+}

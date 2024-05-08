@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head" . }}
+
+<body>
+    {{ template "navbar" . }}
+    <main class="mx-3 mt-3">
+        <section class="row">
+            <div class="col-lg-8">
+                <h1>ACE Data Telemetry Server</h1>
+                <p>The ACE Data Telemetry Server is responsible for tracking data usage and replica locations among all OCI registries that users utililize.
+                The telemetry server only indexes the metadata from data bottles.  The bulk/raw data is only stored in the original OCI registries.
+                        The telemetry server is populated primarily when users move data bottles with the <b>ACE Data Tool</b>.</p>
+
+                <p class="text-muted">Telemetry Version: {{ .Globals.Version }}
+
+                <hr class="my-4" />
+                {{ template "ace-dt.html" }}
+
+                <hr class="my-4" />
+                {{ template "labels.html" }}
+
+            </div>
+                <div class="col-xl-4 mx-auto">
+                    <div class="border rounded-3" style="padding: 1em; margin: 1em; border-color: var(--bs-info) !important;">
+                        <h3>Disclaimer</h3>
+                        <p>	ACE Data Bottles are created in an open-source format and their content is <em>not</em> verified.</br>
+                            </br>
+                            Your ability to pull data bottles visible in ACE Telemetry may be limited by network conditions, authentication, or deprecation status. </p>
+                    </div>
+                </div>
+        </section>
+        <section>
+            <hr class="my-4" />
+            <h1>Total Counts</h1> 
+            <table class="table" style="width: 30em;">           
+                <tr><th>Type</th><th>Count</th></tr>
+                <tr><td>Events</td><td>{{.Values.EventsCount}}</td></tr>
+                <tr><td>Manifests</td><td>{{.Values.ManifestsCount}}</td></tr>
+                <tr><td>Bottles</td><td>{{.Values.BottlesCount}}</td></tr>
+                <tr><td>Artifacts</td><td>{{.Values.ArtifactsCount}}</td></tr>
+                <tr><td>Signatures</td><td>{{.Values.SignaturesCount}}</td></tr>
+                <tr><td>Data (Bytes)</td><td>{{.Values.BlobDataBytes}}</td></tr>
+            </table>
+        </section>
+    </main>
+    <script>
+    document.getElementById("origin").innerHTML = window.location.origin;
+    </script>
+    {{ template "scripts" . }}
+</body>
+
+</html>

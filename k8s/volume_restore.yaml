@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: restore-pvc
+  namespace: ace
+spec:
+  storageClassName: ceph-rbd
+  dataSource:
+    name: telemetry-db-snapshot-2024-03-22
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

@@ -1,0 +1,1 @@
+cmd/telemetry/cli/log.jq

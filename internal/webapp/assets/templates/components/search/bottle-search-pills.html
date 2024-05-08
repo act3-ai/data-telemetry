@@ -1,0 +1,164 @@
+{{ define "bottle-search-pills" }}
+<ul class="list-inline" id="search-pill-list">
+    {{ with .Values.Params }}
+    <li>
+        <input class="visually-hidden bottle-search-field" name="created-before" value="{{ toString .CreatedBefore }}" />
+    </li>
+    {{ range .LabelSelectors }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-label">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/label.svg" />
+            {{ . }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="label-selector" value="{{ . }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .Author) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/author.svg" />
+            {{ .Author }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+            <input class="visually-hidden bottle-search-field" name="author" value="{{ .Author }}" />
+        </span>
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .Description) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" />
+            {{ .Description }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="description" value="{{ .Description }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .SignatureFingerprint) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" />
+            {{ toString .SignatureFingerprint }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="signature-fingerprint"
+            value="{{ toString .SignatureFingerprint }}" />
+    </li>
+    {{ end }}
+
+    {{ range .SignatureAnnotations }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-annotation">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" />
+            {{ . }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="signature-annotation" value="{{ . }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .ParentsOf) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/parent.svg" />
+            {{ toString .ParentsOf }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="parents-of" value="{{ .ParentsOf }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .ChildrenOf) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/child.svg" />
+            {{ toString .ChildrenOf }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="children-of" value="{{ .ChildrenOf }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .DeprecatedBy) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-warning">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" />
+            {{ toString .DeprecatedBy }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="deprecated-by" value="{{ toString .DeprecatedBy }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .Deprecates) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecates.svg" />
+            {{ toString .Deprecates }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="deprecates" value="{{ .Deprecates }}" />
+    </li>
+    {{ end }}
+
+    {{ if (gt (len .BottleRepo) 0) }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+            src="{{ $.Globals.Top }}www/static/img/bottle-attributes/database-svg.svg" />
+            {{ .BottleRepo }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="bottle-repository" value="{{ .BottleRepo }}" />
+    </li>
+    {{ end }}
+
+    {{ if .ShowDeprecated }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-warning">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" />
+            Showing Deprecated
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#show-deprecated-checkbox", "on-show-deprecated-remove", {}); '></i>
+        </span>
+    </li>
+    {{ end }}
+
+    {{ range .PartDigests }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-info">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/part.svg" />
+            {{ toString . }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="part-digest" value="{{ toString . }}" />
+    </li>
+    {{ end }}
+    {{ end }}
+</ul>
+{{ end }}

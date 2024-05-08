@@ -1,0 +1,93 @@
+{
+    "apiVersion": "data.act3-ace.io/v1beta1",
+    "kind": "Bottle",
+    "labels": {
+        "type": "testing",
+        "group": "testset",
+        "refname": "bottle3",
+        "myotherkey": "myothervalue2",
+        "numeric": "3.5419"
+    },
+    "annotations": {
+        "somekey": "Hello World, This is an annotations and can be anything such as: -*/er345345%^$##()."
+    },
+    "description": "This is bottle 3 folks!",
+    "sources": [
+        {
+            "name": "Training set",
+            {{- $dgst := FileDigest "testdata/bottle/bottle2.json" "sha512" }}
+            "uri": {{ BottleURI "bottle" $dgst | quote }}
+        },
+        {
+            "name": "Test set",
+            {{- $dgst := FileDigest "testdata/bottle/bottle1.json" "sha256" }}
+            "uri": {{ BottleURI "hash" $dgst | quote }}
+        },
+        {
+            "name": "Original",
+            "uri": "http://data.example.com/for-bottle-3"
+        }
+    ],
+    "authors": [
+        {
+            "name": "Jane Smith",
+            "email": "jane.smith@example.com"
+        },
+        {
+            "name": "Bob Dillon",
+            "email": "bdill@example.com"
+        }
+    ],
+    "metrics": [
+        {
+            "name": "accuracy",
+            "description": "The final accuracy of the model",
+            "value": "0.0123"
+        },
+        {
+            "name": "training loss",
+            "description": "The final loss while training the model",
+            "value": "52"
+        }
+    ],
+    "publicArtifacts": [
+        {
+            "name": "some cool file",
+            "mediaType": "text/plain",
+            "path": "dir/x.txt",
+            "digest": "{{ FileDigest "testdata/blob/sample.txt" "sha256" }}"
+        },
+        {
+            "name": "a png image",
+            "mediaType": "image/png",
+            "path": "foo/bar.png",
+            "digest": "{{ FileDigest "testdata/blob/image1.png" "sha256" }}"
+        },
+        {
+            "name": "a jpeg image",
+            "mediaType": "image/jpeg",
+            "path": "dir/c.jpg",
+            "digest": "{{ FileDigest "testdata/blob/image1.jpg" "sha256" }}"
+        }
+    ],
+    "parts": [
+        {
+            "name": "foo/bar.png",
+            "size": 45,
+            "digest": "sha256:9a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "label2": "mysecondlabel"
+            }
+        },
+        {
+            "name": "dir",
+            "size": 450,
+            "digest": "sha256:3a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "mykey": "something-else"
+            }
+        }
+    ]
+}

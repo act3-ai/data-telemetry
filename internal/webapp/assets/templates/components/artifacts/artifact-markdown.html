@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{ template "head" . }}
+
+  <body>
+    {{ template "navbar" . }}
+    <main class="container">
+      {{ template "artifact-header" . }}
+      <hr>
+      <section>
+        {{ .Values.SafeHTML }}
+      </section>
+    </main>
+  </body>
+</html>

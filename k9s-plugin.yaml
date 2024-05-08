@@ -1,0 +1,20 @@
+# To add the plogs plugin to k9s put this file in ~/.config/k9s/plugin.yml
+# other interesting plugins are at https://github.com/derailed/k9s/tree/master/plugins
+
+plugin:
+  plogs:
+    shortCut: j
+    confirm: false
+    description: Pretty logs
+    scopes:
+    - po
+    command: kubectl
+    background: false
+    args:
+    - plogs
+    - -f
+    - $NAME
+    - -n
+    - $NAMESPACE
+    - --context
+    - $CONTEXT

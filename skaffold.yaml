@@ -1,0 +1,97 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+build:
+  artifacts:
+  - image: ace/data/telemetry
+    ko:
+      main: ./cmd/telemetry
+manifests:
+  helm:
+    releases:
+    - name: telemetry
+      chartPath: charts/telemetry
+      setValueTemplates:
+        image.repository: '{{.IMAGE_REPO_ace_data_telemetry}}'
+        image.tag: '{{.IMAGE_TAG_ace_data_telemetry}}@{{.IMAGE_DIGEST_ace_data_telemetry}}'
+      setValues:
+        # global.storageClass: ceph-rbd
+        verbosity: 1
+        # securityContext.readOnlyRootFilesystem: false # to allow for "sync" to work
+        prometheus:
+          serviceMonitor:
+            enabled: false
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 300m
+          limits:
+            memory: 300Mi
+            cpu: 2000m
+        postgresql:
+          auth:
+            database: telemetry
+            postgresPassword: telemetry
+          primary:
+            # Need persistence.storageClass commented out for KinD deployment
+            persistence:
+              storageClass: ceph-rbd
+            resources:
+              requests:
+                memory: 256Mi
+                cpu: 250m
+              limits:
+                memory: 1Gi
+                cpu: 1000m
+deploy:
+  helm: {}
+
+portForward:
+  - resourceType: Service
+    resourceName: telemetry
+    port: http
+    localPort: 8100
+  - resourceType: Service
+    resourceName: telemetry-postgresql
+    port: tcp-postgresql
+    localPort: 15432
+
+profiles:
+
+# - name: act3
+#   patches:
+#   - op: replace
+#     path: /manifests/helm/releases/0/setValues/postgresql/primary/persistence/storageClass
+#     value: ceph-rbd
+
+- name: hub
+  build:
+    artifacts:
+    - image: ace/data/telemetry
+      kaniko:
+        target: dev
+        # registryMirror: reg-cache.act3-ace.ai
+        skipUnusedStages: true
+        cache:
+          repo: zot.lion.act3-ace.ai/ace/data/telemetry/cache
+    cluster:
+      resources:
+        requests:
+          cpu: "1"
+          memory: "4Gi"
+        limits:
+          cpu: "4"
+          memory: "8Gi"
+
+- name: ipynb
+  build:
+    artifacts:
+    - image: ace/data/telemetry
+      docker:
+        target: prod-ipynb
+      # hooks:
+      #   before:
+      #   - command:
+      #     - make
+      #     - build-linux
+    local:
+      useBuildkit: true

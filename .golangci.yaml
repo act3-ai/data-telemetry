@@ -1,0 +1,191 @@
+linters:
+  enable:
+    - gofmt
+    - bodyclose
+    - exhaustive
+    - dupl
+    - errorlint
+    - prealloc
+    - importas
+    - errorlint
+    - errname
+    - revive
+    - gocritic
+    - staticcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - typecheck
+    - unused
+    - misspell
+    - goimports
+    - tenv
+    # - gochecknoglobals
+    - gochecknoinits
+    # - gci
+    - usestdlibvars
+    - thelper
+    - nolintlint
+    - noctx
+    - wrapcheck
+    - gocognit
+    - godot
+    - sloglint
+    - copyloopvar
+
+linters-settings:
+  # importas:
+    # if set to `true`, force to use alias.
+    # no-unaliased: true
+    # List of aliases
+    # alias:
+    #   - pkg: github.com/opencontainers/go-digest
+    #     alias: digest
+  
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  staticcheck:
+    # https://staticcheck.io/docs/options#checks
+    checks: [ "all" ]
+
+  revive:
+    ignore-generated-header: true
+    severity: warning
+    # enable-all-rules: true
+    # rules:
+    # - name: banned-characters
+    #   arguments: [""]
+    # - name: line-length-limit
+    #   severity: warning
+    #   arguments: [200]
+    # - name: function-result-limit
+    #   arguments: [4]
+    rules:
+      - name: atomic
+      # - name: line-length-limit
+      #   severity: warning
+      #   arguments: [120]
+      - name: unhandled-error
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      # - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+      - name: defer
+      - name: useless-break
+      - name: unexported-naming
+      # - name: cognitive-complexity
+      #   arguments: [35]
+      - name: use-any
+      - name: deep-exit
+      # - name: add-constant
+      - name: unnecessary-stmt
+      - name: modifies-value-receiver
+      # - name: constant-logical-expr
+      - name: call-to-gc
+      - name: import-shadowing
+
+
+  goimports:
+    # Put imports beginning with prefix after 3rd-party packages.
+    # It's a comma-separated list of prefixes.
+    # Default: ""
+    local-prefixes: git.act3-ace.com/ace
+
+  wrapcheck:
+    ignoreSigs:
+      # defaults
+      - ".Errorf("
+      - ".Err("
+      - "errors.New("
+      - "errors.Unwrap("
+      - "errors.Join("
+      # Don't check "file info" errors
+      - ".Info("
+      - ".Stat("
+      - ".Lstat("
+      - ".Close()" # another linter handles close err
+      - ".WalkDir("
+      # expected to work
+      - .ExecuteContext( # cobra command
+      - (*golang.org/x/sync/errgroup.Group).Wait()
+    ignoreSigRegexps:
+      # ignore printing (to stdout)
+      - "fmt\\..?(P|p)rint.*\\(" 
+    ignorePackageGlobs:
+      - encoding/*
+      - sigs.k8s.io/yaml
+      - github.com/go-logr/logr
+      - git.act3-ace.com/* # Only catches things when they are imported
+
+  gocognit:
+    min-complexity: 20
+
+  sloglint:
+    # Enforce not mixing key-value pairs and attributes.
+    # Default: true
+    # no-mixed-args: false
+
+    # Enforce using key-value pairs only (overrides no-mixed-args, incompatible with attr-only).
+    # Default: false
+    # kv-only: true
+
+    # Enforce using attributes only (overrides no-mixed-args, incompatible with kv-only).
+    # Default: false
+    # attr-only: true
+
+    # Enforce using methods that accept a context.
+    # Default: false
+    context-only: true
+
+    # Enforce using static values for log messages.
+    # Default: false
+    static-msg: true
+
+    # Enforce using constants instead of raw keys.
+    # Default: false
+    # no-raw-keys: true
+
+    # Enforce a single key naming convention.
+    # Values: snake, kebab, camel, pascal
+    # Default: ""
+    key-naming-case: camel
+
+    # Enforce putting arguments on separate lines.
+    # Default: false
+    # args-on-sep-lines: true
+    
+issues:
+  # uncomment to enable more linting
+  # exclude-use-default: false
+
+  include:
+  # - EXC0001
+  - EXC0002
+  - EXC0005
+  - EXC0009
+  - EXC0011
+  - EXC0012
+  - EXC0013
+  - EXC0014
+  - EXC0015

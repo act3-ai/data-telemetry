@@ -1,0 +1,12 @@
+{
+    "accept": "application/x.jupyter.notebook+json, */*;q=0.8",
+    "acehub": {
+        "image": "docker.io/jupyter/base-notebook",
+        "resources": {
+            "cpu": "1",
+            "memory": "1Gi"
+        },
+        "proxyType": "straight",
+        "jupyter": true
+    }
+}

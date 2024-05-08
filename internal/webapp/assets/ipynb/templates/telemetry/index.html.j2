@@ -1,0 +1,13 @@
+{%- extends 'lab/index.html.j2' -%}
+{% from 'mathjax.html.j2' import mathjax %}
+
+{%- block html_head -%}
+  {{ super() }}
+  <!--Added by ACE Data Telemetry to support linking properly -->
+  <base target="_parent"/>
+{%- endblock html_head -%}
+
+{%- block html_head_js_mathjax -%}
+  <!--Added by ACE Data Telemetry to support MathJax3 properly until https://github.com/jupyter/nbconvert/issues/1706 is resolved -->
+  {{ mathjax(resources.mathjax_url) }}
+{%- endblock html_head_js_mathjax -%}

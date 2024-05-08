@@ -1,0 +1,139 @@
+@baseURL=http://localhost:8100
+
+# regenerate these tests with `make template`
+
+###
+GET {{baseURL}}/health HTTP/1.1
+###
+GET {{baseURL}}/readiness HTTP/1.1
+###
+GET {{baseURL}}/metrics HTTP/1.1
+###
+GET {{baseURL}}/version HTTP/1.1
+
+###
+PUT {{baseURL}}/api/blob?digest=sha256:c604dc0fdbd032a020fbd224fe7b7b8b94866d09e2915ee3eb16663e0d2a82a5 HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/image1.png
+
+###
+# @name pngSHA512
+PUT {{baseURL}}/api/blob?digest-alg=sha512 HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/image1.png
+
+###
+PUT {{baseURL}}/api/blob HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/image1.png
+
+###
+PUT {{baseURL}}/api/blob?digest={{pngSHA512.response.headers.X-Content-Digest}} HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/image1.png
+
+###
+PUT {{baseURL}}/api/blob HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/image1.jpg
+
+###
+PUT {{baseURL}}/api/blob HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/sample.txt
+
+###
+PUT {{baseURL}}/api/blob HTTP/1.1
+Content-Type: application/octet-stream
+
+< ./testdata/blob/tabular1.csv
+
+###
+PUT {{baseURL}}/api/bottle HTTP/1.1
+Content-Type: application/vnd.act3-ace.bottle.config.v1+json
+
+< ./testdata/bottle/bottle1.json
+
+###
+PUT {{baseURL}}/api/bottle HTTP/1.1
+Content-Type: application/vnd.act3-ace.bottle.config.v1+json
+
+< ./testdata/bottle/bottle2.json
+
+###
+PUT {{baseURL}}/api/manifest HTTP/1.1
+Content-Type: application/vnd.oci.image.manifest.v1+json
+
+< ./testdata/manifest/manifest1.json
+
+###
+PUT {{baseURL}}/api/event HTTP/1.1
+Content-Type: application/json
+
+{
+    "manifestDigest": "sha256:74ba55277a135ab395e1a52cff9299f4b0e54565d4c4014b579cdad82613d968",
+    "action": "push",
+    "repository": "reg.example.com",
+    "tag": "v1.0.1",
+    "bandwidth": 101010101099,
+    "timestamp":"2021-04-23T18:25:43Z",
+     "username": "donald.crentsil@example.com"
+}
+
+### (bottle by digest)
+GET {{baseURL}}/api/bottle?digest=sha512:aceb8cf2524b29297c5160819d4e17e3740a174ce52770a28fbd4926347321b51519f7446df97037f2d83bc28d960952bda85a0476843c01f53430d53f7fc68f HTTP/1.1
+
+### (bottle by digest HEAD)
+HEAD {{baseURL}}/api/bottle?digest=sha256:9d0fa4bb58bc23d8144f7fe11e1e616af0448fb8e9744af1b426cd842536c69d HTTP/1.1
+
+###
+GET {{baseURL}}/api/metric?metric=learning_rate&count=15&order=asc&bottleSelector=mykey%3Dmyvalue,myotherkey%3Dmyothervalue HTTP/1.1
+
+### (ascending by default)
+GET {{baseURL}}/api/metric?metric=learning%20rate
+
+###
+GET {{baseURL}}/api/metric?metric=learning%20rate&descending=1&limit=5
+
+###
+GET {{baseURL}}/api/metric?metric=learning%20rate&descending=0&limit=5
+
+###
+GET {{baseURL}}/api/metric?metric=learning%20rate&limit=15&selector=numbers%3D12345,test%3Dlabel HTTP/1.1
+
+### (blob by digest)
+GET {{baseURL}}/api/blob?digest=sha256:1328428ff0a11d5f414f26093abaac831fde705e99f36be6d71616e76376c401 HTTP/1.1
+
+###
+HEAD {{baseURL}}/api/blob?digest=sha256:1328428ff0a11d5f414f26093abaac831fde705e99f36be6d71616e76376c401 HTTP/1.1
+
+### (manifest by digest)
+GET {{baseURL}}/api/manifest?digest=sha256:2f717d3ff9874c512b372ad13bea68d1b81fff519ce2bb5fb85eba3b5c5baf75 HTTP/1.1
+
+### (manifest by digest, missing)
+GET {{baseURL}}/api/manifest?digest=sha256:2f717d3ff9874c512b372ad13bea69d1b81fff519ce2bb5fb85eba3b5c5baf75 HTTP/1.1
+
+### (manifest by digest head)
+HEAD  {{baseURL}}/api/manifest?digest=sha256:2f717d3ff9874c512b372ad13bea68d1b81fff519ce2bb5fb85eba3b5c5baf75 HTTP/1.1
+
+###
+GET {{baseURL}}/api/location?bottle_digest=sha256:c604dc0fdbd032a020fbd224fe7b7b8b94866d09e2915ee3eb16663e0d2a82a5
+
+###
+GET {{baseURL}}/api/search?description=image&digestOnly=0&selector=mykey=myvalue
+
+###
+GET {{baseURL}}/api/metric?selector=mykey=myvalue,myotherkey=myothervalue2&selector=mykey=doesnotexist&metric=training%20loss
+
+###
+GET {{baseURL}}/api/bottle?since=2021-11-15T11:06:36.762880891-05:00&limit=10
+
+###
+GET {{baseURL}}/api/blob?digest=sha256:c604dc0fdbd032a020fbd224fe7b7b8b94866d09e2915ee3eb16663e0d2a82a5 HTTP/1.1
+Content-Type: application/octet-stream

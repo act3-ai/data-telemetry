@@ -1,0 +1,9 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: telemetry-db-snapshot-2024-03-22
+  namespace: ace
+spec:
+  volumeSnapshotClassName: csi-rbdplugin-snapclass
+  source:
+    persistentVolumeClaimName: data-telemetry-postgresql-0

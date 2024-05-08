@@ -1,0 +1,138 @@
+# Default values for telemetry.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: reg.git.act3-ace.com/ace/data/telemetry
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v0.19.2"
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+podAnnotations: {}
+podSecurityContext: {}
+# fsGroup: 2000
+
+# Configure arbitrary envoironment variables for the telemetry container
+# key names are automatically converted to proper environment variable case/format
+environment: {}
+#  anyEnvVariable: 1234 # will become ANY_ENV_VARIABLE=1234
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  runAsUser: 12345
+  runAsGroup: 12345
+  runAsNonRoot: true
+service:
+  type: ClusterIP
+  port: 80
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+nodeSelector: {}
+tolerations: []
+affinity: {}
+pgchecker:
+  image:
+    # Docker image used to check Postgresql readiness at startup
+    repository: docker.io/busybox
+    # Image tag for the pgchecker image
+    tag: 1.36
+    # Image pull policy for the pgchecker image
+    pullPolicy: IfNotPresent
+  # SecurityContext for the pgchecker container
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    runAsUser: 12345
+    runAsGroup: 12345
+    runAsNonRoot: true
+  # Resource requests and limits for the pgchecker container
+  resources:
+    requests:
+      cpu: "20m"
+      memory: "32Mi"
+    limits:
+      cpu: "20m"
+      memory: "32Mi"
+postgresql:
+  # If `true`, the Postgresql dependency is enabled
+  enabled: true
+  # # PostgreSQL User to create
+  # auth.username: telemetry
+  # # PostgreSQL Password for the new user
+  # auth.password: telemetry
+  # PostgreSQL Database to create
+  auth.database: telemetry
+  # Password for the "postgres" admin user
+  auth.postgresPassword: telemetry
+# set the priority class name for the deployment
+priorityClassName:
+# logging verbosity
+verbosity: 0
+db: {}
+# if NOT using postgres these values will be used to construct a DSN for DB connection
+# $(DB_VENDOR)://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_ADDR)/$(DB_DATABASE)
+# vendor: sqlite # DB_VENDOR
+# username: root # DB_USERNAME
+# password: password # DB_PASSWORD (can instead use secret "db-password" by commenting this line out)
+# address: 127.0.0.1 # DB_ADDR
+# database: telemetry # DB_DATABASE
+# or construct your own DSN
+# NOTE: setting this will override any other database connection setting
+# dsn: "file:test.db"
+# Configure the webapp.  See the Configuration struct in pkg/webapp/webapp.go for more details.
+webapp: {}
+# acehubs:
+# - name: Lion
+#   url:  https://hub.lion.act3-ace.ai
+# - name: GCP
+#   url:  https://hub.ace.afresearchlab.com
+
+# viewers:
+# - name: "VS Code"
+#   accept: "image/*,application/json,text/plain;q=0.5, application/vnd.act3-ace.bottle;q=0.9"
+#   acehub:
+#     image: reg.git.act3-ace.com/ace/hub/vscode-server:v0
+#     resources:
+#       cpu: "2"
+#       memory: "2Gi"
+#     proxyType: normal
+#     jupyter: false
+
+# defaultBottleSelectors:
+# - type != testing
+# - foo!=bar
+prometheus:
+  serviceMonitor:
+    enabled: no
+    # change the labels to match the prometheses serviceMonitorSelector
+    labels: {}

@@ -1,0 +1,85 @@
+{
+    "apiVersion": "data.act3-ace.io/v1beta1",
+    "kind": "Bottle",
+    "labels": {
+        "type": "testing",
+        "group": "testset",
+        "epoch": "3",
+        "learning-rate": "0.1",
+        "refname": "bottle2",
+        "myotherkey": "myothervalue2",
+        "numeric": "3.1419"
+    },
+    "annotations": {
+        "somekey": "Hello World, This is an annotations and can be anything.",
+        "bottle.data.act3-ace.io/deprecates": "{{ FileDigest "testdata/bottle/bottle01.json" "sha256" }},{{ FileDigest "testdata/bottle/bottle02.json" "sha256" }}"
+    },
+    "description": "Common Object in Context (COCO)\nThe Common Object in Context (COCO) is one of the most popular large-scale labeled image datasets available for public use. It represents a handful of objects we encounter on a daily basis and contains image annotations in 80 categories, with over 1.5 million object instances. You can explore COCO dataset by visiting SuperAnnotate’s respective dataset section.",
+    "sources": [
+        {
+            "name": "Training dataset",
+            {{- $dgst := FileDigest "testdata/bottle/bottle1.json" "sha256" }}
+            "uri": {{ BottleURI "bottle" $dgst "label2=otherlabel" "other=doesnotexist,also=notthere" | quote }}
+        },
+        {
+            "name": "Original",
+            "uri": "http://data.example.com/for-bottle-2"
+        }
+    ],
+    "authors": [
+        {
+            "name": "Jane Smith",
+            "email": "jane.smith@example.com"
+        },
+        {
+            "name": "Bob Dillon",
+            "email": "bdill@example.com"
+        }
+    ],
+    "metrics": [
+        {
+            "name": "accuracy",
+            "description": "The final accuracy of the model",
+            "value": "0.0123"
+        },
+        {
+            "name": "training loss",
+            "description": "The final loss while training the model",
+            "value": "52"
+        }
+    ],
+    "publicArtifacts": [
+        {
+            "name": "some cool file",
+            "mediaType": "text/plain",
+            "path": "dir/x.txt",
+            "digest": "{{ FileDigest "testdata/blob/sample.txt" "sha256" }}"
+        },
+        {
+            "name": "a png image",
+            "mediaType": "image/png",
+            "path": "foo/bar/a.png",
+            "digest": "{{ FileDigest "testdata/blob/image1.png" "sha256" }}"
+        }
+    ],
+    "parts": [
+        {
+            "name": "foo/bar",
+            "size": 45,
+            "digest": "sha256:9a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "label2": "mysecondlabel"
+            }
+        },
+        {
+            "name": "dir",
+            "size": 450,
+            "digest": "sha256:3a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "mykey": "something-else"
+            }
+        }
+    ]
+}

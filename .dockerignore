@@ -1,0 +1,15 @@
+# Ignore everything
+**
+
+# Allow files and directories
+!/ci-dist/**
+!*.go
+!go.*
+!/cmd
+!/internal
+!/pkg
+!/Makefile
+!/requirements.txt
+
+# ignore tests
+*_test.go

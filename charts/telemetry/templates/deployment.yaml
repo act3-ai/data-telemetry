@@ -1,0 +1,161 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "telemetry.fullname" . }}
+  labels:
+    {{- include "telemetry.labels" . | nindent 4 }}
+  annotations:
+    logs.act3-ace.io/jq: {{ .Files.Get "log.jq" | quote }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "telemetry.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        logs.act3-ace.io/jq: {{ .Files.Get "log.jq" | quote }}
+      labels:
+        {{- include "telemetry.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "telemetry.fullname" . }}
+      serviceAccountName: {{ include "telemetry.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      enableServiceLinks: false
+      initContainers:
+        {{- if .Values.postgresql.enabled }}
+        - name: pgchecker
+          image: "{{ .Values.pgchecker.image.repository }}:{{ .Values.pgchecker.image.tag }}"
+          imagePullPolicy: {{ .Values.pgchecker.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.pgchecker.securityContext | nindent 12 }}
+          command:
+            - sh
+            - -c
+            - |
+              echo 'Waiting for PostgreSQL to become ready...'
+
+              until printf "." && nc -z -w 2 {{ include "telemetry.postgresql.fullname" . }} {{ .Values.postgresql.primary.service.ports.postgresql }}; do
+                  sleep 2;
+              done;
+
+              echo 'PostgreSQL OK ✓'
+          resources:
+            {{- toYaml .Values.pgchecker.resources | nindent 12 }}
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - serve
+            - --config=/etc/ace/telemetry/config.yaml
+          env:
+            - name: ACE_TELEMETRY_LISTEN
+              value: ":8100"
+            - name: ACE_TELEMETRY_VERBOSITY
+              value: {{ .Values.verbosity | quote }}
+          {{- range $key, $value := .Values.environment }}
+            - name: {{ $key | snakecase | upper }}
+              value: {{ $value | quote }}
+          {{- end }}
+          {{- if .Values.postgresql.enabled }}
+            - name: DB_VENDOR
+              value: postgres
+            - name: DB_ADDR
+              value: {{ include "telemetry.postgresql.fullname" . }}
+            - name: DB_PORT
+              value: {{ .Values.postgresql.primary.service.ports.postgresql | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.postgresql.auth.database | quote }}
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "telemetry.postgresql.fullname" . }}
+                  key: postgres-password
+          {{- else if and .Values.db.vendor .Values.db.username .Values.db.address .Values.db.database }}
+            - name: DB_VENDOR
+              value: {{ .Values.db.vendor | quote }}
+            - name: DB_ADDR
+              value: {{ .Values.db.address | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.db.name | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.db.username | quote }}
+            {{- if .Values.db.password }}
+            - name: DB_PASSWORD
+              value: {{ .Values.db.password | quote }}
+            {{- else }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "telemetry.db.fullname" . }}
+                  key: db-password
+            {{- end }}
+          {{- end }}
+          {{- if .Values.db.dsn }}
+            - name: ACE_TELEMETRY_DSN
+              value: {{ .Values.db.dsn }}
+          {{- else }}
+            - name: ACE_TELEMETRY_DSN
+              value: "$(DB_VENDOR)://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_ADDR)/$(DB_DATABASE)"
+          {{- end }}
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.memory
+            - name: GOMAXPROCS
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.cpu
+          volumeMounts:
+            - name: config
+              mountPath: /etc/ace/telemetry/
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: 8100
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

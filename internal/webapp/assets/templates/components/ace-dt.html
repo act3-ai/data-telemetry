@@ -1,0 +1,25 @@
+<h1>ACE Data Tool</h1>
+<p class="text-muted"><small>For more detailed information on ACE Data Tool and its features, reference the project <a
+            href="https://git.act3-ace.com/ace/data/tool">git repository</a> and <a
+            href="https://git.act3-ace.com/ace/data/tool/-/blob/main/docs/usage.md">usage guide</a>.</small></p>
+<p>In order to download/upload bottle metadata from/to Telemetry, you will need the <code>ace-dt</code> command-line tool installed on your system.
+    You can find installation instructions <a
+        href="https://git.act3-ace.com/ace/data/tool/-/blob/main/docs/quick-start-guide.md">here</a>.</p>
+
+<h3>Using ACE Data Tool With Telemetry</h3>
+<div class="alert alert-secondary" role="alert">
+    <b>NOTE:</b> Authentication and/or a VPN connection might be required to access the Telemetry and/or registry
+    servers.
+</div>
+<p>To enable <code>ace-dt</code> to send and receive bottle metadata from this telemetry server, you will need to update your <code>ace-dt</code>
+    configuration. You can either:
+<ul>
+    <li>Set an environment variable: <code>export ACE_DT_TELEMETRY_URL=<span id="origin"></span></code></li>
+    <li>Update your <code>ace-dt</code> config file to include this telemetry server.</li>
+</ul>
+<p>Once your <code>ace-dt</code> is properly configured, you may use the <code>ace-dt pull</code> and <code>ace-dt
+        push</code> commands to download bottles and upload bottle info to Telemetry respectively.</p>
+<p class="text-muted"><small>For more information on configuring <code>ace-dt</code> click <a
+            href="https://git.act3-ace.com/ace/data/tool/-/blob/main/docs/quick-start-guide.md#configuration">here</a>
+        or run <code>ace-dt config --help</code></small>
+</p>

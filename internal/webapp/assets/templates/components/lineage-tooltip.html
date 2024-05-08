@@ -1,0 +1,28 @@
+{{ if .Data.Note }} <b style="text-decoration: underline blue double;">NOTE: {{ .Data.Note }}</b><br /> {{ end }}
+<div style="text-align: left;">
+    {{ if .Data.Labels }}
+        <br /><b>Labels:</b> 
+        {{ range .Data.Labels }} 
+            <span class="badge rounded-pill bg-primary">{{ .Key }}={{ .Value }}</span>
+        {{ end }}
+    {{ end }}
+    {{ if .Data.Metrics }} 
+        <br /><b>Metrics:</b> 
+        {{ range .Data.Metrics }} 
+            <span class="badge rounded-pill bg-success">{{ .Name }}={{ .Value }}</span>
+        {{ end }}
+    {{ end }}
+    {{ if .Data.Description }} <br /><b>Description:</b> {{ .Data.Description }} {{ end }}
+    {{ if .Data.Authors }} 
+        <br /><b>Authors:</b> 
+        {{ range .Data.Authors }}
+            <div>
+                <i class="bi bi-person-circle me-2"></i>
+                <strong>{{ .Name }}</strong>
+            </div>
+        {{ end }} 
+    {{ end }}
+    {{ if gt .Data.PullScore 0 }}<br /><b>Pulls:</b> {{ .Data.PullScore }} {{ end }}
+    <br/><b>ID:</b> {{ .Data.Name}}
+</div>
+<!-- <img src="{{ .Top }}www/static/img/ace-logo.svg" alt="" height="60" class="d-inline-block align-text-top" /> -->

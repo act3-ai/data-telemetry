@@ -1,0 +1,136 @@
+{{ define "bottle-cards" }}
+{{ $CommonLabels := GetCommonLabels .Values.Entries }}
+
+{{ if (gt (len .Values.Errors) 0) }}
+<div class="alert alert-danger" role="alert" style="margin-top: 1em; margin-bottom: 1em;">
+    <div>
+        An error occurred while generating bottle results:
+    </div>
+    <ul>
+        {{ with splitList "\n" .Values.Errors }}
+        {{ range .}}
+        <li>{{ . }}</li>
+        {{ end }}
+        {{ end }}
+    </ul>
+</div>
+{{ else }}
+
+{{ if (gt (len .Values.Entries) 0) }}
+<div id="total-search-results" class="row" style="margin-top: 1em; margin-left: 1em;" hx-swap-oob="true">
+    <div class="col-12">
+        You are viewing 
+        {{ with index .Values.Entries 0 }}
+        {{ min (mul (add1 $.Values.Params.Page) $.Values.Params.Limit) .TotalCount }} 
+        of
+        {{ .TotalCount }} Results
+        {{ end }}
+    </div>
+</div>
+
+<div class="row align-items-center" style="margin-top: 1em; margin-bottom: 1em;">
+<h4 class="col-1 offset-5 me-auto" style="text-align: center;">Page {{ $.Values.Params.Page }}</h4>
+{{ if (gt (len $CommonLabels) 0) }}
+<div class="col-4 offset-3">
+    <h5>Common Labels</h5>
+    <div>
+      {{ range $CommonLabels }}
+      <!-- <li>{{ .Key }}={{ .Value }}</li> -->
+      <span class="badge rounded-pill bg-label">{{ .Key }}={{ .Value }}</span>
+      {{ end }}
+    </div>
+</div>
+{{ end }}
+</div>
+{{ else }}
+<div class="row align-items-center" style="margin-top: 1em; margin-bottom: 1em;">
+    <h4 class="col-3 offset-4" style="text-align: center;">End of results</h4>
+</div>
+{{ end }}
+
+{{ range $index, $entry := .Values.Entries }}
+<div class="col-lg-4 mb-4"
+    {{ if eq (len $.Values.Entries) (add1 $index) }}
+    hx-get="{{ $.Globals.Top }}www/search/cards?page={{ add1 $.Values.Params.Page }}"
+    hx-trigger="revealed"
+    hx-swap="afterend"
+    hx-indicator="#bottle-cards-spinner"
+    {{ end }}
+>
+    <div class="card {{ if .IsDeprecated }}border-warning {{ end }}h-100">
+        <div class="card-body">
+            {{/*
+            <h5 class="card-title">Bottle</h5>
+            */}}
+            <div style="display: flex; justify-content: space-between;">
+                <small class="card-subtitle text-muted" style="max-width: 80%;">
+                    {{ index $entry.Digests 0 }}
+                </small>
+                {{ if $entry.IsDeprecated }}
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg"
+                    class="bottle-attribute-icon" />
+                {{ else }}
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/bottle.svg"
+                    class="bottle-attribute-icon-bottle" />
+                {{ end }}
+            </div>
+            {{ with $entry.Authors }}
+            <div class="my-1 fw-light">
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/authors.svg" alt="authors"
+                    class="bottle-attribute-icon" />
+                {{ range $i, $author := . }}{{if
+                $i}},{{end}}{{ .Name }}{{ end }}
+            </div>
+            {{ end }}
+            <div class="my-1">
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/labels.svg" alt="labels"
+                    class="bottle-attribute-icon" />
+                {{ range (RemoveLabels $CommonLabels $entry.Labels) }}
+                <!-- <li>{{ .Key }}={{ .Value }}</li> -->
+                <span class="badge rounded-pill bg-label">{{ .Key }}={{ .Value }}</span>
+                {{ end }}
+            </div>
+            <div class="overflow-hidden line-clamp mb-2">
+                <div>
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" alt="description"
+                        class="bottle-attribute-icon" style="float: left; margin: 1em 1em 0em 0em;" />
+                </div>
+                <div>
+                    <p class="card-text my-1" style="white-space: pre-line">
+                        {{ $entry.Description }}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" alt="metrics"
+                class="bottle-attribute-icon" />
+            {{ range $entry.Metrics }}
+            <span class="badge rounded-pill bg-metric">{{ .Name }}={{ .Value }}</span>
+            {{ end }} 
+            </div>
+            <div class="mt-auto d-grid gap-2 d-md-block">
+                <a id="bottle_details_button" class="btn btn-primary" href="bottle.html?digest={{ index $entry.Digests 0 }}">Bottle Details</a>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <div class="my-1 card-subtitle text-muted" style="max-width: 80%;">
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/pull.svg" alt="bottle pulls"
+                        class="bottle-attribute-icon" />
+                    {{ $entry.NumPulls }}
+                </div>
+                <div class="my-1 card-subtitle text-muted">
+                    {{ if (gt (len $entry.Signatures) 0) }}
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg"
+                        class="bottle-attribute-icon" />
+                    {{ len $entry.Signatures }}
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+        <!-- <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg"  class="bottle-attribute-icon" /> -->
+        <!-- <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/annotation.svg"  class="bottle-attribute-icon" /> -->
+        <!-- <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg"  class="bottle-attribute-icon" /> -->
+    </div>
+</div>
+{{ end }}
+{{ end }}
+{{ end }}

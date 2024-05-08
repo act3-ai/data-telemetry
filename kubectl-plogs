@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# kubectl plugin to support pretty logs by way of jq (others in the future)
+# Put this script on your PATH to install it.  Then use it with `kubectl plogs my-pod-name`
+
+# TODO support logging from other than pods (like deployments)
+# TODO create a real temp file
+
+# Get the jq filter from the annotations
+kubectl get pod $@ -o jsonpath='{.metadata.annotations.logs\.act3-ace\.io/jq}' > /tmp/log.jq
+
+kubectl logs $@ | jq -j -f /tmp/log.jq

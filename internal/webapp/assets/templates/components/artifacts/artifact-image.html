@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{ template "head" . }}
+
+  <body>
+    {{ template "navbar" . }}
+    <main class="container">
+      {{ template "artifact-header" . }}
+      <hr>
+      <section>
+        <img class="img-fluid" src="{{ .Globals.Top }}www/artifact/{{ .Values.BottleDigest }}/{{ .Values.Path }}?_type=raw"/>
+      </section>
+    </main>
+  </body>
+</html>

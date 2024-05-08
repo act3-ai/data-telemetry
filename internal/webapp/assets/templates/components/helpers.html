@@ -1,0 +1,51 @@
+{{ define "head" }}
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex">
+
+  <!-- Bootstrap CSS -->
+  <link href="{{ .Globals.Top }}www/static/libs/bootstrap/5.2.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{{ .Globals.Top }}www/static/libs/bootstrap-icons/1.11.0/bootstrap-icons.css" rel="stylesheet" />
+
+  <link href="{{ .Globals.Top }}www/static/css/main.css" rel="stylesheet" />
+
+  <!-- Disable the favicon.ico request -->
+  <link rel="icon" href="data:," />
+
+  <script type="text/javascript" id="MathJax-script" async
+    src="{{ .Globals.Top }}www/static/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
+    </script>
+  <script src="{{ .Globals.Top }}www/static/js/htmx.1.9.11.min.js"></script>
+
+  <title>ACE Data Telemetry</title>
+</head>
+{{ end }}
+
+{{define "scripts"}}
+<script src="{{ .Globals.Top }}www/static/libs/bootstrap/5.2.2/js/bootstrap.bundle.min.js"></script>
+<script src="{{ .Globals.Top }}www/static/js/main.js"></script>
+{{ end }}
+
+{{ define "artifact-header" }}
+<section class="mt-5">
+  <h1 class="display-5">Artifact: {{ .Values.Name }}</h1>
+  <h2>{{ .Values.Path }}</h2>
+  <a class="btn btn-sm btn-secondary" role="button"
+    href="{{ .Globals.Top }}www/bottle.html?digest={{ .Values.BottleDigest }}" id="bottle-btn"><i
+      class="bi bi-arrow-90deg-left" title="Bottle containing this artifact"></i>
+    Enclosing Bottle
+  </a>
+  <ul>
+    <li>Media Type: {{ .Values.MediaType }}</li>
+    <li>File Digest: {{ .Values.Digest }}</li>
+  </ul>
+  <a class="btn btn-sm btn-primary" role="button"
+    href="{{ .Globals.Top }}www/artifact/{{ .Values.BottleDigest }}/{{ .Values.Path }}?_type=raw"
+    download="{{ base .Values.Path }}" id="download-btn"><i class="bi bi-download" title="Download"></i>
+    Download
+  </a>
+</section>
+{{ end }}

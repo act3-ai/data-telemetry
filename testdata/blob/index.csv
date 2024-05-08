@@ -1,0 +1,8 @@
+image1.jpg,sha256
+image1.png,sha256,sha512
+sample.txt,sha256
+tabular1.csv,sha256
+flame_temperature.ipynb,sha256
+doc.md,sha512
+parent.html,sha256
+child.html,sha256

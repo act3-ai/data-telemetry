@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "mediaType": "application/vnd.oci.image.manifest.v1+json",
+  "config": {
+    "mediaType": "application/vnd.act3-ace.bottle.config.v1+json",
+    "size": {{ FileSize "testdata/bottle/bottle4.json" }},
+    "digest": "{{ FileDigest "testdata/bottle/bottle4.json" "sha256" }}"
+  },
+  "layers": [
+    {
+      "mediaType": "application/vnd.act3-ace.bottle.layer.v1.tar+gzip",
+      "size": 32654,
+      "digest": "sha256:625b0528ec90bd34498563b8380db33f2f374256181a62a23a6cdcaf41b19304"
+    },
+    {
+      "mediaType": "application/vnd.act3-ace.bottle.layer.v1.tar+gzip",
+      "size": 16724,
+      "digest": "sha256:725b0528ec90bd34498563b8380db33f2f374256181a62a23a6cdcaf41b19304"
+    }
+  ]
+}

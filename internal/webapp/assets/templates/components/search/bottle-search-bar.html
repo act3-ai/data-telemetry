@@ -1,0 +1,137 @@
+{{ define "bottle-search-bar" }}
+<div class="row border border-secondary fade-in fade-out" id="bottle-search-bar">
+    <div id="total-search-results" class="row" style="margin-top: 1em; margin-left: 1em;"> </div>
+    <form hx-get="{{ $.Globals.Top }}www/search" hx-swap="outerHTML swap:1s" hx-target="#bottle-search-bar"
+        hx-include=".bottle-search-field" hx-indicator="#bottle-cards-spinner"
+        hx-trigger="submit,onPillRemove from:#search-pill-list,change from:#show-deprecated-checkbox"
+        hx-on:htmx:before-request="window.scrollTo({ top: 0, behavior: 'smooth' });">
+        <div class=" input-group input-group-sm p-3 ">
+            <button id="search-filter-button" class="btn btn-primary dropdown-toggle fs-4 px-3" type="button"
+                data-bs-toggle="dropdown">
+                Search Filters
+            </button>
+            <ul id="search-filter-dropdown-list" class="dropdown-menu dropdown-menu-dark"
+                style="padding-left: 0 !important;">
+                <li><a id="sf-bottle" class="dropdown-item" onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/bottle.svg" />
+                        Bottle</a></li>
+                <li><a id="sf-label" class="dropdown-item" onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/label.svg" />
+                        Label Selector</a></li>
+                <li><a id="sf-author" class="dropdown-item {{ if gt (len .Values.Params.Author) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/author.svg" />
+                        Author</a></li>
+                <li><a id="sf-description"
+                        class="dropdown-item {{ if gt (len .Values.Params.Description) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" />
+                        Description</a></li>
+                <li><a id="sf-signature"
+                        class="dropdown-item {{ if gt (len .Values.Params.SignatureFingerprint) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" />
+                        Signature Fingerprint</a></li>
+                <li><a id="sf-signature-annotation" class="dropdown-item" onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" />
+                        Signature Annotation</a></li>
+                <li><a id="sf-parent"
+                        class="dropdown-item {{ if gt (len .Values.Params.ParentsOf) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/parent.svg" />
+                        Parent</a></li>
+                <li><a id="sf-child"
+                        class="dropdown-item {{ if gt (len .Values.Params.ChildrenOf) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/child.svg" />
+                        Child</a></li>
+                <li><a id="sf-deprecates"
+                        class="dropdown-item {{ if gt (len .Values.Params.Deprecates) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecates.svg" />
+                        Deprecates</a></li>
+                <li><a id="sf-deprecated-by"
+                        class="dropdown-item {{ if gt (len .Values.Params.DeprecatedBy) 0 }} disabled {{ end }}"
+                        onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" />
+                        Deprecated By</a></li>
+                <li><a id="sf-part" class="dropdown-item" onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/part.svg" />
+                        Part</a></li>
+                 <li><a id="sf-bottle-repository" class="dropdown-item" onclick="selectSearchFilter(this)">
+                    <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/database-svg.svg" />
+                    Bottle Repository</a></li>
+            </ul>
+            <input id="search-text" class="col p-2 bottle-search-field" type="text"
+                placeholder="Select a search filter to begin" />
+            <span class="input-group-text bg-dark p-2">
+                <label for="show-deprecated-checkbox" class="text-light bg-dark ">
+                    Show Deprecated
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" alt="deprecated" />
+                </label>
+                <input class="form-check-input bottle-search-field"
+                    hx-on:on-show-deprecated-remove="this.checked = false; htmx.trigger(this, 'change', {});"
+                    type="checkbox" name="show-deprecated" id="show-deprecated-checkbox" title="show-deprecated" {{ if
+                    .Values.Params.ShowDeprecated }} checked {{ end }} />
+            </span>
+            <button type="submit" class="btn text-lg btn-primary p-2">
+                <i class="bi bi-search h4"></i>
+            </button>
+        </div>
+        <div id="bottle-search-pills">
+            {{ template "bottle-search-pills" . }}
+        </div>
+        {{ if (gt (len .Values.Errors) 0) }}
+        <div class="alert alert-danger" role="alert" style="margin-top: 1em; margin-bottom: 1em;">
+            <h5>Try Again?</h5>
+            <div>
+                There was an issue with the search criteria:
+            </div>
+            <ul>
+                {{ with splitList "\n" .Values.Errors }}
+                {{ range .}}
+                <li>{{ . }}</li>
+                {{ end }}
+                {{ end }}
+            </ul>
+        </div>
+        {{ end }}
+    </form>
+</div>
+<script>
+    function selectSearchFilter(selectedDropdownElement) {
+        var searchFilterDropdownButton = document.getElementById("search-filter-button")
+        var searchTextField = document.getElementById("search-text")
+        deactivateAllDropdownItems()
+        selectedDropdownElement.classList.add("active");
+
+        const dropdownMap = new Map([
+            ["sf-bottle", {formName: "bottle", placeholderText: "Bottle hash (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-label", {formName: "label-selector", placeholderText: "Label Selector (ex. project=COACH or learning-rate=0.005 or testing!=true)"}],
+            ["sf-author", {formName: "author", placeholderText: "Name (ex. Jane Doe or Jon Doe)"}],
+            ["sf-description", {formName: "description", placeholderText: "Any part of a bottle's description"}],
+            ["sf-signature", {formName: "signature-fingerprint", placeholderText: "Signature fingerprint hash (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-signature-annotation", {formName: "signature-annotation", placeholderText: "Key value pair (ex. F-16Ready=true or SignatureType=cosign)"}],
+            ["sf-parent", {formName: "parents-of", placeholderText: "Bottle hash of parent (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-child", {formName: "children-of", placeholderText: "Bottle hash of child (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-deprecates", {formName: "deprecates", placeholderText: "Find bottles that are deprecated by... (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-deprecated-by", {formName: "deprecated-by", placeholderText: "Find bottles that deprecates... (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-part", {formName: "part-digest", placeholderText: "Part digest (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-bottle-repository", {formName: "bottle-repository", placeholderText: "Bottle Repository (ex. reg.example.com/foo)"}],
+        ]);
+        selected = dropdownMap.get(selectedDropdownElement.id);
+
+        searchFilterDropdownButton.innerHTML = selectedDropdownElement.innerHTML.trim()
+        searchTextField.setAttribute("name", selected.formName);
+        searchTextField.setAttribute("placeholder", selected.placeholderText);
+    }
+
+    function deactivateAllDropdownItems() {
+        var searchFilterDropdownListItems = document.getElementById("search-filter-dropdown-list").getElementsByTagName("a");
+        for (var i = 0, len = searchFilterDropdownListItems.length; i < len; i++) {
+            searchFilterDropdownListItems[i].classList.remove("active");
+        }
+    }
+</script>
+
+{{ end }}

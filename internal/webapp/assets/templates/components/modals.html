@@ -1,0 +1,63 @@
+{{ define "selector-help" }}
+<section id="selector-help" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">What is a Selector?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    id="header-close-btn"></button>
+            </div>
+            <div class="modal-body">
+                {{template "labels.html"}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="footer-close-btn">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{{ end }}
+{{ define "updating-bottles" }}
+<section id="update-bottle-schema" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-fullscreen-xl-down modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Updating Bottle Schema Version</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    id="config-submit-btn"></button>
+            </div>
+            <div class="modal-body">
+                <p>As mentioned in the Telemetry documentation, the Telemetry server has the ability to update a
+                    bottle's schema version
+                    automatically when it is received.
+                    This update to the metadata of the bottle will cause the creation of a new bottle in Telemetry with
+                    the correct
+                    schema.</br>
+                <p>To create the updated bottle in Telemetry, you will need to have the following:</p>
+                <ul>
+                    <li>Pull access for one of the OCI repositories where the bottle you want to update is stored</li>
+                    <li>Push access for an OCI repository to push the bottle to</li>
+                    <li>Your current <code>ace-dt</code> configuration includes this Telemetry server.</li>
+                    <li>The latest version of the ACE Data Tool <a
+                            href="https://git.act3-ace.com/ace/data/tool">ace-dt</a> installed.
+                    </li>
+                </ul>
+                <p>Assuming the above requirements are met you may follow these instructions using the command-line:</p>
+                <ul>
+                    <li>Pull the outdated bottle: <code>ace-dt bottle pull
+                            &lt;registry&gt;/&lt;repository&gt;/&lt;name&gt;:&lt;tag&gt;</code></li>
+                    <li>Push the outdated bottle to your chosen registry: <code>ace-dt bottle push
+                            &lt;registry&gt;/&lt;repository&gt;/&lt;name&gt;:&lt;tag&gt;</code></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="config-close-btn">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{{ end }}

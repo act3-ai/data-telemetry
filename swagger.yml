@@ -1,0 +1,632 @@
+openapi: "3.0.3"
+info:
+  title: "ACE Telemetry API"
+  description: "Documentation for Ace Telemetry API. This telemetry server implements a longitudinal tracking system   for ACE Data Bottles.  When `ace-dt bottle push` or `ace-dt bottle pull` is run it pushed the bottle (metadata and data) to the OCI registry that is provided.  In addition those commands also push the metadata to 0 or more telemetry servers configured in ace-dt's configuration file.  In this way the telemetry server can be used to discover and track data bottles."
+  version: "0.8.19"
+  contact:
+    email: "Kyle.Tarplee@udri.udayton.edu"
+tags:
+  - name: "blob"
+    description: ""
+  - name: "bottle"
+    description: ""
+    externalDocs:
+      description: "Bottle docs"
+      url: "https://gitlab.com/act3-ai/asce/data/tool/-/blob/main/docs/datamodel.md"
+  - name: "manifest"
+    description: ""
+  - name: "event"
+    description: ""
+  - name: "search"
+    description: "Search Bottle Functionality"
+  - name: "metric"
+    description: "Metrics functionality"
+  - name: "location"
+    description: "Location functionality"
+#  ---- /Defining all paths below ----------------------------------------
+paths:
+  /api/search:
+    get:
+      tags:
+        - "search"
+      summary: "Searches for a bottle by its Description from a param struct"
+      operationId: "search"
+      parameters:
+        - name: "selector"
+          in: "query"
+          description: "selector parameter"
+          required: false
+          schema:
+            type: "string"
+        - name: "metric"
+          in: "query"
+          description: "Description parameter"
+          required: false
+          schema:
+            type: "string"
+        - name: "limit"
+          in: "query"
+          description: "limit parameter"
+          required: false
+          schema:
+            type: "string"
+        - name: "digestOnly"
+          in: "query"
+          description: "DigestOnly parameter"
+          required: false
+          schema:
+            type: "boolean"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+  /api/metric:
+    get:
+      tags:
+        - "metric"
+      summary: "This will Get Bottle details using metric data"
+      operationId: "handleGetBottlesFromMetric"
+      parameters:
+        - name: "selector"
+          in: "query"
+          description: "selector parameter"
+          required: false
+          schema:
+            type: "string"
+        - name: "metric"
+          in: "query"
+          description: "Description parameter"
+          required: false
+          schema:
+            type: "string"
+        - name: "limit"
+          in: "query"
+          description: "limit parameter"
+          required: false
+          schema:
+            type: "integer"
+        - name: "digestOnly"
+          in: "query"
+          description: "DigestOnly parameter"
+          required: false
+          schema:
+            type: "boolean"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+  /api/location:
+    get:
+      tags:
+        - "location"
+      summary: "This gets the Location for the bottle using its bottle_digest parameter"
+      operationId: "handleGetLocation"
+      parameters:
+        - name: "bottle_digest"
+          in: "query"
+          description: "{bottle digest} param"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+          #  ---- /Represent Blob/Artifact Information  ----------------------------------------
+  /api/blob:
+    put:
+      tags:
+        - "blob"
+      summary: "Will send a blob to the db using the digest as parameter"
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: object
+            examples:
+              text:
+                summary: example blob text
+                value: my cool text
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          schema:
+            type: "string"
+          required: false
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+    get:
+      tags:
+        - "blob"
+      summary: "Get blob details using its digest"
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          required: false
+          schema:
+            type: string
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: string
+        - name: "since"
+          in: "query"
+          description: "parameter of type {since} YYYY-MM-DD format"
+          required: false
+          schema:
+            type: string
+        - name: "limit"
+          in: "query"
+          description: "limit result to"
+          required: false
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+  #  ---- /Represent Bottle Information  ----------------------------------------
+  /api/bottle:
+    put:
+      tags:
+        - "bottle"
+      summary: "Will send a bottle to the db"
+      operationId: "genericPutData-bottle"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              bottleJSON:
+                summary: sample bottle JSON object
+                externalValue: 'https://gitlab.com/act3-ai/asce/data/telemetry/-/blob/main/testdata/bottle/bottle1.json.tmpl'
+                value: |
+                  {
+                      "apiVersion": "data.act3-ace.io/v1",
+                      "kind": "Bottle",
+                      "labels": {
+                          "type": "testing",
+                          "group": "testset",
+                          "epoch": "13",
+                          "learning-rate": "0.001",
+                          "refname": "bottle1"
+                      },
+                      "annotations": {
+                          "viewer.data.act3-ace.io/jupyter-base": "{\"accept\":\"application/x.jupyter.notebook+json, */*;q=0.8\",\"acehub\":{\"image\":\"docker.io/jupyter/base-notebook\",\"jupyter\":true,\"proxyType\":\"straight\",\"resources\":{\"cpu\":\"1\",\"memory\":\"1Gi\"}}}"
+                      },
+                      "description": "MNIST Dataset\nThe MNIST database is an extension of the NIST database, is a low-complexity data collection of handwritten digits used to train and test various supervised machine learning algorithms. The database contains 70,000 28x28 black and white images representing the digits zero through nine. The data is split into two subsets, with 60,000 images belonging to the training set and 10,000 images belonging to the testing set. The separation of images ensures that given what an adequately trained model has learned previously, it can accurately classify relevant images not previously examined.",
+                      "sources": [
+                          {
+                              "name": "Data page",
+                              "uri": "http://data.example.com"
+                          },
+                          {
+                              "name": "Hash type reference - NOT KNOWN to this telemetry server",
+                              "uri": "hash://sha256/42a8efd3483c60a4364d3f6f328ee1897facdbffb043b51941424a34121bbbe9?selector=mykey%3Dvalue2%2Cpartkey%21%3Dvalue1&selector=partkey2%3D45&type=application%2Fvnd.act3-ace.bottle.config.v1%2Bjson"
+                          }
+                      ],
+                      "authors": [
+                          {
+                              "name": "John Smith",
+                              "url": "https://john.example.com",
+                              "email": "john.smith@example.com"
+                          }
+                      ],
+                      "metrics": [
+                          {
+                              "name": "training loss",
+                              "value": "3.141592654"
+                          },
+                          {
+                              "name": "AUC",
+                              "value": "0.985",
+                              "description": "Area under the curve"
+                          }
+                      ],
+                      "publicArtifacts": [
+                          {
+                              "name": "Some text",
+                              "mediaType": "text/plain",
+                              "path": "foo/bar/sample.txt",
+                              "digest": "sha256:eab4fe92c4c81e25676d91b3dac3191fe3d0a22e2a6644b76726a7683862a339"
+                          },
+                          {
+                              "name": "A table",
+                              "mediaType": "text/csv",
+                              "path": "foo/bar/data.csv",
+                              "digest": "sha256:1328428ff0a11d5f414f26093abaac831fde705e99f36be6d71616e76376c401"
+                          },
+                          {
+                              "name": "Raw data",
+                              "mediaType": "application/x.raw-data-from-app",
+                              "path": "dir/data.dat",
+                              "digest": "sha256:7cb607db8efefc44070857113acad5dd257b34014bf911b5565b926d053ffed1"
+                          },
+                          {
+                              "name": "jupyter notebook",
+                              "mediaType": "application/x.jupyter.notebook+json",
+                              "path": "dir/flame_tempurature.ipynb",
+                              "digest": "sha256:9bebf313bc210eaba37b0bfba445527894b5a7cc72168bdd85b1e996a58859a6"
+                          },
+                          {
+                              "name": "sample markdown document",
+                              "mediaType": "text/markdown",
+                              "path": "dir/doc.md",
+                              "digest": "sha512:ca066d4d0ce3af824f6e7fab8acb126eee975e34c2160bb1244b7d47a514f789162611eaccde9f0bcf68b20b33de14d0dd87f6ace58bf5f7f606158d548923e2"
+                          },
+                          {
+                              "name": "Custom HTML",
+                              "mediaType": "text/html",
+                              "path": "dir/parent.html",
+                              "digest": "sha256:74358630353286e412f4cd134a8b2ba8de469d31f1b57d899dc12dd3732c85c9"
+                          },
+                          {
+                              "name": "Linked HTML",
+                              "mediaType": "text/html",
+                              "path": "dir/child.html",
+                              "digest": "sha256:70b9abae25690fe6c609c176c31fbc9af730fa98ffd084128faa906147dc3068"
+                          },
+                          {
+                              "name": "Some image",
+                              "mediaType": "image/jpeg",
+                              "path": "dir/a/b/c.jpg",
+                              "digest": "sha256:7cb607db8efefc44070857113acad5dd257b34014bf911b5565b926d053ffed1"
+                          }
+                      ],
+                      "deprecates": [
+                          "sha256:2e9e86ac5509a9870d4109c1d0d26d160cc7ce21d8350ac74d37371894d300f6"
+                      ],
+                      "parts": [
+                          {
+                              "name": "foo/bar",
+                              "size": 45,
+                              "digest": "sha256:0b1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+                              "labels": {
+                                  "label1": "myfirstlabel",
+                                  "label2": "mysecondlabel"
+                              }
+                          },
+                          {
+                              "name": "dir",
+                              "size": 450,
+                              "digest": "sha256:0a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+                              "labels": {
+                                  "label1": "myfirstlabel",
+                                  "label2": "otherlabel"
+                              }
+                          }
+                      ]
+                  }
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          schema:
+            type: "string"
+          required: false
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+    get:
+      tags:
+        - "bottle"
+      summary: "This will Get bottle details using its digest"
+      operationId: "genericGetData-bottle"
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          required: false
+          schema:
+            type: string
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: string
+        - name: "since"
+          in: "query"
+          description: "parameter of type {since} YYYY-MM-DD format"
+          required: false
+          schema:
+            type: string
+        - name: "limit"
+          in: "query"
+          description: "limit result to"
+          required: false
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+          #  ---- /Represent Manifest Information  ----------------------------------------
+  /api/manifest:
+    put:
+      tags:
+        - "manifest"
+      summary: "Push a manifest to the database"
+      operationId: "genericPutData-manifest"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              manifestJSON:
+                summary: sample Manifest JSON object
+                value: |
+                  {
+                    "schemaVersion": 2,
+                    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+                    "config": {
+                      "mediaType": "application/vnd.act3-ace.bottle.config.v1+json",
+                      "size": 4720,
+                      "digest": "sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d"
+                    },
+                    "layers": [
+                      {
+                        "mediaType": "application/vnd.act3-ace.bottle.layer.v1.tar+gzip",
+                        "size": 32654,
+                        "digest": "sha256:625b0528ec90bd34498563b8380db33f2f374256181a62a23a6cdcaf41b19304"
+                      },
+                      {
+                        "mediaType": "application/vnd.act3-ace.bottle.layer.v1.tar+gzip",
+                        "size": 16724,
+                        "digest": "sha256:725b0528ec90bd34498563b8380db33f2f374256181a62a23a6cdcaf41b19304"
+                      }
+                    ],
+                    "annotations": {
+                      "com.example.key1": "value1",
+                      "com.example.key2": "value2"
+                    }
+                  }
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          schema:
+            type: "string"
+          required: false
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+    get:
+      tags:
+        - "manifest"
+      summary: "Get a manifest from the database"
+      operationId: "genericGetData-manifest"
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          required: false
+          schema:
+            type: string
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: string
+        - name: "since"
+          in: "query"
+          description: "parameter of type {since} YYYY-MM-DD format"
+          required: false
+          schema:
+            type: string
+        - name: "limit"
+          in: "query"
+          description: "limit result to"
+          required: false
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+  #  ---- /Represent Event Information  ----------------------------------------
+  /api/event:
+    put:
+      tags:
+        - "event"
+      summary: "Will send an event to the db using the digest as parameter"
+      operationId: "genericPutData-event"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              eventJSON:
+                summary: sample event body
+                value: |
+                  {
+                      "manifestDigest": "sha256:74968ed318f252397002f7cc02c563554156cc1f0eeec91d643fc12de61314c9",
+                      "action": "push",
+                      "repository": "reg.example.com/foo",
+                      "tag": "v1.0.1",
+                      "bandwidth": 101010101099,
+                      "timestamp": "2021-04-23T18:25:43Z",
+                      "username": "joe.shmo@example.com"
+                  }
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "pass in digest"
+          schema:
+            type: "string"
+          required: false
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+    get:
+      tags:
+        - "event"
+      summary: "gets an event"
+      operationId: "genericGetData-event"
+      parameters:
+        - name: "digest"
+          in: "query"
+          description: "parameter of type {digest}"
+          required: false
+          schema:
+            type: string
+        - name: "digest-alg"
+          in: "query"
+          description: "parameter of type {digest-alg}"
+          required: false
+          schema:
+            type: string
+        - name: "since"
+          in: "query"
+          description: "parameter of type {since} YYYY-MM-DD format"
+          required: false
+          schema:
+            type: string
+        - name: "limit"
+          in: "query"
+          description: "limit result to"
+          required: false
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/ResponseObj"
+        "400":
+          description: "Invalid status value"
+          #  ---- /servers defined below  ----------------------------------------
+servers:
+  - url: 'http://localhost:8100'
+    description: Local dev server
+#  ---- /Definitions below  ----------------------------------------
+components:
+  schemas:
+    ResponseObj:
+      type: "object"
+      properties:
+        HTTP/1.1:
+          type: "integer"
+        Content-Type:
+          type: "string"
+        Date:
+          type: "string"
+        Content-Length:
+          type: "integer"
+        Connection:
+          type: "string"
+externalDocs:
+  description: "Ace Telemetry Server Link"
+  url: "https://telemetry.lynx.act3-ace.ai/www/about.html"

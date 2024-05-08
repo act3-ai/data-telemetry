@@ -1,0 +1,13 @@
+{
+    "files.autoSave": "afterDelay",
+    "editor.minimap.enabled": false,
+    "editor.rulers": [120],
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "window.zoomLevel": 1,
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.value": 7,
+    "workbench.editor.limit.perEditorGroup": true,
+    "extensions.autoUpdate": false,
+    "extensions.autoCheckUpdates": false,
+    "update.mode": "none"
+}

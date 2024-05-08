@@ -1,0 +1,116 @@
+{
+    "apiVersion": "data.act3-ace.io/v1",
+    "kind": "Bottle",
+    "labels": {
+        "type": "testing",
+        "group": "testset",
+        "epoch": "13",
+        "learning-rate": "0.001",
+        "refname": "bottle1"
+    },
+    "annotations": {
+        "viewer.data.act3-ace.io/jupyter-base": {{ ReadFile "testdata/bottle/acehub_viewer_jupyter.json" | toString | mustFromJson | toJson | quote }}
+    },
+    "description": "MNIST Dataset\nThe MNIST database is an extension of the NIST database, is a low-complexity data collection of handwritten digits used to train and test various supervised machine learning algorithms. The database contains 70,000 28x28 black and white images representing the digits zero through nine. The data is split into two subsets, with 60,000 images belonging to the training set and 10,000 images belonging to the testing set. The separation of images ensures that given what an adequately trained model has learned previously, it can accurately classify relevant images not previously examined.",
+    "sources": [
+        {
+            "name": "Data page",
+            "uri": "http://data.example.com"
+        },
+        {
+            "name": "Hash type reference - NOT KNOWN to this telemetry server",
+            "uri": "{{ BottleURI "hash" "sha256:42a8efd3483c60a4364d3f6f328ee1897facdbffb043b51941424a34121bbbe9" "partkey!=value1,mykey=value2" "partkey2=45" }}"
+        }
+    ],
+    "authors": [
+        {
+            "name": "John Smith",
+            "url": "https://john.example.com",
+            "email": "john.smith@example.com"
+        }
+    ],
+    "metrics": [
+        {
+            "name": "training loss",
+            "value": "3.141592654"
+        },
+        {
+            "name": "AUC",
+            "value": "0.985",
+            "description": "Area under the curve"
+        }
+    ],
+    "publicArtifacts": [
+        {
+            "name": "Some text",
+            "mediaType": "text/plain",
+            "path": "foo/bar/sample.txt",
+            "digest": "{{ FileDigest "testdata/blob/sample.txt" "sha256" }}"
+        },
+        {
+            "name": "A table",
+            "mediaType": "text/csv",
+            "path": "foo/bar/data.csv",
+            "digest": "{{ FileDigest "testdata/blob/tabular1.csv" "sha256" }}"
+        },
+        {
+            "name": "Raw data",
+            "mediaType": "application/x.raw-data-from-app",
+            "path": "dir/data.dat",
+            "digest": "{{ FileDigest "testdata/blob/image1.jpg" "sha256" }}"
+        },
+        {
+            "name": "jupyter notebook",
+            "mediaType": "application/x.jupyter.notebook+json",
+            "path": "dir/flame_tempurature.ipynb",
+            "digest": "{{ FileDigest "testdata/blob/flame_temperature.ipynb" "sha256" }}"
+        },
+        {
+            "name": "sample markdown document",
+            "mediaType": "text/markdown",
+            "path": "dir/doc.md",
+            "digest": "{{ FileDigest "testdata/blob/doc.md" "sha512" }}"
+        },
+        {
+            "name": "Custom HTML",
+            "mediaType": "text/html",
+            "path": "dir/parent.html",
+            "digest": "{{ FileDigest "testdata/blob/parent.html" "sha256" }}"
+        },
+        {
+            "name": "Linked HTML",
+            "mediaType": "text/html",
+            "path": "dir/child.html",
+            "digest": "{{ FileDigest "testdata/blob/child.html" "sha256" }}"
+        },
+        {
+            "name": "Some image",
+            "mediaType": "image/jpeg",
+            "path": "dir/a/b/c.jpg",
+            "digest": "{{ FileDigest "testdata/blob/image1.jpg" "sha256" }}"
+        }
+    ],
+    "deprecates": [
+        "{{ FileDigest "testdata/bottle/bottle00.json" "sha256" }}"
+    ],
+    "parts": [
+        {
+            "name": "foo/bar",
+            "size": 45,
+            "digest": "sha256:0b1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "label2": "mysecondlabel"
+            }
+        },
+        {
+            "name": "dir",
+            "size": 450,
+            "digest": "sha256:0a1de4364cfd94d75e7bda5d0583bcb136d6437c88a36dc06bcd64566a3530ae",
+            "labels": {
+                "label1": "myfirstlabel",
+                "label2": "otherlabel"
+            }
+        }
+    ]
+}
