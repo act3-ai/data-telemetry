@@ -26,22 +26,6 @@ Install the GO toolchain by any option:
 - `snap install go --classic`
 - `brew install go`
 
-Then run:
-
-```shell
-go env -w GOPRIVATE=git.act3-ace.com
-```
-
-Also make sure that you have a `~/.netrc` with your git.act3-ace.com credentials with a personal access token with at least read_api and read_repository access.  You may have already done this for access to your GIT private repositories without a password prompt.
-
-```txt
-machine git.act3-ace.com
-    login your-username
-    password your-personal-access-token
-```
-
-See [this](https://seankhliao.com/blog/12021-04-29-go-private-modules-in-gitlab/) for more information and troubleshooting private GitLab repositories with GO.
-
 ### SQLite Extension for VSCode (Optional)
 
 Install sqlite extension in VSCode with `code --install-extension alexcvzz.vscode-sqlite`.  If this does not work, set the Sqlite extension settings to DEBUG
