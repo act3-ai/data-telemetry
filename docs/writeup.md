@@ -772,7 +772,7 @@ bottles.
 
 The ACE Telemetry Server is developed and packaged similarly to other
 ACE team and ACT3 projects. The project is hosted in the ACT3 Gitlab
-instance at <https://gitlab.com/act3-ai/asce/data/telemetry>.
+instance at <https://git.act3-ace.com/ace/data/telemetry>.
 
 Issues are reported in the project, and development team members create
 merge requests for improvements to be merged into the main code. When
@@ -887,7 +887,7 @@ At the end of the build pipeline, three main products are created:
 The binary is available from the Releases page, accessible from the main
 repository page. The Docker container image is available from the
 repository's registry at
-<https://gitlab.com/act3-ai/asce/data/telemetry/container_registry>. The
+<https://git.act3-ace.com/ace/data/telemetry/container_registry>. The
 Helm chart is also available from the repository's registry.
 
 ## Technologies/Terms of Reference

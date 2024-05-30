@@ -231,7 +231,7 @@ func (a *WebApp) convertNotebook(ctx context.Context, artifact *db.PublicArtifac
 	defer os.RemoveAll(tmpDirPath)
 	err = copyFSToDir(a.ipynbFS, tmpDirPath)
 	if err != nil {
-		return nil, fmt.Errorf("creating ipynb templates temp directory: %w", err)
+		return nil, fmt.Errorf("populating ipynb templates temp directory: %w", err)
 	}
 
 	// TODO this wont work with assetFS

@@ -8,6 +8,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/notaryproject/notation-core-go/signature/cose"
 	"github.com/notaryproject/notation-core-go/signature/jws"
+	notaryreg "github.com/notaryproject/notation-go/registry"
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 )
@@ -16,7 +17,7 @@ const (
 	// CosignSignatureType is a mediatype associated with cosign-generated digital signatures.
 	CosignSignatureType = "dev.cosignproject.cosign/signature"
 	// NotarySignatureType is a mediatype associated with notary-generated digital signatures.
-	NotarySignatureType = "application/vnd.cncf.notary.payload.v1+json"
+	NotarySignatureType = notaryreg.ArtifactTypeNotation
 	// SignaturePayloadMediaType is the media type for cosign signature payloads.
 	SignaturePayloadMediaType = "application/vnd.dev.cosign.simplesigning.v1+json"
 	// AnnotationX509ChainThumbprint stores a certificate chain as a list of thumbprints. A manifest annotation key.

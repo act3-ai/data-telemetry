@@ -80,7 +80,9 @@
           </div>
           
         </form>
-        <img src="{{ $globals.Top }}www/static/img/bottle-attributes/description.svg"  class="bottle-attribute-icon" style="float: left; margin: 1em;" />
+        <a style="text-decoration: none; color: #FFFFFF;" href="#description-icon">
+          <img id="description-icon" src="{{ $globals.Top }}www/static/img/bottle-attributes/description.svg"  class="bottle-attribute-icon" style="float: left; margin: 1em;" />
+        </a>
         <p class="lead" style="white-space: pre-line;">{{ $.Bottle.Description }}</p>
         <div class="input-group my-4">
           <span type="text" class="form-control copy-bottle-digest" aria-label="Recipient's username"
@@ -308,9 +310,9 @@
       </div>
     </section>
     <section id="artifacts" class="mb-5">
-      <h4>
+      <h4 id="artifacts">
         <img src="{{ $globals.Top }}www/static/img/bottle-attributes/public-artifacts.svg"  class="bottle-attribute-icon" />
-        Artifacts
+        <a style="text-decoration: none; color: #FFFFFF;" href="#artifacts">Artifacts</a>
       </h4>
       <p class="text-muted">
         Associated files can be viewed and downloaded below
@@ -382,9 +384,9 @@
 
     <section id="parts" class="mb-5">
         <div id="parts" class="my-5">
-          <h4>
+          <h4 id="parts">
           <img src="{{ $globals.Top }}www/static/img/bottle-attributes/part.svg"  class="bottle-attribute-icon" />
-          Parts <span class="badge rounded-pill bg-dark">Size: {{ ByteSize $.TotalSize }}</span>
+          <a style="text-decoration: none; color: #FFFFFF;" href="#parts">Parts</a> <span class="badge rounded-pill bg-dark">Size: {{ ByteSize $.TotalSize }}</span>
           </h4>
           <p class="text-muted">
             These individual pieces make up the bottle. When pulling a bottle you can use the labels to form a selector
@@ -470,7 +472,7 @@
     <section id="lineage" class="mb-5">
       <div>
         <div class="row" style="margin: auto; padding-bottom: 1em;">
-          <h4 class="col">Lineage</h4>
+          <h4 id="lineage" class="col"><a style="text-decoration: none; color: #FFFFFF;" href="#lineage">Lineage</a></h4>
           <div class="col">
             <p>Ancestor Generations</p>
             <div class="btn-group">

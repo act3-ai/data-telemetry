@@ -105,12 +105,11 @@ linters-settings:
       - name: call-to-gc
       - name: import-shadowing
 
-
   goimports:
     # Put imports beginning with prefix after 3rd-party packages.
     # It's a comma-separated list of prefixes.
     # Default: ""
-    local-prefixes: git.act3-ace.com/ace
+    local-prefixes: gitlab.com/act3-ai
 
   wrapcheck:
     ignoreSigs:
@@ -136,7 +135,7 @@ linters-settings:
       - encoding/*
       - sigs.k8s.io/yaml
       - github.com/go-logr/logr
-      - git.act3-ace.com/* # Only catches things when they are imported
+      - gitlab.com/act3-ai/* # Only catches things when they are imported
 
   gocognit:
     min-complexity: 20
@@ -156,7 +155,7 @@ linters-settings:
 
     # Enforce using methods that accept a context.
     # Default: false
-    context-only: true
+    context: scope
 
     # Enforce using static values for log messages.
     # Default: false
@@ -180,12 +179,12 @@ issues:
   # exclude-use-default: false
 
   include:
-  # - EXC0001
-  - EXC0002
-  - EXC0005
-  - EXC0009
-  - EXC0011
-  - EXC0012
-  - EXC0013
-  - EXC0014
-  - EXC0015
+    # - EXC0001
+    - EXC0002
+    - EXC0005
+    - EXC0009
+    - EXC0011
+    - EXC0012
+    - EXC0013
+    - EXC0014
+    - EXC0015

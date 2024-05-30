@@ -23,6 +23,9 @@ spec:
         logs.act3-ace.io/jq: {{ .Files.Get "log.jq" | quote }}
       labels:
         {{- include "telemetry.selectorLabels" . | nindent 8 }}
+        {{- with .Values.extraPodLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -32,6 +35,8 @@ spec:
         - name: config
           configMap:
             name: {{ include "telemetry.fullname" . }}
+        - name: tmp-dir
+          emptyDir: {}
       serviceAccountName: {{ include "telemetry.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -133,6 +138,8 @@ spec:
             - name: config
               mountPath: /etc/ace/telemetry/
               readOnly: true
+            - name: tmp-dir
+              mountPath: /tmp
           ports:
             - name: http
               containerPort: 8100

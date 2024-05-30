@@ -12,7 +12,7 @@ tags:
     description: ""
     externalDocs:
       description: "Bottle docs"
-      url: "https://gitlab.com/act3-ai/asce/data/tool/-/blob/main/docs/datamodel.md"
+      url: "https://gitlab.com/act3-ai/asce/data/tool/-/blob/master/docs/datamodel.md"
   - name: "manifest"
     description: ""
   - name: "event"
@@ -227,7 +227,7 @@ paths:
             examples:
               bottleJSON:
                 summary: sample bottle JSON object
-                externalValue: 'https://gitlab.com/act3-ai/asce/data/telemetry/-/blob/main/testdata/bottle/bottle1.json.tmpl'
+                externalValue: 'https://gitlab.com/act3-ai/asce/data/telemetry/-/blob/master/testdata/bottle/bottle1.json.tmpl'
                 value: |
                   {
                       "apiVersion": "data.act3-ace.io/v1",

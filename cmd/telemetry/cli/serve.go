@@ -3,9 +3,8 @@ package cli
 import (
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/config"
-
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/actions"
+	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 )
 
 // NewServeCmd creates a new "serve" subcommand.

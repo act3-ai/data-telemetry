@@ -76,7 +76,7 @@ func NewWebApp(conf v1alpha1.WebApp, log *slog.Logger, version string) (*WebApp,
 
 	ipynbFS, err := fs.Sub(assetFS, "ipynb")
 	if err != nil {
-		a.log.Warn("could not get ipynbFS from assetDir", "msg", err.Error()) //nolint:sloglint
+		a.log.Warn("could not get ipynbFS from assetDir", "msg", err.Error())
 	}
 	a.ipynbFS = ipynbFS
 

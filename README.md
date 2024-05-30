@@ -1,5 +1,3 @@
-> :warning: This is prerelease software.
-
 # ACE Data Telemetry
 
 This telemetry server implements a longitudinal tracking system for ACE Data Bottles.  When `ace-dt bottle push` or `ace-dt bottle pull` is run it pushed the bottle (metadata and data) to the OCI registry that is provided.  In addition those commands also push the metadata to 0 or more telemetry servers configured in ace-dt's configuration file.  In this way the telemetry server can be used to discover and track data bottles.
@@ -40,7 +38,7 @@ In a shell call `make reload` to load data into the sqlite database.  Then run `
 
 Alternatively you can upload test data into a running server with `make upload`.
 
-Using the [VSCode REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) you can open the [test.http](test.http) to hit the REST API.
+Using the [VSCode REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) you can open the [test.http](testdata/test.http) to hit the REST API.
 
 You can select your database by creating a `config.yaml` file at the top level of the project, with the contents
 
@@ -101,7 +99,7 @@ We cannot use "sqlite browser" on ACE Hub since it is a desktop application.  As
 
 Run `make hub` to build and push the image.
 
-Then launch in ACE Hub using [zot.lion](https://hub.lion.act3-ace.ai/environments/0?replicas=1&image=zot.lion.act3-ace.ai/ace/data/telemetry/hub:latest&hubName=telemetry2&proxyType=normal&resources[cpu]=4&resources[memory]=8Gi&shm=64Mi&env[GIT_CLONE_URL]=https://gitlab.com/act3-ai/asce/data/telemetry.git) or [reg.git](https://hub.lion.act3-ace.ai/environments/0?replicas=1&image=reg.gitlab.com/act3-ai/asce/data/telemetry/hub:latest&hubName=telemetry2&proxyType=normal&resources[cpu]=4&resources[memory]=8Gi&shm=64Mi&env[GIT_CLONE_URL]=https://gitlab.com/act3-ai/asce/data/telemetry.git). <!-- markdownlint-disable-line MD034 -->
+Then launch in ACE Hub using [zot.lion](https://hub.lion.act3-ace.ai/environments/0?replicas=1&image=zot.lion.act3-ace.ai/ace/data/telemetry/hub:latest&hubName=telemetry2&proxyType=normal&resources[cpu]=4&resources[memory]=8Gi&shm=64Mi&env[GIT_CLONE_URL]=https://gitlab.com/act3-ai/asce/data/telemetry.git) or [reg.git](https://hub.lion.act3-ace.ai/environments/0?replicas=1&image=reg.git.act3-ace.com/ace/data/telemetry/hub:latest&hubName=telemetry2&proxyType=normal&resources[cpu]=4&resources[memory]=8Gi&shm=64Mi&env[GIT_CLONE_URL]=https://gitlab.com/act3-ai/asce/data/telemetry.git). <!-- markdownlint-disable-line MD034 -->
 
 Make sure you set your NETRC envfile to get access to GIT.  Also set the default repo for skaffold with `skaffold config set default-repo zot.lion.act3-ace.ai`.  Make sure your KUBECONFIG is in the environment and set to the correct namespace.  Ensure helm has the bitnami repo with `helm repo add bitnami https://charts.bitnami.com/bitnami`. Then you can run `skaffold dev -p hub` and it will build  in the a pod running kaniko and then deploy with helm.
 
@@ -207,7 +205,7 @@ To make it easier for an operations team member to view logs we have a kubectl p
 
 ## Support
 
-- **[Troubleshooting FAQ](docs/troubleshooting-faq.md)**: consult list of frequently asked questions and their answers.
+<!-- - **[Troubleshooting FAQ](docs/troubleshooting-faq.md)**: consult list of frequently asked questions and their answers. -->
 - **Mattermost [channel](https://chat.git.act3-ace.com/act3/channels/devops)**: create a post in the Telemetry channel for assistance.
-- **[Web Browser](https://chat.git.act3-ace.com/act3/channels/devops)**: create an issue in GitLab.
+- **[Web Browser](https://gitlab.com/act3-ai/asce/data/telemetry/-/issues)**: create an issue in GitLab.
 <!-- TODO reinstate once operational - **Create a GitLab issue by [email](mailto:incoming+ace-data-telemetry-518-issue-@mail.act3-ace.com)** -->

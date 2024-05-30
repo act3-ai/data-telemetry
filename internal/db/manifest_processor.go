@@ -10,9 +10,8 @@ import (
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-
 	"gitlab.com/act3-ai/asce/data/schema/pkg/validation"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
 )
