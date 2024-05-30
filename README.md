@@ -1,3 +1,5 @@
+> :warning: This is prerelease software.
+
 # ACE Data Telemetry
 
 This telemetry server implements a longitudinal tracking system for ACE Data Bottles.  When `ace-dt bottle push` or `ace-dt bottle pull` is run it pushed the bottle (metadata and data) to the OCI registry that is provided.  In addition those commands also push the metadata to 0 or more telemetry servers configured in ace-dt's configuration file.  In this way the telemetry server can be used to discover and track data bottles.
@@ -209,3 +211,7 @@ To make it easier for an operations team member to view logs we have a kubectl p
 - **Mattermost [channel](https://chat.git.act3-ace.com/act3/channels/devops)**: create a post in the Telemetry channel for assistance.
 - **[Web Browser](https://gitlab.com/act3-ai/asce/data/telemetry/-/issues)**: create an issue in GitLab.
 <!-- TODO reinstate once operational - **Create a GitLab issue by [email](mailto:incoming+ace-data-telemetry-518-issue-@mail.act3-ace.com)** -->
+
+---
+
+Approved for public release: distribution unlimited. Case Number: AFRL-2024-1786
