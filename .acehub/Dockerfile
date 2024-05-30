@@ -97,5 +97,3 @@ RUN go install github.com/haya14busa/goplay/cmd/goplay@latest
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
 RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 RUN go install golang.org/x/tools/gopls@latest
-
-RUN go env -w GOPRIVATE=git.act3-ace.com

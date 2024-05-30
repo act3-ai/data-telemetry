@@ -1,8 +1,6 @@
 builds:
   - id: telemetry
     main: ./cmd/telemetry
-    env:
-      - GOPRIVATE=git.act3-ace.com
     flags:
       - -trimpath
     ldflags:
