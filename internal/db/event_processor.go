@@ -8,9 +8,8 @@ import (
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 )
 
 // EventProcessorVersion is the current version of the processor code.  This is incremented after each measurable change to the EventProcessor().

@@ -1,9 +1,9 @@
 module gitlab.com/act3-ai/asce/data/telemetry
 
-go 1.22.2
+go 1.22.3
 
 require (
-	code.cloudfoundry.org/bytefmt v0.0.0-20240506165048-60382360e736
+	code.cloudfoundry.org/bytefmt v0.0.0-20240522170716-2951b8ebd80e
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-chi/chi/v5 v5.0.12
@@ -17,15 +17,15 @@ require (
 	github.com/notaryproject/notation-go v1.1.0
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.0
-	github.com/prometheus/client_golang v1.19.0
+	github.com/prometheus/client_golang v1.19.1
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
-	gitlab.com/act3-ai/asce/data/schema v0.0.0-20240508200823-44749c8de09a
-	gitlab.com/act3-ai/asce/go-common v0.0.0-20240508194511-8205ae7d0e17
+	gitlab.com/act3-ai/asce/data/schema v0.0.0-20240515135820-820f65b6a194
+	gitlab.com/act3-ai/asce/go-common v0.0.0-20240515134838-75dff81e3d47
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.10
-	k8s.io/apimachinery v0.30.0
+	k8s.io/apimachinery v0.30.1
 	sigs.k8s.io/yaml v1.4.0
 )
 
@@ -44,7 +44,7 @@ require (
 	github.com/fxamacker/cbor/v2 v2.6.0 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.5 // indirect
 	github.com/go-ldap/ldap/v3 v3.4.6 // indirect
-	github.com/go-logr/logr v1.4.1 // indirect
+	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect

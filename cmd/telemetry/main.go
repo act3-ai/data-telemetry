@@ -33,7 +33,7 @@ func main() {
 	// add embedded documentation command
 	embeddedDocs, err := docs.Embedded(root)
 	if err != nil {
-		log.Error("could not embed docs", "msg", err.Error()) //nolint:sloglint
+		log.Error("could not embed docs", "msg", err.Error())
 		os.Exit(1)
 	}
 

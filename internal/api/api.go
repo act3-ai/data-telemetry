@@ -8,9 +8,8 @@ import (
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-
 	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
 )

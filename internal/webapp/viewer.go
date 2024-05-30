@@ -78,7 +78,7 @@ func (a *WebApp) GetViewerSpecList(bottle db.Bottle) ViewerSpecList {
 		v := v1alpha1.ViewerSpec{}
 		if err := json.Unmarshal([]byte(annotation.Value), &v); err != nil {
 			// eat errors
-			a.log.Error("Unable to decode viewer specification, skipping", "key", annotation.Key, "value", annotation.Value, "error", err) //nolint:sloglint
+			a.log.Error("Unable to decode viewer specification, skipping", "key", annotation.Key, "value", annotation.Value, "error", err)
 			continue
 		}
 		v.Name = path.Base(annotation.Key)
@@ -99,7 +99,7 @@ func (a *WebApp) FindViewers(specs []v1alpha1.ViewerSpec, bottle digest.Digest, 
 
 			u, err := getViewerURL(spec, hub, bottle, partSelectors, artifact)
 			if err != nil {
-				log.Error("could not get viewer URL", "error", err) //nolint:sloglint
+				log.Error("could not get viewer URL", "error", err)
 				continue
 			}
 
@@ -107,11 +107,11 @@ func (a *WebApp) FindViewers(specs []v1alpha1.ViewerSpec, bottle digest.Digest, 
 			if log.Enabled(context.Background(), slog.LevelError) {
 				decoded, err := url.QueryUnescape(u.RawQuery)
 				if err != nil {
-					a.log.Error("Unable to decode query string", "error", err) //nolint:sloglint
+					a.log.Error("Unable to decode query string", "error", err)
 					continue
 				}
 
-				log.Info("Viewer Link", "encoded", u.RawQuery, "decoded", decoded) //nolint:sloglint
+				log.Info("Viewer Link", "encoded", u.RawQuery, "decoded", decoded)
 			}
 
 			viewers = append(viewers, ViewerLink{

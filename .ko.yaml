@@ -1,12 +1,9 @@
 builds:
-- id: telemetry
-  main: ./cmd/telemetry
-  env:
-  - GOPRIVATE=git.act3-ace.com
-  flags:
-  - -trimpath
-  ldflags:
-  - -X main.version={{.Env.VERSION}}
-  - -s -w # strip symbols (make the binary smaller)
-  - -extldflags "-static"
-  
+  - id: telemetry
+    main: ./cmd/telemetry
+    flags:
+      - -trimpath
+    ldflags:
+      - -X main.version={{.Env.VERSION}}
+      - -s -w  # strip symbols (make the binary smaller)
+      - -extldflags "-static"

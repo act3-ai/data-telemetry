@@ -12,10 +12,9 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
-
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 	"gitlab.com/act3-ai/asce/data/schema/pkg/selectors"
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
 )

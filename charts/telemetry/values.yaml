@@ -6,7 +6,7 @@ image:
   repository: reg.git.act3-ace.com/ace/data/telemetry
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.19.2"
+  tag: "v0.20.1"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -20,9 +20,10 @@ serviceAccount:
   name: ""
 podAnnotations: {}
 podSecurityContext: {}
+extraPobLabels: {}
 # fsGroup: 2000
 
-# Configure arbitrary envoironment variables for the telemetry container
+# Configure arbitrary environment variables for the telemetry container
 # key names are automatically converted to proper environment variable case/format
 environment: {}
 #  anyEnvVariable: 1234 # will become ANY_ENV_VARIABLE=1234
@@ -33,8 +34,8 @@ securityContext:
       - ALL
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
-  runAsUser: 12345
-  runAsGroup: 12345
+  runAsUser: 65532
+  runAsGroup: 65532
   runAsNonRoot: true
 service:
   type: ClusterIP
@@ -72,8 +73,8 @@ pgchecker:
   securityContext:
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
-    runAsUser: 12345
-    runAsGroup: 12345
+    runAsUser: 65532
+    runAsGroup: 65532
     runAsNonRoot: true
   # Resource requests and limits for the pgchecker container
   resources:

@@ -20,10 +20,9 @@ import (
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 
+	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-
-	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
@@ -493,7 +492,7 @@ func writeRecordToCsv(log *slog.Logger, result types.ListResultEntry, dir string
 	// We just pick the first one (these are sorted by the server)
 	primaryDigest := result.Digests[0]
 
-	log.Info("Saving", "digest", primaryDigest) //nolint:sloglint
+	log.Info("Saving", "digest", primaryDigest)
 
 	// by default there is a ":" in the name but that is not a valid filename on some platforms (Windows)
 	filename := primaryDigest.Algorithm().String() + "-" + primaryDigest.Encoded()

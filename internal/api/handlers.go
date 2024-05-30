@@ -13,6 +13,8 @@ import (
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
+	// _ "github.com/opencontainers/go-digest/blake3" // Requires master of go-digest (not version v1.0.0).
+
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 

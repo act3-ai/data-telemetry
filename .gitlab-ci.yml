@@ -1,143 +1,143 @@
-# include:
-#   - project: devsecops/cicd/pipeline
-#     ref: v19.0.13
-#     file: main.yml
+include:
+  - project: devsecops/cicd/pipeline
+    ref: v19.0.18
+    file: main.yml
 
-# variables:
-#   CHART_LOCATION: local
-#   OCI_CHART_REG: "true"
-#   CHART_NAME: telemetry
-#   LOCAL_CHART_DIR: charts
+variables:
+  CHART_LOCATION: local
+  OCI_CHART_REG: "true"
+  CHART_NAME: telemetry
+  LOCAL_CHART_DIR: charts
 
-#   # HACK for strange GOLANG issue (v0.10.0 does not install properly in this project)
-#   # CONTROLLER_GEN_VERSION: v0.8.0
+  # HACK for strange GOLANG issue (v0.10.0 does not install properly in this project)
+  # CONTROLLER_GEN_VERSION: v0.8.0
 
-# golang unit test:
-#   variables:
-#     KUBERNETES_CPU_REQUEST: 4
-#     KUBERNETES_CPU_LIMIT: 6
-#   before_script:
-#   - !reference [.go_create_netrc, script]
-#   - go run ./cmd/telemetry template ./testdata
+golang unit test:
+  variables:
+    KUBERNETES_CPU_REQUEST: 4
+    KUBERNETES_CPU_LIMIT: 6
+  before_script:
+    - !reference [.go_create_netrc, script]
+    - go run ./cmd/telemetry template ./testdata
 
-# functional test:
-#   extends: golang unit test
-#   variables:
-#     POSTGRES_DB: testdb
-#     POSTGRES_USER: testUser
-#     POSTGRES_PASSWORD: testPassword
-#     POSTGRES_HOST_AUTH_METHOD: trust
-#   services:
-#     - postgres:16-alpine
-#     # We should be testing the built image as a service but we do not build the image.  See https://git.act3-ace.com/devsecops/cicd/pipeline/blob/28170656832be8e8bb75c347c8f2d71f7170adf5/golang/service.yml
-#     # - $CI_REGISTRY_IMAGE:ci-$CI_PIPELINE_ID
-#   script:
-#   - !reference [.go_create_netrc, script]
-#   - export ACE_TELEMETRY_DSN=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB
-#   - go run ./cmd/telemetry serve &
-#   - sleep 5
-#   - go run ./cmd/telemetry client upload ./testdata http://localhost:8100 --all
-#   - mkdir -p testdata-download
-#   - go run ./cmd/telemetry client download testdata-download http://localhost:8100 --all --from-latest
-#   - hack/test-webapp.sh http://localhost:8100
-#   coverage: null
-#   artifacts: null
+functional test:
+  extends: golang unit test
+  variables:
+    POSTGRES_DB: testdb
+    POSTGRES_USER: testUser
+    POSTGRES_PASSWORD: testPassword
+    POSTGRES_HOST_AUTH_METHOD: trust
+  services:
+    - postgres:16-alpine
+    # We should be testing the built image as a service but we do not build the image.  See https://git.act3-ace.com/devsecops/cicd/pipeline/blob/28170656832be8e8bb75c347c8f2d71f7170adf5/golang/service.yml
+    # - $CI_REGISTRY_IMAGE:ci-$CI_PIPELINE_ID
+  script:
+    - !reference [.go_create_netrc, script]
+    - export ACE_TELEMETRY_DSN=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB
+    - go run ./cmd/telemetry serve &
+    - sleep 5
+    - go run ./cmd/telemetry client upload ./testdata http://localhost:8100 --all
+    - mkdir -p testdata-download
+    - go run ./cmd/telemetry client download testdata-download http://localhost:8100 --all --from-latest
+    - hack/test-webapp.sh http://localhost:8100
+  coverage: null
+  artifacts: null
 
-# build binaries:
-#   extends: .go build
-#   variables:
-#     EXECUTABLE: telemetry
-#   image: docker.io/library/golang:1.22.2-bookworm 
-#   before_script:
-#     - apt-get update
-#     - apt-get install unzip
-#     - make deps
-#   parallel:
-#     matrix:
-#       - GOOS:
-#         - linux
-#         - windows
-#         - darwin
-#         GOARCH:
-#         - amd64
-#         - arm64
+build binaries:
+  extends: .go build
+  variables:
+    EXECUTABLE: telemetry
+  image: docker.io/library/golang:1.22.3-bookworm 
+  before_script:
+    - apt-get update
+    - apt-get install unzip
+    - make deps
+  parallel:
+    matrix:
+      - GOOS:
+          - linux
+          - windows
+          - darwin
+        GOARCH:
+          - amd64
+          - arm64
 
-# build fips linux/amd64:
-#   extends: .go build fips
-#   variables:
-#     EXECUTABLE: telemetry
+build fips linux/amd64:
+  extends: .go build fips
+  variables:
+    EXECUTABLE: telemetry
 
-# build fips linux/arm64:
-#   extends: .go build fips
-#   variables:
-#     EXECUTABLE: telemetry
-#     GOARCH: arm64
-#     CC: aarch64-linux-gnu-gcc
-#   before_script:
-#   - apt update
-#   - apt install -y gcc-aarch64-linux-gnu
+build fips linux/arm64:
+  extends: .go build fips
+  variables:
+    EXECUTABLE: telemetry
+    GOARCH: arm64
+    CC: aarch64-linux-gnu-gcc
+  before_script:
+    - apt update
+    - apt install -y gcc-aarch64-linux-gnu
 
-# acehub image:
-#   extends:
-#     - build tagged image
-#   variables:
-#     CONTEXT: .acehub/
-#     DESTINATION_PATH: /hub
+acehub image:
+  extends:
+    - build tagged image
+  variables:
+    CONTEXT: .acehub/
+    DESTINATION_PATH: /hub
 
-# slim image:
-#   extends:
-#     - build tagged image
-#   variables:
-#     TARGET_STAGE: prod
-#     DESTINATION_PATH: /slim
-#   needs:
-#     - build binaries
-#     - get version list
+slim image:
+  extends:
+    - build tagged image
+  variables:
+    TARGET_STAGE: prod
+    DESTINATION_PATH: /slim
+  needs:
+    - build binaries
+    - get version list
 
-# build image:
-#   needs:
-#     - build binaries
+build image:
+  needs:
+    - build binaries
 
-# # depending on "build binaries" could be a problem if the runner is using a different version of libc
-# build tagged image:
-#   needs:
-#     - build binaries
-#     - get version list
+# depending on "build binaries" could be a problem if the runner is using a different version of libc
+build tagged image:
+  needs:
+    - build binaries
+    - get version list
 
-# build with ko:
-#   variables:
-#     KUBERNETES_CPU_REQUEST: 4
-#     KUBERNETES_CPU_LIMIT: 8
-#     KUBERNETES_MEMORY_REQUEST: 16Gi
-#     KUBERNETES_MEMORY_LIMIT: 16Gi
+build with ko:
+  variables:
+    KUBERNETES_CPU_REQUEST: 4
+    KUBERNETES_CPU_LIMIT: 8
+    KUBERNETES_MEMORY_REQUEST: 16Gi
+    KUBERNETES_MEMORY_LIMIT: 16Gi
 
-# generate docs:
-#   stage: Semantic Release
-#   rules:
-#     - if: '$CI_COMMIT_TITLE !~ /^chore\(release\):(.*)$/ && $DEP_CHECK != "true"'
-#   image: !reference [.go build, image]
-#   script:
-#   - if [[ $NETRC ]]; then cp $NETRC ~/.netrc; else echo "machine git.act3-ace.com
-#       login gitlab-ci-token password $CI_JOB_TOKEN" > ~/.netrc; fi
-#   - go install github.com/mikefarah/yq/v4@latest
-#   - yq -V
-#   - ci-dist/telemetry/linux/amd64/bin/telemetry template ./testdata
-#   - make gendoc apidoc swagger # manpage
-#   artifacts:
-#     paths:
-#     - docs
-#     - swagger.yml
-#     when: on_success
+generate docs:
+  stage: Semantic Release
+  rules:
+    - if: '$CI_COMMIT_TITLE !~ /^chore\(release\):(.*)$/ && $DEP_CHECK != "true"'
+  image: !reference [.go build, image]
+  script:
+    - if [[ $NETRC ]]; then cp $NETRC ~/.netrc; else echo "machine git.act3-ace.com
+        login gitlab-ci-token password $CI_JOB_TOKEN" > ~/.netrc; fi
+    - go install github.com/mikefarah/yq/v4@latest
+    - yq -V
+    - ci-dist/telemetry/linux/amd64/bin/telemetry template ./testdata
+    - make gendoc apidoc swagger # manpage
+  artifacts:
+    paths:
+      - docs
+      - swagger.yml
+    when: on_success
     
-# # This dependency is so we can run "telemetry util gendocs" from release.sh
-# semantic release:
-#   image:
-#     name: reg.git.act3-ace.com/devsecops/cicd/images/ci-go-semantic
-#   before_script:
-#   - !reference [.go_create_netrc, script]
-#   # - !reference [semantic release, before_script]
-#   - git config --global --add safe.directory /builds/$CI_PROJECT_PATH
-#   dependencies: 
-#     - generate docs
-#   needs:
-#     - generate docs
+# This dependency is so we can run "telemetry util gendocs" from release.sh
+semantic release:
+  image:
+    name: reg.git.act3-ace.com/devsecops/cicd/images/ci-go-semantic
+  before_script:
+    - !reference [.go_create_netrc, script]
+    # - !reference [semantic release, before_script]
+    - git config --global --add safe.directory /builds/$CI_PROJECT_PATH
+  dependencies: 
+    - generate docs
+  needs:
+    - generate docs

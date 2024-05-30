@@ -7,10 +7,9 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 
+	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-
-	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/app"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"

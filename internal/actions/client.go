@@ -7,11 +7,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"k8s.io/apimachinery/pkg/runtime"
 
+	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
-
-	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
