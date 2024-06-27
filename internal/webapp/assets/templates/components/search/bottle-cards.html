@@ -29,7 +29,6 @@
 </div>
 
 <div class="row align-items-center" style="margin-top: 1em; margin-bottom: 1em;">
-<h4 class="col-1 offset-5 me-auto" style="text-align: center;">Page {{ $.Values.Params.Page }}</h4>
 {{ if (gt (len $CommonLabels) 0) }}
 <div class="col-4 offset-3">
     <h5>Common Labels</h5>
@@ -43,9 +42,6 @@
 {{ end }}
 </div>
 {{ else }}
-<div class="row align-items-center" style="margin-top: 1em; margin-bottom: 1em;">
-    <h4 class="col-3 offset-4" style="text-align: center;">End of results</h4>
-</div>
 {{ end }}
 
 {{ range $index, $entry := .Values.Entries }}
@@ -57,8 +53,9 @@
     hx-indicator="#bottle-cards-spinner"
     {{ end }}
 >
-    <div class="card {{ if .IsDeprecated }}border-warning {{ end }}h-100">
+    <div class="bottle-card card {{ if .IsDeprecated }}border-warning {{ end }}h-100" >
         <div class="card-body">
+        <a class="stretched-link" href="bottle.html?digest={{ index $entry.Digests 0 }}"> </a>
             {{/*
             <h5 class="card-title">Bottle</h5>
             */}}
@@ -74,6 +71,7 @@
                     class="bottle-attribute-icon-bottle" />
                 {{ end }}
             </div>
+            {{ if (gt (len $entry.Authors) 0) }}
             {{ with $entry.Authors }}
             <div class="my-1 fw-light">
                 <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/authors.svg" alt="authors"
@@ -82,14 +80,18 @@
                 $i}},{{end}}{{ .Name }}{{ end }}
             </div>
             {{ end }}
+            {{ end }}
+            {{ $uniqueLabels := RemoveLabels $CommonLabels $entry.Labels }}
+            {{ if (gt (len $uniqueLabels) 0) }}
             <div class="my-1">
                 <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/labels.svg" alt="labels"
                     class="bottle-attribute-icon" />
-                {{ range (RemoveLabels $CommonLabels $entry.Labels) }}
-                <!-- <li>{{ .Key }}={{ .Value }}</li> -->
+                {{ range $uniqueLabels }}
                 <span class="badge rounded-pill bg-label">{{ .Key }}={{ .Value }}</span>
                 {{ end }}
             </div>
+            {{ end }}
+            {{ if (gt (len $entry.Description) 0) }}
             <div class="overflow-hidden line-clamp mb-2">
                 <div>
                     <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" alt="description"
@@ -101,6 +103,8 @@
                     </p>
                 </div>
             </div>
+            {{ end }}
+            {{ if (gt (len $entry.Metrics) 0) }}
             <div>
                 <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" alt="metrics"
                 class="bottle-attribute-icon" />
@@ -108,9 +112,7 @@
             <span class="badge rounded-pill bg-metric">{{ .Name }}={{ .Value }}</span>
             {{ end }} 
             </div>
-            <div class="mt-auto d-grid gap-2 d-md-block">
-                <a id="bottle_details_button" class="btn btn-primary" href="bottle.html?digest={{ index $entry.Digests 0 }}">Bottle Details</a>
-            </div>
+            {{ end }}
             <div style="display: flex; justify-content: space-between;">
                 <div class="my-1 card-subtitle text-muted" style="max-width: 80%;">
                     <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/pull.svg" alt="bottle pulls"
@@ -131,6 +133,11 @@
         <!-- <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg"  class="bottle-attribute-icon" /> -->
     </div>
 </div>
+<style>
+.bottle-card:hover {
+    border-color: var(--primary) !important;
+}
+</style>
 {{ end }}
 {{ end }}
 {{ end }}
