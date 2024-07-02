@@ -110,7 +110,9 @@ db: {}
 # or construct your own DSN
 # NOTE: setting this will override any other database connection setting
 # dsn: "file:test.db"
-# Configure the webapp.  See the Configuration struct in pkg/webapp/webapp.go for more details.
+# Configure the webapp.  See the Configuration struct in pkg/webapp/webapp.go for more details
+# existingSecret: # the name of an existing secret that contains the db password
+# passwordKeyName  # the key in the existing secret that contains the db password
 webapp: {}
 # acehubs:
 # - name: Lion

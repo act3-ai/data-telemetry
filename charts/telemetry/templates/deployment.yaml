@@ -115,8 +115,8 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "telemetry.db.fullname" . }}
-                  key: db-password
+                  name: {{ .Values.db.existingSecret }}
+                  key: {{ .Values.db.passwordKeyName }}                
             {{- end }}
           {{- end }}
           {{- if .Values.db.dsn }}
