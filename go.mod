@@ -6,7 +6,7 @@ require (
 	code.cloudfoundry.org/bytefmt v0.0.0-20240730181512-d61d30bca0a4
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/aohorodnyk/mimeheader v0.0.6
-	github.com/go-chi/chi/v5 v5.0.14
+	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gomarkdown/markdown v0.0.0-20240730141124-034f12af3bf6
