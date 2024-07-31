@@ -3,7 +3,7 @@ module gitlab.com/act3-ai/asce/data/telemetry
 go 1.22.5
 
 require (
-	code.cloudfoundry.org/bytefmt v0.0.0-20240622173923-7a5a4f8651ac
+	code.cloudfoundry.org/bytefmt v0.0.0-20240730181512-d61d30bca0a4
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-chi/chi/v5 v5.0.14
@@ -78,11 +78,11 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/veraison/go-cose v1.1.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	golang.org/x/crypto v0.24.0 // indirect
+	golang.org/x/crypto v0.25.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
