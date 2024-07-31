@@ -1,8 +1,8 @@
 {{ define "bottle-search-bar" }}
 <div class="row border border-secondary fade-in fade-out" id="bottle-search-bar">
     <div id="total-search-results" class="row" style="margin-top: 1em; margin-left: 1em;"> </div>
-    <form hx-get="{{ $.Globals.Top }}www/search" hx-swap="outerHTML swap:1s" hx-target="#bottle-search-bar"
-        hx-include=".bottle-search-field" hx-indicator="#bottle-cards-spinner"
+    <form id="search-form" hx-get="{{ $.Globals.Top }}www/search" hx-swap="outerHTML swap:1s"
+        hx-target="#bottle-search-bar" hx-include=".bottle-search-field" hx-indicator="#bottle-cards-spinner"
         hx-trigger="submit,onPillRemove from:#search-pill-list,change from:#show-deprecated-checkbox"
         hx-on:htmx:before-request="window.scrollTo({ top: 0, behavior: 'smooth' });">
         <div class=" input-group input-group-sm p-3 ">
@@ -11,13 +11,16 @@
                 Search Filters
             </button>
             <ul id="search-filter-dropdown-list" class="dropdown-menu dropdown-menu-dark"
-                style="padding-left: 0 !important;">
+                style="padding-left: 0 !important; z-index: 1021;">
                 <li><a id="sf-bottle" class="dropdown-item" onclick="selectSearchFilter(this)">
                         <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/bottle.svg" />
                         Bottle</a></li>
                 <li><a id="sf-label" class="dropdown-item" onclick="selectSearchFilter(this)">
                         <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/label.svg" />
                         Label Selector</a></li>
+                <li><a id="sf-metric" class="dropdown-item" onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" />
+                        Metric</a></li>
                 <li><a id="sf-author" class="dropdown-item {{ if gt (len .Values.Params.Author) 0 }} disabled {{ end }}"
                         onclick="selectSearchFilter(this)">
                         <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/author.svg" />
@@ -58,9 +61,9 @@
                 <li><a id="sf-part" class="dropdown-item" onclick="selectSearchFilter(this)">
                         <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/part.svg" />
                         Part</a></li>
-                 <li><a id="sf-bottle-repository" class="dropdown-item" onclick="selectSearchFilter(this)">
-                    <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/database-svg.svg" />
-                    Bottle Repository</a></li>
+                <li><a id="sf-bottle-repository" class="dropdown-item" onclick="selectSearchFilter(this)">
+                        <img class="pe-2" src="{{ $.Globals.Top }}www/static/img/bottle-attributes/database-svg.svg" />
+                        Bottle Repository</a></li>
             </ul>
             <input id="search-text" class="col p-2 bottle-search-field" type="text"
                 placeholder="Select a search filter to begin" />
@@ -77,24 +80,15 @@
             <button type="submit" class="btn text-lg btn-primary p-2">
                 <i class="bi bi-search h4"></i>
             </button>
+            <button class="btn text-lg btn-danger p-2" onclick="resetSearch();">
+                <i class="bi bi-x-octagon-fill h4"></i>
+            </button>
         </div>
         <div id="bottle-search-pills">
             {{ template "bottle-search-pills" . }}
         </div>
         {{ if (gt (len .Values.Errors) 0) }}
-        <div class="alert alert-danger" role="alert" style="margin-top: 1em; margin-bottom: 1em;">
-            <h5>Try Again?</h5>
-            <div>
-                There was an issue with the search criteria:
-            </div>
-            <ul>
-                {{ with splitList "\n" .Values.Errors }}
-                {{ range .}}
-                <li>{{ . }}</li>
-                {{ end }}
-                {{ end }}
-            </ul>
-        </div>
+        {{ template "error-message" . }}
         {{ end }}
     </form>
 </div>
@@ -107,6 +101,7 @@
 
         const dropdownMap = new Map([
             ["sf-bottle", {formName: "bottle", placeholderText: "Bottle hash (ex. sha256:1c62b7c436992270b5ac7fc683debef0bbf461fe296d85d823ffc18f68dae33d)"}],
+            ["sf-metric", {formName: "metric", placeholderText: "Metric Filter (ex. learning-loss or learning-loss>0.15 or metric<3.14159)"}],
             ["sf-label", {formName: "label-selector", placeholderText: "Label Selector (ex. project=COACH or learning-rate=0.005 or testing!=true)"}],
             ["sf-author", {formName: "author", placeholderText: "Name (ex. Jane Doe or Jon Doe)"}],
             ["sf-description", {formName: "description", placeholderText: "Any part of a bottle's description"}],
@@ -131,6 +126,32 @@
         for (var i = 0, len = searchFilterDropdownListItems.length; i < len; i++) {
             searchFilterDropdownListItems[i].classList.remove("active");
         }
+    }
+
+    function removeSearchFilter(filterValue) {
+        var searchPills = [...document.getElementById("search-pill-list").children];
+        searchPills.forEach((sp) => {
+            if (sp.textContent.trim() == filterValue) {
+                sp.getElementsByTagName("i")[0].click();
+            }
+        });
+    }
+
+    function addSearchFilter(filterType, filterValue) {
+        var dropdownOptions = [...document.getElementById("search-filter-dropdown-list").children]
+        dropdownOptions.forEach((option) => {
+            var optionButton = option.getElementsByTagName("a")[0];
+            if (optionButton.id.includes(filterType)) {
+                optionButton.click();
+                document.getElementById("search-text").value = filterValue;
+                document.getElementById("search-form").submit();
+            }
+        });
+    }
+
+    function resetSearch() {
+        var urlParams = new URLSearchParams();
+        window.location.search = urlParams;
     }
 </script>
 

@@ -1,0 +1,207 @@
+{{ define "bottle-table"}}
+{{ if (eq .Values.Params.Page 0) }}
+<div id="bottle-table" class="container" style="overflow-x: auto;">
+  <div class="d-flex">
+    <div id="metric-filter-dropdown" class="col-3 justify-content-center input-group-sm p-3 "
+      hx-get="{{ $.Globals.Top }}www/search/metric/dropdown" hx-swap="innerHTML" hx-trigger="load"></div>
+    <div id="common-label-list" hx-get="{{ $.Globals.Top }}www/search/label/list" hx-swap="innerHTML" hx-trigger="load">
+    </div>
+  </div>
+  <hr />
+  <div class="row sticky-top flex-nowrap" style="align-items: center; background-color: #212121;">
+    <h4 class="col-1 text-center">View</h4>
+    <h4 class="col-4 text-center">Labels</h4>
+    {{ range $index, $labelParam := $.Values.Params.LabelSelectors }}
+    <span class="col-3 text-center">
+      {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelParam "" ) }} <span
+        class="badge rounded-pill bg-label label-pill col justify-content-center" style="max-width: 8rem;"
+        title="{{ . }}">
+        {{ . | abbrev 20 }}
+        {{ end }}
+        <i class="bi bi-x fs-3" style="vertical-align: middle;"
+          onclick='this.dispatchEvent(new CustomEvent("removeSearchFilter", { bubbles: true, detail: { "filterValue" : {{ $labelParam }} } }));'>
+        </i>
+    </span>
+    </span>
+    {{ end }}
+    {{ range $index, $metricParam := $.Values.Params.Metrics }}
+    <span class="col-3 text-center">
+      {{ if (eq $.Values.Params.SortByMetric $metricParam) }}
+      {{ if $.Values.Params.MetricSortAscending }}
+      <button class="btn btn-primary" onclick="onMetricSort(this, {{ $metricParam }}, false);">
+        <i class="bi bi-sort-numeric-down fs-5"></i>
+      </button>
+      {{ else }}
+      <button class="btn btn-primary" onclick="onMetricSort(this, {{ $metricParam }}, true);">
+        <i class="bi bi-sort-numeric-up fs-5"></i>
+      </button>
+      {{ end }}
+      {{ else }}
+      <button class="btn btn-secondary" onclick="onMetricSort(this, {{ $metricParam }}, true);">
+        <i class="bi bi-filter fs-5"></i>
+      </button>
+      {{ end }}
+      {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $metricParam "" ) }} <span
+        class="badge rounded-pill bg-metric metric-pill col justify-content-center" style="max-width: 8rem;"
+        title="{{ . }}">
+        {{ . | abbrev 20 }}
+        <i class="bi bi-x fs-3" style="vertical-align: middle;"
+          onclick='this.dispatchEvent(new CustomEvent("removeSearchFilter", { bubbles: true, detail: { "filterValue" : {{ $metricParam }} } }));'>
+        </i>
+    </span>
+    </span>
+    {{ end }}
+    {{ end }}
+  </div>
+  {{ end }}
+  <div id="metric-table-accordion" class="accordion accordion-flush" style="margin: 2px 0 2px 0;">
+    {{ range $index, $entry := .Values.Entries}}
+    <div class="accordion-item" id="accordion{{$index}}" {{ if eq (len $.Values.Entries) (add1 $index) }}
+      hx-get="{{ $.Globals.Top }}www/search/bottle/table?page={{ add1 $.Values.Params.Page }}" hx-trigger="revealed"
+      hx-swap="afterend" {{ end }}>
+      <div id="accordion-header{{$index}}"
+        class="accordion-header position-relative row align-items-center flex-nowrap">
+        <h4 class="col-1 justify-content-center">
+          <a class="col btn btn-primary position-relative" href="bottle.html?digest={{ index .Digests 0 }}"
+            style="z-index: 2;">
+            <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/bottle.svg"
+              class="bottle-attribute-icon-bottle" />
+          </a>
+        </h4>
+        <div class="col-4 justify-content-center" id="labels"
+          style="display: grid; grid-template-columns: max-content max-content; margin: .5em;">
+          {{ $count := 0 }}
+          {{ range $index, $entryLabel := $entry.Labels }}
+
+          {{ $isParam := false }}
+          {{ range $j, $labelSelector := $.Values.Params.LabelSelectors }}
+            {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelSelector "" ) }}
+              {{ if eq . $entryLabel.Key }}
+                {{ $isParam = true }}
+                {{ break }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          {{ if $isParam }}
+            {{ continue }}
+          {{ else }}
+            {{ $count = add1 $count }}
+          {{ end }}
+
+          {{ if (lt $count 6) }}
+          <span id="pill" style="max-width: 10rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+            class="badge rounded-pill bg-label m-1">
+            {{ .Key }} = {{ .Value}}
+          </span>
+          {{ else if (eq $index 6) }}
+          <span id="pill" style="max-width: 10rem; background-color: var(--bs-warning);"
+            class="badge rounded-pill bg-label m-1">
+            + {{ sub (len $entry.Labels) 5 }} more
+          </span>
+          {{ end }}
+          {{ end }}
+        </div>
+        {{ range $lsIndex, $labelSelector := $.Values.Params.LabelSelectors }}
+        {{ range $labelIndex, $label := $entry.Labels }}
+        {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelSelector "" ) }} {{ if (eq $label.Key .) }} <h6
+          class="col-3 ps-5" title="{{ $label.Value }}">{{ abbrev 20 $label.Value }}</h6>
+          {{ end }}
+          {{ end }}
+          {{ end }}
+          {{ end }}
+
+          {{ range $paramIndex, $metricParam := $.Values.Params.Metrics }}
+          {{ range $metricIndex, $metric := $entry.Metrics }}
+          {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $metricParam "" ) }} {{ if (eq $metric.Name .) }} <h6
+            class="col-3 ps-5" title="{{ $metric.Value }}">{{ abbrev 15 (toString $metric.Value) }}</h6>
+            {{ end }}
+            {{ end }}
+            {{ end }}
+            {{ end }}
+            <a class="stretched-link" data-bs-toggle="collapse" data-bs-target="#collapse{{$index}}"
+              aria-expanded="false" aria-controls="collapse{{$index}}">
+            </a>
+      </div>
+
+      <div id="collapse{{$index}}" class="accordion-collapse collapse" data-bs-parent="#metric-table-accordion"
+        aria-labelledby="accordion-header{{$index}}">
+        <div class="accordion-body row">
+          <div class="col">
+            <div class="row">
+              <div id="authors" class="col">
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/authors.svg" alt="authors"
+                  class="bottle-attribute-icon" />
+                <ul>
+                  {{ range $index, $entryAuth := $entry.Authors}}
+                  <li>
+                    <h6>{{ $entryAuth.Name }}</h6>
+                  </li>
+                  {{ end }}
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div id="description" class="col">
+                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" alt="description"
+                  class="bottle-attribute-icon" />
+                {{ $entry.Description }}
+              </div>
+            </div>
+          </div>
+
+
+          {{ if (gt (len $entry.Labels) 5) }}
+          <div class="col">
+            <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/labels.svg" alt="labels"
+              class="bottle-attribute-icon" />
+            <div style="display: grid; grid-template-columns: auto auto; ">
+              {{ range $index, $entryLabel := $entry.Labels }}
+              {{ if (gt $index 4) }}
+              <span class="badge rounded-pill bg-label label-pill"
+                style="box-sizing: border-box; width: max-content; max-height: 40px; margin-top: 5px;">
+                {{ .Key }} = {{ .Value }}
+              </span>
+              {{ end }}
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+
+          {{ if (gt (len $entry.Metrics) 0) }}
+          <div class="col">
+            <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" alt="metrics"
+              class="bottle-attribute-icon" />
+            <div style="display: grid; grid-template-columns: auto auto;">
+              {{ range $entry.Metrics}}
+              <span class="badge rounded-pill bg-metric metric-pill"
+                style="box-sizing: border-box; width: max-content; max-height: 40px; margin-top: 5px;">
+                {{ .Name }}={{ .Value }}
+              </span>
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+  {{ if (eq .Values.Params.Page 0) }}
+</div>
+{{ end }}
+
+<style>
+  .accordion-header:hover {
+    border-color: var(--primary) !important;
+  }
+</style>
+
+<script>
+  function onMetricSort(button, metric, ascending) {
+    button.dispatchEvent(new CustomEvent("onMetricSortButtonClick", {
+      bubbles: true,
+      detail: {"metricName": metric, "ascending": ascending},
+    }));
+  }
+</script>
+{{ end }}

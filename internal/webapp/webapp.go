@@ -118,17 +118,25 @@ func (a *WebApp) Initialize(router chi.Router) {
 
 	// pages
 	router.Get("/about.html", httputil.RootHandler(a.handleAbout).ServeHTTP)
-	router.Get("/catalog.html", httputil.RootHandler(a.handleCatalog).ServeHTTP)
-	router.Get("/leaderboard.html", httputil.RootHandler(a.handleLeaderboard).ServeHTTP)
+	router.Get("/catalog.html", httputil.RootHandler(a.getPageHandler("catalog.html")).ServeHTTP)
+	router.Get("/leaderboard.html", httputil.RootHandler(a.getPageHandler("leaderboard.html")).ServeHTTP)
 	router.Get("/bottle.html", httputil.RootHandler(a.handleBottle).ServeHTTP)
 	router.Get("/similarBottles", httputil.RootHandler(a.handleSimilarBottles).ServeHTTP)
 
 	// components
 	router.Route("/search", func(router chi.Router) {
-		router.Get("/", httputil.RootHandler(a.handleBottleSearch).ServeHTTP)
-		router.Get("/cards", httputil.RootHandler(a.handleBottleCards).ServeHTTP)
+		router.Get("/", httputil.RootHandler(a.handleBottleSearchIsValid).ServeHTTP)
+		router.Route("/bottle", func(router chi.Router) {
+			router.Get("/cards", httputil.RootHandler(a.handleBottleSearch).ServeHTTP)
+			router.Get("/table", httputil.RootHandler(a.handleBottleSearch).ServeHTTP)
+		})
+		router.Route("/metric", func(router chi.Router) {
+			router.Get("/dropdown", httputil.RootHandler(a.handleMetricSearch).ServeHTTP)
+		})
+		router.Route("/label", func(router chi.Router) {
+			router.Get("/list", httputil.RootHandler(a.handleCommonLabelSearch).ServeHTTP)
+		})
 	})
-
 	// Note that we want to serve <img> requests (Sec-Fetch-Dest=image) with actual images and not html.
 	router.Get("/artifact/{bottle}/*", func(w http.ResponseWriter, r *http.Request) {
 		qs := r.URL.Query()
@@ -191,14 +199,28 @@ func (a *WebApp) parseTemplates() (*template.Template, error) {
 	templateFuncs := template.FuncMap{
 		"ByteSize":        bytefmt.ByteSize,
 		"ToAge":           toAge,
-		"GetCommonLabels": getCommonLabels,
+		"GetCommonLabels": getCommonLabelsFromBotleEntries,
 		"RemoveLabels":    removeLabels,
+	}
+
+	tempateGlobPatterns := []string{}
+	err := fs.WalkDir(a.templateFS, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("could not walk templateFS directories: %w", err)
+		}
+		if !d.IsDir() {
+			tempateGlobPatterns = append(tempateGlobPatterns, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 
 	t, err := template.New("base").
 		Funcs(sprig.FuncMap()).
 		Funcs(templateFuncs).
-		ParseFS(a.templateFS, "pages/*.html", "components/*.html", "components/search/*.html", "components/artifacts/*.html")
+		ParseFS(a.templateFS, tempateGlobPatterns...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse template: %w", err)
 	}
@@ -233,9 +255,10 @@ func (a *WebApp) executeTemplateAsResponse(ctx context.Context, w http.ResponseW
 	defer a.templatesLock.RUnlock()
 
 	allValues := struct {
-		Values  any
-		Globals globalValues
-	}{values, a.globalValues}
+		Values       any
+		Globals      globalValues
+		RootTemplate string
+	}{values, a.globalValues, templateName}
 	allValues.Globals.Top = top
 
 	log := logger.FromContext(ctx).With("values", allValues)

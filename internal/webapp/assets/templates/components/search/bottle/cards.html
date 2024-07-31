@@ -47,7 +47,7 @@
 {{ range $index, $entry := .Values.Entries }}
 <div class="col-lg-4 mb-4"
     {{ if eq (len $.Values.Entries) (add1 $index) }}
-    hx-get="{{ $.Globals.Top }}www/search/cards?page={{ add1 $.Values.Params.Page }}"
+    hx-get="{{ $.Globals.Top }}www/search/bottle/cards?page={{ add1 $.Values.Params.Page }}"
     hx-trigger="revealed"
     hx-swap="afterend"
     hx-indicator="#bottle-cards-spinner"

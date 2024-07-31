@@ -12,8 +12,8 @@ func toAge(t time.Time) string {
 	return duration.ShortHumanDuration(time.Since(t))
 }
 
-// getCommonLabels will return the slice of labels that are common between bottles given.
-func getCommonLabels(bottleResultEntries []resultEntry) []db.Label {
+// getCommonLabelsFromBotleEntries will return the slice of labels that are common between bottles given.
+func getCommonLabelsFromBotleEntries(bottleResultEntries []bottleResultEntry) []db.Label {
 	commonLabels := []db.Label{}
 	for i, b := range bottleResultEntries {
 		if i == 0 {

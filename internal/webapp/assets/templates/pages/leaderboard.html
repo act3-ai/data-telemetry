@@ -1,341 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{ template "head" . }}
+{{ template "head" . }}
 
-  <body>
-    {{ template "navbar" . }}
-    <main class="mx-3 mt-3">
-      <section>
-        <div class="row">
-          <h1 class="display-5 mb-3">ACE Leaderboard</h1>
-          <div class="col-lg-8 text-center text-lg-start">
-            <p class="lead">
-              Welcome to the ACE Leaderboard where you can view artifacts in
-              ranked order. This is used to build leaderboards for machine
-              learning models and other types of computational experiments.
-            </p>
-            {{ if (gt (len .Values.Errors) 0) }}
-              <div class="alert alert-danger" role="alert" style="margin-top: 1em; margin-bottom: 1em;">
-                <h5>Try Again?</h5>
-                <div>
-                  There was an issue with the search criteria:
-                </div>
-              <ul>
-              {{ with splitList "\n" .Values.Errors }}
-                {{ range .}}
-                <li>{{ . }}</li>
-              {{ end }}
-                {{ end }}
-              </ul>
-              </div>
-            {{ end }}
-            <hr class="my-4" />
-            <h4 class="mb-3">
-              <span>Results</span>
-              <span class="badge bg-primary rounded-pill mx-2"
-                >{{len .Values.Entries}}</span
-              >
-            </h4>
-              {{ $CommonLabels := GetCommonLabels .Values.Entries }}
-              {{ if (gt (len $CommonLabels) 0) }}
-            <div class="row" style="margin-top: 1em; margin-bottom: 1em;">
-              <h5>Common Labels</h5>
-              <div>
-                {{ range $CommonLabels }}
-                <!-- <li>{{ .Key }}={{ .Value }}</li> -->
-                <span class="badge rounded-pill bg-label"
-                  >{{ .Key }}={{ .Value }}</span
-                >
-                {{ end }}               
-              </div>
-            </div>
-              {{ end }}
-            <div class="table-responsive">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <!-- <th scope="col">Name</th> -->
-                    <th scope="col">Description</th>
-                    <th scope="col">Labels</th>
-                    <th scope="col">{{ if .Values.Metric }} {{ .Values.Metric }} {{ else }} Pull Count {{ end }} </th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{ range .Values.Entries }}
-                  <tr>
-                    <td
-                      style="
-                        word-wrap: break-word;
-                        min-width: 350px;
-                        max-width: 400px;
-                      "
-                    >
-                      <p
-                        class="overflow-hidden line-clamp"
-                        style="white-space: pre-line"
-                      >
-                        {{ .Description }}
-                      </p>
-                    </td>
-                    <td>
-                      <div>
-                        {{ range (RemoveLabels $CommonLabels .Labels) }}
-                        <!-- <li>{{ .Key }}={{ .Value }}</li> -->
-                        <span class="badge rounded-pill bg-label"
-                          >{{ .Key }}={{ .Value }}</span
-                        >
-                        {{ end }} {{ range .Metrics }}
-                        <span class="badge rounded-pill bg-success"
-                          >{{ .Name }}={{ .Value }}</span
-                        >
-                        {{ end }}
-                      </div>
-                    </td>
-                    <td>
-                      {{ if (gt (len $.Values.Metric) 0) }}
-                        {{ range .Metrics }}
-                        <span title="{{ .Description }}"
-                          >{{ .Value }}</span
-                        >{{ end }}
-                      {{ else }}
-                        <span title="Pull Count"
-                        >{{ .NumPulls }}</span
-                        >
-                      {{ end }}
-                    </td>
-                    <td>
-                      <div class="d-grid gap-2">
-                        <a
-                          class="btn btn-sm btn-primary"
-                          href="bottle.html?digest={{ index .Digests 0 }}"
-                          id="bottle-details-btn"
-                          >Bottle Details</a
-                        >
-                      </div>
-                    </td>
-                  </tr>
-                  {{ end }}
-                </tbody>
-              </table>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                You are viewing {{ len .Values.Entries }} of {{ .Values.TotalResults }} Results
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 mx-auto">
-            <form action="" method="get" class="p-4 border rounded-3">
-              <h3 class="mb-4"><i class="bi bi-search"></i> Search Criteria</h3>
-              <div class="d-flex flex-row">
-                <label class="form-label" for="selector"
-                  >Selector <span class="text-muted">(Optional)</span></label
-                >
-                <a
-                  class="mx-1"
-                  href="#"
-                  data-bs-toggle="modal"
-                  data-bs-target="#selector-help"
-                  id="add-selector-btn"
-                  ><i class="bi bi-info-circle-fill"></i
-                ></a>
-              </div>
-              <div class="row align-items-center mb-4">
-                <!-- pattern="([a-zA-Z0-9\-_\.]{0,253}/)[a-zA-Z0-9\-_\.]{0,63}(=|==|!=)[a-zA-Z0-9\-_\.]{0,63} -->
-                <div class="col-10" id="selectorDiv">
-                  <input
-                    type="text"
-                    class="form-control selectorInput"
-                    name="selector"
-                    title="selector"
-                    placeholder="somekey=somevalue"
-                    value=""
-                  />
-                </div>
-                <div class="col-2">
-                  <a
-                    class="fs-4"
-                    href="#"
-                    onclick="addSelector();return false;"
-                  >
-                    <i class="bi bi-plus-circle-fill"></i
-                  ></a>
-                </div>
-                <div id="removeSelectorButton" class="col-2 d-none">
-                  <a
-                    class="fs-4"
-                    href="#"
-                    onclick="removeSelector();return false;"
-                  >
-                    <i class="bi bi-dash-circle-fill"></i
-                  ></a>
-                </div>
-                {{ range $i, $e := .Values.Selectors }}
-                <div class="col-10 mt-2" id="selectorDiv{{$i}}">
-                  <input
-                    type="text"
-                    id="selectorInput{{$i}}"
-                    class="form-control"
-                    name="selector"
-                    title="selector"
-                    value="{{ . }}"
-                    placeholder="somekey=somevalue"
-                  />
-                </div>
-                <div id="removeSelectorButton{{$i}}" class="col-2">
-                  <a
-                    class="fs-4"
-                    href="#"
-                    onclick="removeSelector({{$i}});return false;"
-                  >
-                    <i class="bi bi-dash-circle-fill"></i
-                  ></a>
-                </div>
-                {{ end }}
-              </div>
+<body>
+  {{ template "navbar" . }}
+  <main class="mx-3">
+    <section id="leaderboard-view">
+      <div id="bottle-cards-spinner" class="spinner-border text-primary htmx-indicator" role="status">
+      </div>
+      <div class="col-xl-12 text-center text-lg-start" style="background-color: #212121;">
+        {{ template "bottle-search-bar" . }}
+      </div>
 
-              <div class="mb-4">
-                <label class="form-label" for="metric">Metric Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="metric"
-                  id="metric"
-                  title="metric"
-                  {{
-                  with
-                  .Values.Metric
-                  }}value="{{ . }}"
-                  {{
-                  end
-                  }}
-                  placeholder="learning rate"
-                />
-                <!-- <small id="metric-help" class="form-text text-muted"
-                  >Results will be sorted by this metric's value.</small
-                > -->
-              </div>
-              <div class="mb-4">
-                <label for="author">Author</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="author"
-                  id="author"
-                  title="author"
-                  {{
-                  with
-                  .Values.Author
-                  }}value="{{ . }}"
-                  {{
-                  end
-                  }}
-                  placeholder="Name/Email"
-                />
-              </div>
-
-              <div class="mb-4">
-                <label for="parents-of">Parent Search</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="parents-of"
-                  id="parents-of"
-                  title="Parents of this bottle digest"
-                  {{
-                  with
-                  .Values.ParentsOf
-                  }}value="{{ . }}"
-                  {{
-                  end
-                  }}
-                  placeholder="Bottle digest of the child"
-                />
-              </div>
-
-              <div class="mb-4">
-                <label for="children-of">Children Search</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="children-of"
-                  id="children-of"
-                  title="Children of this bottle digest"
-                  {{
-                  with
-                  .Values.ChildrenOf
-                  }}value="{{ . }}"
-                  {{
-                  end
-                  }}
-                  placeholder="Bottle digest of the parent"
-                />
-              </div>
-
-              <div class="row mb-4">
-                <div class="col-sm-5">
-                  <div>
-                    <label class="form-label" for="limit">Result Limit</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="limit"
-                      id="limit"
-                      title="limit"
-                      value="{{ .Values.Limit | default 5 }}"
-                    />
-                  </div>
-                </div>
-                <div class="col-sm-7">
-                  <div>
-                    <label class="form-label" for="limit">Sort By</label>
-                    <select
-                      class="form-select"
-                      name="descending"
-                      id="descending"
-                    >
-                      <option
-                        value="false"
-                        {{
-                        with
-                        .Values.Descending
-                        }}{{
-                        else
-                        }}selected{{
-                        end
-                        }}
-                      >
-                        Ascending
-                      </option>
-                      <option
-                        value="true"
-                        {{
-                        with
-                        .Values.Descending
-                        }}selected{{
-                        end
-                        }}
-                      >
-                        Descending
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <button
-                class="w-100 btn btn-primary mt-2"
-                type="submit"
-                id="search-btn"
-              >
-                Search
-              </button>
-            </form>
-          </div>
+      <div class="row mt-4 fade-out fade-in">
+        <div hx-trigger="load, onValidSearch from:document" hx-get="{{ .Globals.Top }}www/search/bottle/table"
+          hx-include=".bottle-search-field" hx-swap="innerHTML swap:1s" class="row mt-4 fade-out fade-in">
         </div>
-      </section>
-      {{ template "selector-help" }}
-    </main>
-    {{ template "scripts" . }}
-  </body>
+      </div>
+    </section>
+  </main>
+  {{ template "scripts" . }}
+</body>
+<script>
+  // If a removeSearchFilter event bubbles up, tell the search bar to handle it
+  document.querySelector('#leaderboard-view').addEventListener("removeSearchFilter", (event) => {
+    removeSearchFilter(event.detail.filterValue);
+  });
+
+  document.querySelector('#leaderboard-view').addEventListener("onMetricFilterDropdownSelect", (event) => {
+    addSearchFilter("metric", event.detail.metricName);
+  });
+
+  document.querySelector('#leaderboard-view').addEventListener("onMetricSortButtonClick", (event) => {
+    var urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('sort-by-metric', event.detail.metricName);
+    urlParams.set('metric-sort-ascending', event.detail.ascending);
+    window.location.search = urlParams;
+  });
+</script>
+
 </html>

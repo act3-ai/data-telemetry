@@ -4,41 +4,23 @@
 
 <body>
   {{ template "navbar" . }}
-  <main class="mx-3 mt-3">
+  <main class="mx-3">
     <section>
-      <h1 class="display-5 mb-3">ACE Data Catalog
-      </h1>
+      <div id="bottle-cards-spinner" class="spinner-border text-primary htmx-indicator" role="status"></div>
       <div class="col-xl-12 text-center text-lg-start sticky-top" style="background-color: #212121;">
         {{ template "bottle-search-bar" . }}
       </div>
-      {{ if (gt (len .Values.Errors) 0) }}
-      <div class="alert alert-danger" role="alert" style="margin-top: 1em; margin-bottom: 1em;">
-        <h5>Try Again?</h5>
-        <div>
-          There was an issue with the search criteria:
-        </div>
-        <ul>
-          {{ with splitList "\n" .Values.Errors }}
-          {{ range .}}
-          <li>{{ . }}</li>
-          {{ end }}
-          {{ end }}
-        </ul>
-      </div>
-      {{ end }}
       <div 
           hx-trigger="onValidSearch from:document,load" 
-          hx-get="{{ .Globals.Top }}www/search/cards" 
+          hx-get="{{ .Globals.Top }}www/search/bottle/cards" 
           hx-include=".bottle-search-field" 
           hx-swap="innerHTML swap:1s" 
           class="row mt-4 fade-out fade-in" 
           id="bottle-cards">
       </div>
-      <div id="bottle-cards-spinner" class="spinner-border text-primary htmx-indicator" role="status"></div>
     </section>
     {{ template "selector-help" }}
   </main>
   {{ template "scripts" . }}
 </body>
-
 </html>

@@ -1,0 +1,17 @@
+{{ define "label-list" }}
+<div id="label-list">
+  {{ if (gt (len .Values.CommonLabelKeys) 0) }}
+  <h4>Common Labels</h4>
+  <div class="col-4 justify-content-center" id="labels" style="margin: .5em; width: fit-content;">
+    <div class="row flex-nowrap">
+      {{ range $index, $entryLabel := .Values.CommonLabelKeys }}
+      <span id="pill" style="max-width: 10rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+        class="common-label-pill badge rounded-pill bg-label m-1 col-2" title="{{ . }}">
+        {{ . }}
+      </span>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

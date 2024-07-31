@@ -15,9 +15,9 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link" id="home-link" href="{{ .Globals.Top }}www/about.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}">Home</a>
-          <a class="nav-link" id="catalog-link" href="{{ .Globals.Top }}www/catalog.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}">Catalog</a>
-          <a class="nav-link" id="leaderboard-link" href="{{ .Globals.Top }}www/leaderboard.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}">Leaderboard</a>
+          <a class="nav-link {{ if eq .RootTemplate "about.html" }} active{{ end }}" id="home-link" onclick="window.location='{{ .Globals.Top }}www/about.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}'+window.location.search;">Home</a>
+          <a class="nav-link {{ if eq .RootTemplate "catalog.html" }} active{{ end }}" id="catalog-link" onclick="window.location='{{ .Globals.Top }}www/catalog.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}'+window.location.search;">Catalog</a>
+          <a class="nav-link {{ if eq .RootTemplate "leaderboard.html" }} active{{ end }}" id="leaderboard-link" onclick="window.location='{{ .Globals.Top }}www/leaderboard.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}'+window.location.search;">Leaderboard</a>
         </div>
       </div>
   </div>

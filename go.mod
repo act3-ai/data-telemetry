@@ -1,6 +1,6 @@
 module gitlab.com/act3-ai/asce/data/telemetry
 
-go 1.22.3
+go 1.22.5
 
 require (
 	code.cloudfoundry.org/bytefmt v0.0.0-20240622173923-7a5a4f8651ac
@@ -10,7 +10,7 @@ require (
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gomarkdown/markdown v0.0.0-20240419095408-642f0ee99ae2
-	github.com/gorilla/schema v1.4.0
+	github.com/gorilla/schema v1.4.1
 	github.com/hetiansu5/urlquery v1.2.7
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/notaryproject/notation-core-go v1.0.2

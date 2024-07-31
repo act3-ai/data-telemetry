@@ -4,6 +4,12 @@
     <li>
         <input class="visually-hidden bottle-search-field" name="created-before" value="{{ toString .CreatedBefore }}" />
     </li>
+    <li>
+        <input class="visually-hidden bottle-search-field" name="sort-by-metric" value="{{ .SortByMetric }}" />
+    </li>
+    <li>
+        <input class="visually-hidden bottle-search-field" name="metric-sort-ascending" value="{{ .MetricSortAscending }}" />
+    </li>
     {{ range .LabelSelectors }}
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-label">
@@ -14,6 +20,19 @@
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
         </span>
         <input class="visually-hidden bottle-search-field" name="label-selector" value="{{ . }}" />
+    </li>
+    {{ end }}
+
+    {{ range .Metrics }}
+    <li class="list-inline-item">
+        <span class="badge rounded-pill bg-metric">
+            <img class="pe-2 bottle-attribute-icon-pill"
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" />
+            {{ . }}
+            <i class="bi bi-x fs-3" style="vertical-align: middle;"
+                hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
+        </span>
+        <input class="visually-hidden bottle-search-field" name="metric" value="{{ . }}" />
     </li>
     {{ end }}
 
