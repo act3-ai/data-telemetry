@@ -121,6 +121,8 @@ github.com/neilotoole/slogt v1.1.0 h1:c7qE92sq+V0yvCuaxph+RQ2jOKL61c4hqS1Bv9W7FZ
 github.com/neilotoole/slogt v1.1.0/go.mod h1:RCrGXkPc/hYybNulqQrMHRtvlQ7F6NktNVLuLwk6V+w=
 github.com/notaryproject/notation-core-go v1.0.2 h1:VEt+mbsgdANd9b4jqgmx2C7U0DmwynOuD2Nhxh3bANw=
 github.com/notaryproject/notation-core-go v1.0.2/go.mod h1:2HkQzUwg08B3x9oVIztHsEh7Vil2Rj+tYgxH+JObLX4=
+github.com/notaryproject/notation-core-go v1.0.3 h1:FCgvULSypEFrrNgvDRdHbKAGAgbXK43n/jKD9q2WECA=
+github.com/notaryproject/notation-core-go v1.0.3/go.mod h1:eDo5/LTUp23mB7w0CckJLnl+p93oGdyiKDzzggpqTH4=
 github.com/notaryproject/notation-go v1.1.0 h1:7WBeH8FGoA+GkeUwmBIBnlJc/PpdYaUKfiXu6ZZeEeg=
 github.com/notaryproject/notation-go v1.1.0/go.mod h1:ZSk34URQar5fnWflaFByzpDvuefgZKm/mp8Q2tQpBaw=
 github.com/onsi/ginkgo/v2 v2.19.0 h1:9Cnnf7UHo57Hy3k6/m5k3dRfGTMXGvxhHFvkDTCTpvA=

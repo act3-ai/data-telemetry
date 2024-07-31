@@ -13,7 +13,7 @@ require (
 	github.com/gorilla/schema v1.4.1
 	github.com/hetiansu5/urlquery v1.2.7
 	github.com/microcosm-cc/bluemonday v1.0.26
-	github.com/notaryproject/notation-core-go v1.0.2
+	github.com/notaryproject/notation-core-go v1.0.3
 	github.com/notaryproject/notation-go v1.1.0
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.0
