@@ -7,6 +7,8 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
+	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
+
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 )
 
@@ -77,43 +79,6 @@ type BottleSpec struct {
 	IPS string `json:"ips" query:"ips"`
 }
 
-// ACEHubLaunchTemplate is the launch specification for ACE Hub.  It is the same as the PodGroupOptions from ace/hub/api.
-// This struct also supports marshalling to URL query parameters with "github.com/hetiansu5/urlquery".
-type ACEHubLaunchTemplate struct {
-	// HubName is the name of the pod group
-	HubName string `json:"hubName,omitempty" query:"hubName"`
-
-	// Image is the OCI image
-	Image string `json:"image,omitempty" query:"image"`
-
-	// Replicas is the number of pods to launch
-	Replicas uint `json:"replicas,omitempty" query:"replicas"`
-
-	// Resources is the number of resources to use (e.g., {"cpu":"4", "memory":"8Gi"})
-	Resources map[string]string `json:"resources,omitempty" query:"resources"`
-
-	// Shm is the amount of shared memory to use (e.g., "1Gi")
-	Shm string `json:"shm,omitempty" query:"shm"`
-
-	// Env
-	Env map[string]string `json:"env,omitempty" query:"env"`
-
-	// ProxyType straight or normal
-	ProxyType string `json:"proxyType,omitempty" query:"proxyType"`
-
-	// Jupyter is the flag that enables the jupyter hack to support vanilla jupyter images from jupyter-stack
-	Jupyter bool `json:"jupyter,omitempty" query:"jupyter"`
-
-	// JetBrains enables the JetBrains hack
-	JetBrains bool `json:"jetBrains,omitempty" query:"jetBrains"`
-
-	// StartScript is a script (the string is the body of the script) that will run on startup in the main container
-	StartScript string `json:"startScript,omitempty" query:"startScript"`
-
-	// Bottles to mount into the pod
-	Bottles []BottleSpec `json:"bottles,omitempty" query:"bottles"`
-}
-
 // ViewerSpec defines how to launch something in an environment.
 type ViewerSpec struct {
 	// Name is the name of the view that will be presented to the user
@@ -123,7 +88,7 @@ type ViewerSpec struct {
 	Accept string `json:"accept"`
 
 	// ACEHub is the launch template to be launch the viewer
-	ACEHub ACEHubLaunchTemplate `json:"acehub"`
+	ACEHub hub.HubEnvTemplateSpec `json:"acehub"`
 }
 
 // LogValue implements slog.LogValuer.

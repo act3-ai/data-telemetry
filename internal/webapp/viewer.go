@@ -14,6 +14,8 @@ import (
 	"github.com/hetiansu5/urlquery"
 	"github.com/opencontainers/go-digest"
 
+	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
+
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
 )
@@ -28,7 +30,7 @@ func (vsl *ViewerSpecList) FilterAndSort(mediaType string) ViewerSpecList {
 		Quality    float32
 	}
 
-	// Filter and rank the available viewers for this artifact type
+	// Filter and rank the available viewers for this artifact type.
 	matchedSpecs := make([]viewerSpecWithQuality, 0, len(*vsl))
 	for _, vs := range *vsl {
 		ah := mimeheader.ParseAcceptHeader(vs.Accept) // TODO this does not need to be done every request (can be done on startup)
@@ -93,11 +95,11 @@ func (a *WebApp) GetViewerSpecList(bottle db.Bottle) ViewerSpecList {
 // FindViewers computes the viewers for each ACE Hub instance and provided spec.  Each ViewerLink will mount the bottle using the selectors.
 func (a *WebApp) FindViewers(specs []v1alpha1.ViewerSpec, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) []ViewerLink {
 	viewers := make([]ViewerLink, 0, len(a.hubInstances))
-	for _, hub := range a.hubInstances {
+	for _, hubInstance := range a.hubInstances {
 		for _, spec := range specs {
-			log := a.log.With("hub", hub.Name, "image", spec.ACEHub.Image)
+			log := a.log.With("hub", hubInstance.Name, "image", spec.ACEHub.Image)
 
-			u, err := getViewerURL(spec, hub, bottle, partSelectors, artifact)
+			u, err := getViewerURL(spec, hubInstance.URL, bottle, partSelectors, artifact)
 			if err != nil {
 				log.Error("could not get viewer URL", "error", err)
 				continue
@@ -115,7 +117,7 @@ func (a *WebApp) FindViewers(specs []v1alpha1.ViewerSpec, bottle digest.Digest, 
 			}
 
 			viewers = append(viewers, ViewerLink{
-				Location: hub.Name,
+				Location: hubInstance.Name,
 				Viewer:   spec.Name,
 				URL:      u.String(),
 			})
@@ -124,7 +126,7 @@ func (a *WebApp) FindViewers(specs []v1alpha1.ViewerSpec, bottle digest.Digest, 
 	return viewers
 }
 
-func addArtifactEnvs(newSpec *v1alpha1.ACEHubLaunchTemplate, artifact *db.PublicArtifact) {
+func addArtifactEnvs(newSpec *hub.HubEnvTemplateSpec, artifact *db.PublicArtifact) {
 	if newSpec.Env == nil {
 		newSpec.Env = make(map[string]string, 1)
 	}
@@ -138,51 +140,115 @@ func addArtifactEnvs(newSpec *v1alpha1.ACEHubLaunchTemplate, artifact *db.Public
 	newSpec.Env["ACE_OPEN_DIGEST"] = artifact.Digest.String()
 }
 
-func getViewerURL(spec v1alpha1.ViewerSpec, hub v1alpha1.ACEHubInstance, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) (*url.URL, error) {
-	// Make a shallow copy
+func getViewerURL(spec v1alpha1.ViewerSpec, hubInstanceURL string, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) (*url.URL, error) {
+	// Make a shallow copy of the viewer spec
 	newSpec := spec.ACEHub
 
 	// Add the bottle
 	if newSpec.Bottles == nil {
-		newSpec.Bottles = make([]v1alpha1.BottleSpec, 0, 1)
+		newSpec.Bottles = make([]hub.BottleSpec, 0, 1)
 	}
-	newSpec.Bottles = append(newSpec.Bottles, v1alpha1.BottleSpec{
-		Name:     HubBottleName,
-		Bottle:   "bottle:" + bottle.String(),
-		Selector: strings.Join(partSelectors, "|"),
+	newSpec.Bottles = append(newSpec.Bottles, hub.BottleSpec{
+		Name:      HubBottleName,
+		BottleRef: bottle.String(),
+		Selector:  partSelectors,
 	})
 
 	if artifact != nil {
 		// This viewer is for a specific artifact so we include that information
-
 		addArtifactEnvs(&newSpec, artifact)
 	}
 
-	newSpec.HubName = "" // We want the user to select the name in ACE Hub
-	newSpec.Replicas = 1
-
-	u, err := url.Parse(hub.URL)
-	if err != nil {
-		return nil, fmt.Errorf("Error parsing ACE Hub URL: %w", err)
+	// parse resources separately so resource to string conversion is correct
+	resourceQueryParams := url.Values{}
+	if newSpec.Resources.Requests != nil {
+		requests := newSpec.Resources.Requests
+		newSpec.Resources.Requests = nil
+		for k, v := range requests {
+			resourceQueryParams.Add(fmt.Sprintf("resources[requests][%s]", k.String()), (&v).String())
+			resourceQueryParams.Add(fmt.Sprintf("resources[limits][%s]", k.String()), (&v).String())
+		}
 	}
-	// qs := u.Query()
 
-	// https://hub.lion.act3-ace.ai/environments/0?bottles[0][name]=mybottle&bottles[0][bottle]=reg.git.bottle&bottles[0][selector]=foo=bar|dog=cat,x=y&replicas=3&image=sdfsdfsadfsdf&hubName=foo&proxyType=normal&resources[nvidia.com/sharedgpu]=2&shm=64Mi&env[MyENV]=Value&startScript[ACE_START_SCRIPT]=My%20script
+	if newSpec.Resources.Limits != nil {
+		limits := newSpec.Resources.Limits
+		newSpec.Resources.Limits = nil
+		for k, v := range limits {
+			resourceQueryParams.Add(fmt.Sprintf("resources[limits][%s]", k.String()), (&v).String())
+		}
+	} else {
+		newSpec.Resources.Limits = nil
+		for k, v := range newSpec.Resources.Requests {
+			resourceQueryParams.Add(fmt.Sprintf("resources[limits][%s]", k.String()), (&v).String())
+		}
+	}
 
-	// NOTE that this query string encoding does not allow you to infer the type of the value from the query string.
-	// for example foo=1 could have a type of int(1), bool (true), or a string "1".
-	// I think a way to encode the type properly is to ensure that the value is a valid JSON value.  So 1 is an int, true is a boolean and "1" is a string
-
-	ds, err := urlquery.Marshal(newSpec)
+	urlqueryEncoder := urlquery.NewEncoder(urlquery.WithNeedEmptyValue(true))
+	ds, err := urlqueryEncoder.Marshal(newSpec)
 	if err != nil {
-		return nil, fmt.Errorf("Skipping viewer link: %w", err)
+		return nil, fmt.Errorf("skipping viewer link: %w", err)
 	}
 	encoded := string(ds)
+	specQueryParams, err := url.ParseQuery(encoded)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse encoded spec query values: %w", err)
+	}
 
-	u.RawQuery = encoded
+	for k, vals := range resourceQueryParams {
+		for _, v := range vals {
+			specQueryParams.Add(k, v)
+		}
+	}
+
+	// make the query parameters lowercased
+	lowercaseSpecQueryParams := setQueryParamKeysLowercase(specQueryParams)
+	// remove empty query params
+	updatedSpecQueryParams := removeEmptyQueryParams(lowercaseSpecQueryParams)
+
+	u, err := url.Parse(hubInstanceURL)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing ACE Hub URL: %w", err)
+	}
+
+	u.RawQuery = updatedSpecQueryParams.Encode()
 	u.Path = "/environments/0"
 
 	return u, nil
+}
+
+func setQueryParamKeysLowercase(params url.Values) url.Values {
+	getFirstCharLowercase := func(s string) string {
+		if len(s) == 0 {
+			return ""
+		}
+		firstChar := s[0]
+		lowerCaseFirstChar := strings.ToLower(string(firstChar))
+		return fmt.Sprintf("%s%s", lowerCaseFirstChar, s[1:])
+	}
+	lowercaseSpecQueryParams := url.Values{}
+	for k, vals := range params {
+		lowercaseKey := ""
+		paramArrayKeys := strings.SplitAfter(k, "[")
+		for _, paramArrayKey := range paramArrayKeys {
+			lowercaseKey = fmt.Sprintf("%s%s", lowercaseKey, getFirstCharLowercase(paramArrayKey))
+		}
+		for _, v := range vals {
+			lowercaseSpecQueryParams.Add(lowercaseKey, v)
+		}
+	}
+	return lowercaseSpecQueryParams
+}
+
+func removeEmptyQueryParams(params url.Values) url.Values {
+	updatedQueryParams := url.Values{}
+	for k, vals := range params {
+		for _, v := range vals {
+			if len(v) > 0 {
+				updatedQueryParams.Add(k, v)
+			}
+		}
+	}
+	return updatedQueryParams
 }
 
 // GetArtifactViewers finds the viewers for each artifact by matching viewerSpecs to artifact's media type.
