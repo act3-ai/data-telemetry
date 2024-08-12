@@ -60,11 +60,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Create a default fully qualified app name for the postgres requirement.
-*/}}
-{{- define "telemetry.postgresql.fullname" -}}
-{{- $postgresContext := dict "Values" .Values.postgresql "Release" .Release "Chart" (dict "Name" "postgresql") -}}
-{{ include "postgresql.v1.primary.fullname" $postgresContext }}
-{{- end }}

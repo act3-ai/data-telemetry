@@ -44,27 +44,6 @@ spec:
       priorityClassName: {{ . }}
       {{- end }}
       enableServiceLinks: false
-      initContainers:
-        {{- if .Values.postgresql.enabled }}
-        - name: pgchecker
-          image: "{{ .Values.pgchecker.image.repository }}:{{ .Values.pgchecker.image.tag }}"
-          imagePullPolicy: {{ .Values.pgchecker.image.pullPolicy }}
-          securityContext:
-            {{- toYaml .Values.pgchecker.securityContext | nindent 12 }}
-          command:
-            - sh
-            - -c
-            - |
-              echo 'Waiting for PostgreSQL to become ready...'
-
-              until printf "." && nc -z -w 2 {{ include "telemetry.postgresql.fullname" . }} {{ .Values.postgresql.primary.service.ports.postgresql }}; do
-                  sleep 2;
-              done;
-
-              echo 'PostgreSQL OK ✓'
-          resources:
-            {{- toYaml .Values.pgchecker.resources | nindent 12 }}
-        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -83,48 +62,16 @@ spec:
             - name: {{ $key | snakecase | upper }}
               value: {{ $value | quote }}
           {{- end }}
-          {{- if .Values.postgresql.enabled }}
-            - name: DB_VENDOR
-              value: postgres
-            - name: DB_ADDR
-              value: {{ include "telemetry.postgresql.fullname" . }}
-            - name: DB_PORT
-              value: {{ .Values.postgresql.primary.service.ports.postgresql | quote }}
-            - name: DB_DATABASE
-              value: {{ .Values.postgresql.auth.database | quote }}
-            - name: DB_USERNAME
-              value: postgres
+          {{- if and .Values.db.existingSecret.name .Values.db.existingSecret.key }}
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "telemetry.postgresql.fullname" . }}
-                  key: postgres-password
-          {{- else if and .Values.db.vendor .Values.db.username .Values.db.address .Values.db.database }}
-            - name: DB_VENDOR
-              value: {{ .Values.db.vendor | quote }}
-            - name: DB_ADDR
-              value: {{ .Values.db.address | quote }}
-            - name: DB_DATABASE
-              value: {{ .Values.db.name | quote }}
-            - name: DB_USERNAME
-              value: {{ .Values.db.username | quote }}
-            {{- if .Values.db.password }}
-            - name: DB_PASSWORD
-              value: {{ .Values.db.password | quote }}
-            {{- else }}
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.db.existingSecret }}
-                  key: {{ .Values.db.passwordKeyName }}                
-            {{- end }}
+                  name: {{ .Values.db.existingSecret.name }}
+                  key: {{ .Values.db.existingSecret.key }}                
           {{- end }}
           {{- if .Values.db.dsn }}
             - name: ACE_TELEMETRY_DSN
               value: {{ .Values.db.dsn }}
-          {{- else }}
-            - name: ACE_TELEMETRY_DSN
-              value: "$(DB_VENDOR)://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_ADDR)/$(DB_DATABASE)"
           {{- end }}
             - name: GOMEMLIMIT
               valueFrom:

@@ -61,57 +61,23 @@ autoscaling:
 nodeSelector: {}
 tolerations: []
 affinity: {}
-pgchecker:
-  image:
-    # Docker image used to check Postgresql readiness at startup
-    repository: docker.io/busybox
-    # Image tag for the pgchecker image
-    tag: 1.36
-    # Image pull policy for the pgchecker image
-    pullPolicy: IfNotPresent
-  # SecurityContext for the pgchecker container
-  securityContext:
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    runAsUser: 65532
-    runAsGroup: 65532
-    runAsNonRoot: true
-  # Resource requests and limits for the pgchecker container
-  resources:
-    requests:
-      cpu: "20m"
-      memory: "32Mi"
-    limits:
-      cpu: "20m"
-      memory: "32Mi"
-postgresql:
-  # If `true`, the Postgresql dependency is enabled
-  enabled: true
-  # # PostgreSQL User to create
-  # auth.username: telemetry
-  # # PostgreSQL Password for the new user
-  # auth.password: telemetry
-  # PostgreSQL Database to create
-  auth.database: telemetry
-  # Password for the "postgres" admin user
-  auth.postgresPassword: telemetry
 # set the priority class name for the deployment
 priorityClassName:
 # logging verbosity
 verbosity: 0
-db: {}
-# if NOT using postgres these values will be used to construct a DSN for DB connection
-# $(DB_VENDOR)://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_ADDR)/$(DB_DATABASE)
-# vendor: sqlite # DB_VENDOR
-# username: root # DB_USERNAME
-# password: password # DB_PASSWORD (can instead use secret "db-password" by commenting this line out)
-# address: 127.0.0.1 # DB_ADDR
-# database: telemetry # DB_DATABASE
-# or construct your own DSN
-# NOTE: setting this will override any other database connection setting
+db: 
+  dsn: {}
+  existingSecret:
+    name: {}
+    key: {}
 # dsn: "file:test.db"
-# Configure the webapp.  See the Configuration struct in pkg/webapp/webapp.go for more details
 # existingSecret: # the name of an existing secret that contains the db password
+#   name:
+#   key:
+# these values will be used to construct a DSN for DB connection
+# $(DB_VENDOR)://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_ADDR)/$(DB_DATABASE)
+# construct your own DSN
+# Configure the webapp.  See the Configuration struct in pkg/webapp/webapp.go for more details
 # passwordKeyName  # the key in the existing secret that contains the db password
 webapp: {}
 # acehubs:
