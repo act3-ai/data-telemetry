@@ -1,3 +1,39 @@
+# [0.21.0](https://git.act3-ace.com/ace/data/telemetry/compare/v0.20.1...v0.21.0) (2024-08-14)
+
+
+### Bug Fixes
+
+* "open in hub" links ([57403ec](https://git.act3-ace.com/ace/data/telemetry/commit/57403ec8d2d5fa342f907b7d350ca875c3424492))
+* Catalog UI tweaks ([0e6244e](https://git.act3-ace.com/ace/data/telemetry/commit/0e6244e322477016ab255c953cbfd6dd1b3790a6))
+* **ci:** add go build vars ([7a54b25](https://git.act3-ace.com/ace/data/telemetry/commit/7a54b25d8e97038323255fc036c087e707cc249a))
+* **ci:** removed unneeded semantic release step override in CI ([bced034](https://git.act3-ace.com/ace/data/telemetry/commit/bced03485cb56fb2e44e7bf8f57ae80c247cf391))
+* **ci:** restored important parts of semantic release override ([87cd34f](https://git.act3-ace.com/ace/data/telemetry/commit/87cd34f21b1a57893c26e1ba29a34ab96362443f))
+* **deps:** update code.cloudfoundry.org/bytefmt digest to 7a5a4f8 ([98d2518](https://git.act3-ace.com/ace/data/telemetry/commit/98d2518d17339ef712130ea65bf5ee6ebc9baba4))
+* **deps:** update code.cloudfoundry.org/bytefmt digest to d61d30b ([8a4eeb1](https://git.act3-ace.com/ace/data/telemetry/commit/8a4eeb1b0ef6c8e9852995bdfbab94ab90e494fd))
+* **deps:** update dependency devsecops/cicd/pipeline to v19.0.22 ([8e0aa39](https://git.act3-ace.com/ace/data/telemetry/commit/8e0aa39c6577a984c046ebca5f96c221fad2bdb6))
+* **deps:** update docker.io/library/ubuntu docker tag to v24 ([accf4a9](https://git.act3-ace.com/ace/data/telemetry/commit/accf4a93eb6069f6a1fd59213a869aeb956ba6b6))
+* **deps:** update github.com/gomarkdown/markdown digest to 034f12a ([cd664ac](https://git.act3-ace.com/ace/data/telemetry/commit/cd664ac0b2abc39c9a5ba49e1c63213dc992d5e5))
+* **deps:** update helm release postgresql to v15.5.9 ([1d669a6](https://git.act3-ace.com/ace/data/telemetry/commit/1d669a63a89a749365cace388a52900a5ed8bc7e))
+* **deps:** update module github.com/go-chi/chi/v5 to v5.0.14 ([2ab8c88](https://git.act3-ace.com/ace/data/telemetry/commit/2ab8c88d26ce0accc4d8827081278ebb2199efca))
+* **deps:** update module github.com/go-chi/chi/v5 to v5.1.0 ([a755374](https://git.act3-ace.com/ace/data/telemetry/commit/a755374445f31212c666fef8ea4ba5e0a05f5384))
+* **deps:** update module github.com/gorilla/schema to v1.4.0 ([4308727](https://git.act3-ace.com/ace/data/telemetry/commit/4308727aa289342f437696ff87d95578188f9f49))
+* **deps:** update module github.com/microcosm-cc/bluemonday to v1.0.27 ([7867011](https://git.act3-ace.com/ace/data/telemetry/commit/7867011714a947cf0c2d14c42ccf5c7493601aa1))
+* **deps:** update module github.com/notaryproject/notation-core-go to v1.0.3 ([3e3ced9](https://git.act3-ace.com/ace/data/telemetry/commit/3e3ced98802f8a8cc78f4943a918deb55ce756fb))
+* **deps:** update module github.com/notaryproject/notation-go to v1.1.1 ([0a5e559](https://git.act3-ace.com/ace/data/telemetry/commit/0a5e55939b4172be27fe0e1dc24d9c245fa30bb0))
+* **deps:** update module github.com/spf13/cobra to v1.8.1 ([6f321ec](https://git.act3-ace.com/ace/data/telemetry/commit/6f321ecfe2d3b8a1bb56acbbd4b981a5b6b3ebbf))
+* **deps:** update module gorm.io/driver/postgres to v1.5.9 ([e5e113d](https://git.act3-ace.com/ace/data/telemetry/commit/e5e113da0877561e9b53a55891d754ef2e1dd5e1))
+* **deps:** update module gorm.io/driver/sqlite to v1.5.6 ([cb67257](https://git.act3-ace.com/ace/data/telemetry/commit/cb67257435b7d1098a67e29bfe7b87cabf64327c))
+* **deps:** update module gorm.io/gorm to v1.25.11 ([7ebaa88](https://git.act3-ace.com/ace/data/telemetry/commit/7ebaa88991fe7896788edaa5a093fb23d9376888))
+* **deps:** update module k8s.io/apimachinery to v0.30.2 ([c5105ee](https://git.act3-ace.com/ace/data/telemetry/commit/c5105ee06202d2b024d70601a7ba2fd6eee2ca95))
+* **deps:** update module k8s.io/apimachinery to v0.30.3 ([d0c4d0e](https://git.act3-ace.com/ace/data/telemetry/commit/d0c4d0e3bcc5e9b82c4c9a0c0120c5ac386ecf22))
+* **helm:** helm chart linting ([09f8173](https://git.act3-ace.com/ace/data/telemetry/commit/09f8173b7bfa6c93061722e31ed8ea81b962c899))
+* **helm:** Removed postgresql chart dependency ([31548e7](https://git.act3-ace.com/ace/data/telemetry/commit/31548e785872d728f9568de51c3e5d4696e77826))
+
+
+### Features
+
+* Leaderboard v2 ([b59aff1](https://git.act3-ace.com/ace/data/telemetry/commit/b59aff18a39eadb0900e4a957733adc7730f20df))
+
 ## [0.20.1](https://git.act3-ace.com/ace/data/telemetry/compare/v0.20.0...v0.20.1) (2024-05-26)
 
 
