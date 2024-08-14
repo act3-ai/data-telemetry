@@ -133,16 +133,3 @@ generate docs:
       - docs
       - swagger.yml
     when: on_success
-    
-# This dependency is so we can run "telemetry util gendocs" from release.sh
-semantic release:
-  image:
-    name: reg.git.act3-ace.com/devsecops/cicd/images/ci-go-semantic
-  before_script:
-    - !reference [.go_create_netrc, script]
-    # - !reference [semantic release, before_script]
-    - git config --global --add safe.directory /builds/$CI_PROJECT_PATH
-  dependencies: 
-    - generate docs
-  needs:
-    - generate docs
