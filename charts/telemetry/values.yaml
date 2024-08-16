@@ -66,10 +66,10 @@ priorityClassName:
 # logging verbosity
 verbosity: 0
 db:
-  dsn: {}
+  dsn: ""
   existingSecret:
-    name: {}
-    key: {}
+    name: ""
+    key: ""
 # dsn: "file:test.db"
 # existingSecret: # the name of an existing secret that contains the db password
 #   name:
@@ -92,10 +92,24 @@ webapp: {}
 #   acehub:
 #     image: reg.git.act3-ace.com/ace/hub/vscode-server:v0
 #     resources:
-#       cpu: "2"
-#       memory: "2Gi"
+#       limits:
+#         cpu: "2"
+#         memory: "2Gi"
+#       requests:
+#         cpu: "2"
+#         memory: "2Gi"
+#     gpu:
+#       type: "gpu_type"
+#       count: 0
+#     env:
+#       MY_KEY: "my_value"
+#     ports:
+#       - name: "web-ui"
+#         number: 8080
+#         proxyType: "normal"
+#     script: "ls -la"
+#     shm: "1Gi"
 #     proxyType: normal
-#     jupyter: false
 
 # defaultBottleSelectors:
 # - type != testing
