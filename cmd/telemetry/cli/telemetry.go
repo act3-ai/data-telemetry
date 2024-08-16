@@ -61,6 +61,12 @@ func ServerConfigurationOverrides(ctx context.Context, c *v1alpha1.ServerConfigu
 		c.DB.DSN = redact.SecretURL(value)
 	}
 
+	name = "ACE_TELEMETRY_DB_PASS"
+	if value, exists := os.LookupEnv(name); exists {
+		log.InfoContext(ctx, "Using environment variable", "name", name)
+		c.DB.Password = redact.Secret(value)
+	}
+
 	// WebApp overrides
 	name = "ACE_TELEMETRY_JUPYTER"
 	if value, exists := os.LookupEnv(name); exists {

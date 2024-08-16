@@ -46,6 +46,9 @@ functional test:
 test chart:
   cache: []
 
+publish chart:
+  cache: []
+
 build binaries:
   extends: .go build
   variables:

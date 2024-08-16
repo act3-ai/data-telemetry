@@ -63,7 +63,7 @@ spec:
               value: {{ $value | quote }}
           {{- end }}
           {{- if and .Values.db.existingSecret.name .Values.db.existingSecret.key }}
-            - name: DB_PASSWORD
+            - name: ACE_TELEMETRY_DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.db.existingSecret.name }}

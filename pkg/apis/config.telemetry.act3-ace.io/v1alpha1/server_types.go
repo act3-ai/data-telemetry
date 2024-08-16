@@ -35,6 +35,9 @@ type ServerConfigurationSpec struct {
 type Database struct {
 	// DSN is the database connection string
 	DSN redact.SecretURL `json:"dsn" datapolicy:"url"`
+
+	// Password is the database account password
+	Password redact.Secret `json:"password,omitempty"`
 }
 
 // WebApp is the configuration for the telemetry web application.

@@ -168,6 +168,10 @@ func Open(ctx context.Context, conf v1alpha1.Database, scheme *runtime.Scheme) (
 	if e != nil {
 		return nil, fmt.Errorf("parsing DSN: %w", e)
 	}
+
+	if conf.Password != "" {
+		u.User = url.UserPassword(u.User.Username(), string(conf.Password))
+	}
 	log.InfoContext(ctx, "Database connection", "dsn", u.Redacted())
 
 	var db *gorm.DB

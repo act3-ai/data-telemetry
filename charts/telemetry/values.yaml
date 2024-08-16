@@ -67,10 +67,10 @@ priorityClassName:
 verbosity: 0
 db:
   dsn: ""
+# dsn: "postgres://telemetry-user@123.123.123.123:5438"
   existingSecret:
     name: ""
     key: ""
-# dsn: "file:test.db"
 # existingSecret: # the name of an existing secret that contains the db password
 #   name:
 #   key:
