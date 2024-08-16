@@ -1,3 +1,10 @@
+## [0.21.2](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.1...v0.21.2) (2024-08-16)
+
+
+### Bug Fixes
+
+* **helm:** helm db password value ([5040e75](https://git.act3-ace.com/ace/data/telemetry/commit/5040e75cdf3376abcf6c434bd01a34835af53f7b))
+
 ## [0.21.1](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.0...v0.21.1) (2024-08-16)
 
 

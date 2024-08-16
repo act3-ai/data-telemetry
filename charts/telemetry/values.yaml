@@ -6,7 +6,7 @@ image:
   repository: reg.git.act3-ace.com/ace/data/telemetry
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.21.1"
+  tag: "v0.21.2"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -67,7 +67,7 @@ priorityClassName:
 verbosity: 0
 db:
   dsn: ""
-# dsn: "postgres://telemetry-user@123.123.123.123:5438"
+  # dsn: "postgres://telemetry-user@123.123.123.123:5438"
   existingSecret:
     name: ""
     key: ""
