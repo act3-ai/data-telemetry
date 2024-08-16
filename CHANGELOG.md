@@ -1,3 +1,10 @@
+## [0.21.1](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.0...v0.21.1) (2024-08-16)
+
+
+### Bug Fixes
+
+* **helm:** chart values data types and added correct examples ([0a524eb](https://git.act3-ace.com/ace/data/telemetry/commit/0a524eb1f701b59329d3eb6a7960cbc1cceb527c))
+
 # [0.21.0](https://git.act3-ace.com/ace/data/telemetry/compare/v0.20.1...v0.21.0) (2024-08-14)
 
 
