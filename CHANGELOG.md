@@ -1,3 +1,10 @@
+## [0.21.3](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.2...v0.21.3) (2024-08-20)
+
+
+### Bug Fixes
+
+* **db:** postgres common label query ([7ad9b7a](https://git.act3-ace.com/ace/data/telemetry/commit/7ad9b7ab4f8c2d6209c0d6717afc11fe309e4e8a))
+
 ## [0.21.2](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.1...v0.21.2) (2024-08-16)
 
 
