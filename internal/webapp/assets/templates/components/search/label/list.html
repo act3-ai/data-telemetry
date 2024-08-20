@@ -5,7 +5,7 @@
   <div class="col-4 justify-content-center" id="labels" style="margin: .5em; width: fit-content;">
     <div class="row flex-nowrap">
       {{ range $index, $entryLabel := .Values.CommonLabelKeys }}
-      <span id="pill" style="max-width: 10rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+      <span id="pill" style="max-width: 10rem; min-width: 5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
         class="common-label-pill badge rounded-pill bg-label m-1 col-2" title="{{ . }}">
         {{ . }}
       </span>

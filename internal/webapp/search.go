@@ -448,9 +448,9 @@ func getCommonLabelsFromRequestParams(ctx context.Context, params *bottleRequest
 		Table("labels").
 		Select("labels.key").
 		Joins("INNER JOIN (?) AS b ON b.id = labels.bottle_id", tx).
-		Joins("LEFT JOIN (?) AS b_count", txCount).
+		Joins("NATURAL LEFT JOIN (?) AS b_count", txCount).
 		Group("labels.key").
-		Having("COUNT(DISTINCT b.id) == b_count.c")
+		Having("COUNT(DISTINCT b.id) = MAX(b_count.c)")
 
 	var labelKeys []string
 	if err := labelQuery.Find(&labelKeys).Error; err != nil {
