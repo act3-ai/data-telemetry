@@ -136,7 +136,7 @@ generate docs:
       - docs
       - swagger.yml
     when: on_success
-    
+
 semantic release:
   image:
     name: reg.git.act3-ace.com/devsecops/cicd/images/ci-go-semantic
