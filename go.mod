@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	code.cloudfoundry.org/bytefmt v0.0.0-20240730181512-d61d30bca0a4
-	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240806202638-22ce07de68bc
+	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-chi/chi/v5 v5.1.0
