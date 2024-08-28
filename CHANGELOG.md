@@ -1,3 +1,11 @@
+## [0.21.4](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.3...v0.21.4) (2024-08-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency devsecops/cicd/pipeline to v19.0.29 ([4550e14](https://git.act3-ace.com/ace/data/telemetry/commit/4550e14144e0bfb8d4edb780fae73ae0cfd8cfc2))
+* **deps:** update git.act3-ace.com/ace/hub/api/v6 digest to 9a83119 ([7785ba0](https://git.act3-ace.com/ace/data/telemetry/commit/7785ba00064d2e54cdc98449bd1002e3e0db2a8c))
+
 ## [0.21.3](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.2...v0.21.3) (2024-08-20)
 
 
