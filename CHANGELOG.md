@@ -1,3 +1,16 @@
+# [1.0.0](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.4...v1.0.0) (2024-08-28)
+
+
+### Bug Fixes
+
+* **ci:** minor typo ([84bb440](https://git.act3-ace.com/ace/data/telemetry/commit/84bb440f5ccd11ed3857653992e14860641b786a))
+* **deps:** update docker.io/library/golang docker tag to v1.23.0 ([a51bb4f](https://git.act3-ace.com/ace/data/telemetry/commit/a51bb4fa6ea3681453f50b690af20b204372845c))
+
+
+### BREAKING CHANGES
+
+* **ci:** going to v1
+
 ## [0.21.4](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.3...v0.21.4) (2024-08-28)
 
 
