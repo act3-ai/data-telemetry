@@ -8,7 +8,6 @@ import (
 
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/selection"
 
@@ -469,6 +468,10 @@ func FilterByMetric(metricFilters []string) func(db *gorm.DB) *gorm.DB {
 // SortByMetric is a scope that will sort bottles by a given metric's value.
 func SortByMetric(metricName string, ascending bool) func(db *gorm.DB) *gorm.DB {
 	return func(con *gorm.DB) *gorm.DB {
-		return con.Joins("JOIN metrics ON metrics.bottle_id = bottles.id AND metrics.name = ?", metricName).Order(clause.OrderByColumn{Column: clause.Column{Name: "metrics.value"}, Desc: !ascending})
+		orderBy := "MAX(metrics.value)"
+		if !ascending {
+			orderBy = fmt.Sprintf("%s desc", orderBy)
+		}
+		return con.Joins("JOIN metrics ON metrics.bottle_id = bottles.id AND metrics.name = ?", metricName).Order(orderBy)
 	}
 }

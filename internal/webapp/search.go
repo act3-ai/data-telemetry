@@ -211,7 +211,7 @@ func getBottlesFromRequestParams(ctx context.Context, params *bottleRequestParam
 		// 	return tx.Select("id", "digest")
 		// }).
 
-		Distinct("bottles.id", "bottles.description").
+		Select("bottles.id, bottles.description").
 		Scopes(db.IncludeDigests("bottles"), db.IncludeIsDeprecated(), db.IncludeNumPulls()).
 		Limit(params.Limit).
 		Offset(params.Page * params.Limit)
