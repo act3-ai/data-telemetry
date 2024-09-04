@@ -3,7 +3,7 @@ module gitlab.com/act3-ai/asce/data/telemetry
 go 1.22.5
 
 require (
-	code.cloudfoundry.org/bytefmt v0.5.0
+	code.cloudfoundry.org/bytefmt v0.6.0
 	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/aohorodnyk/mimeheader v0.0.6

@@ -2,6 +2,8 @@ code.cloudfoundry.org/bytefmt v0.0.0-20240730181512-d61d30bca0a4 h1:0TdG8CEvxn4T
 code.cloudfoundry.org/bytefmt v0.0.0-20240730181512-d61d30bca0a4/go.mod h1:ujeJbPDuEVVnMj8TgwGJEZ2BCcYOaIa7EVRXu995UKY=
 code.cloudfoundry.org/bytefmt v0.5.0 h1:W7PBnnnEaCB1slY8Ax86V68JUF/ZkaWoliraXEPQkIY=
 code.cloudfoundry.org/bytefmt v0.5.0/go.mod h1:bKm8GdmgAatc/ifX2VQ0G+BquevgZW/0NeUl5Ic2sU4=
+code.cloudfoundry.org/bytefmt v0.6.0 h1:R8momoB6yecXFw3OPQvtSG+imXqzisp5lQyT2dKwsjo=
+code.cloudfoundry.org/bytefmt v0.6.0/go.mod h1:lo7u8g+4pNIGuIdo2mew7IGs8162hi2lR8ID8+5W+RA=
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240806202638-22ce07de68bc h1:NdDaObaYlFB/shg2aLG0STZYLAQZ5r7hhPnmj3gFhRA=
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240806202638-22ce07de68bc/go.mod h1:opO8ojnMNH5N2e+JRb9OHFNbwoM5LtPG0n0YMHVMLfI=
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f h1:wBrwWNI2Z/45zSSRTcX+rauycK3/Nb13h5qnY6pXKGA=
