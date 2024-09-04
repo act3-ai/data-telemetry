@@ -1,3 +1,15 @@
+## [1.0.1](https://git.act3-ace.com/ace/data/telemetry/compare/v1.0.0...v1.0.1) (2024-09-04)
+
+
+### Bug Fixes
+
+* **deps:** update kubernetes packages to v0.31.0 ([3f7e334](https://git.act3-ace.com/ace/data/telemetry/commit/3f7e334871bf9b6b53888305b7a0832a24aa248f))
+* **deps:** update module code.cloudfoundry.org/bytefmt to v0.5.0 ([247c464](https://git.act3-ace.com/ace/data/telemetry/commit/247c464fa99516a4f3471a352d6d24625fb2ea63))
+* **deps:** update module code.cloudfoundry.org/bytefmt to v0.6.0 ([c820420](https://git.act3-ace.com/ace/data/telemetry/commit/c820420010ae08053859b87357b98d6e01a5f890))
+* **deps:** update module github.com/masterminds/sprig/v3 to v3.3.0 ([bc457f6](https://git.act3-ace.com/ace/data/telemetry/commit/bc457f6ae9fa1636ca310ef042ba6e2459963c76))
+* **deps:** update module github.com/notaryproject/notation-go to v1.2.0 ([5cf315b](https://git.act3-ace.com/ace/data/telemetry/commit/5cf315bdc17ed95bb0f03e4f7a3ed3884a743e18))
+* **deps:** update module github.com/prometheus/client_golang to v1.20.2 ([6f60542](https://git.act3-ace.com/ace/data/telemetry/commit/6f605427065141152f48e7ae40fc95bbb31dcf5a))
+
 # [1.0.0](https://git.act3-ace.com/ace/data/telemetry/compare/v0.21.4...v1.0.0) (2024-08-28)
 
 
