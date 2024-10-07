@@ -10,6 +10,8 @@ git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240806202638-22ce07de68bc h1:NdDaObaYlF
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240806202638-22ce07de68bc/go.mod h1:opO8ojnMNH5N2e+JRb9OHFNbwoM5LtPG0n0YMHVMLfI=
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f h1:wBrwWNI2Z/45zSSRTcX+rauycK3/Nb13h5qnY6pXKGA=
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f/go.mod h1:opO8ojnMNH5N2e+JRb9OHFNbwoM5LtPG0n0YMHVMLfI=
+git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241003165841-f535566c7143 h1:nHWfI5BtM9ETqmPtBqEwF3oyzyr75qZQNDybXbaJifo=
+git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241003165841-f535566c7143/go.mod h1:zUR7Lizd2dEP1WPpCeUTrw+5tOl+vYi1KwzLGAxDAZE=
 github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 h1:mFRzDkZVAjdal+s7s0MwaRv9igoPqLRdzOLzw/8Xvq8=
 github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358/go.mod h1:chxPXzSsl7ZWRAuOIE23GDNzjWuZquvFlgA8xmpunjU=
 github.com/MakeNowJust/heredoc/v2 v2.0.1 h1:rlCHh70XXXv7toz95ajQWOWQnN4WNLt0TdpZYIR/J6A=
@@ -376,6 +378,8 @@ k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0 h1:jgGTlFYnhF1PM1Ax/lAlxUPE+KfCI
 k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 h1:pUdcCO1Lk/tbT5ztQWOBi5HBgbBP1J8+AsQnQCKsi8A=
 k8s.io/utils v0.0.0-20240711033017-18e509b52bc8/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
+k8s.io/utils v0.0.0-20240921022957-49e7df575cb6 h1:MDF6h2H/h4tbzmtIKTuctcwZmY0tY9mD9fNT47QO6HI=
+k8s.io/utils v0.0.0-20240921022957-49e7df575cb6/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 oras.land/oras-go/v2 v2.5.0 h1:o8Me9kLY74Vp5uw07QXPiitjsw7qNXi8Twd+19Zf02c=
 oras.land/oras-go/v2 v2.5.0/go.mod h1:z4eisnLP530vwIOUOJeBIj0aGI0L1C3d53atvCBqZHg=
 sigs.k8s.io/controller-runtime v0.18.4 h1:87+guW1zhvuPLh1PHybKdYFLU0YJp4FhJRmiHvm5BZw=

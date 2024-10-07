@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	code.cloudfoundry.org/bytefmt v0.6.0
-	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f
+	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241003165841-f535566c7143
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-chi/chi/v5 v5.1.0
@@ -96,7 +96,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
-	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
+	k8s.io/utils v0.0.0-20240921022957-49e7df575cb6 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect
 	sigs.k8s.io/controller-runtime v0.18.4 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
