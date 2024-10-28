@@ -1,25 +1,42 @@
 {{ define "navbar" }}
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="py-2 px-3">
-      <a class="navbar-brand" href="/" id="root-link" style="font-size: 2.25rem;">
-        <img src="{{ .Globals.Top }}www/static/img/ace-logo.svg" alt="" height="60" class="d-inline-block align-text-top" />
-        ACE Telemetry
-      </a>
+  <nav class="navbar">
+    <a href="/www/catalog.html" class="flex items-center logo-text">
+      <img src="{{ .Globals.Top }}www/static/img/logo.svg" alt="ACE Logo" height="60"
+        class="d-inline-block align-text-top" />
+    </a>
+    <div class="navbar-nav ms-auto">
+      <div class="nav-item dropdown">
+        <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{ .Globals.Top }}www/static/img/menu_icon.svg" alt="menu icon" />
+        </button>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="/www/documentation.html"
+              class="{{ if eq .RootTemplate "documentation" }}{{ end }}">Documentation</a>
+          </li>
+          <li><a href="https://chat.git.act3-ace.com/act3/channels/ace-dt" target="_blank"
+              rel="noopener noreferrer">Mattermost</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
   <div class="navbar navbar-expand-lg nav-menu px-3">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" id="toggler-btn">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link {{ if eq .RootTemplate "about.html" }} active{{ end }}" id="home-link" onclick="window.location='{{ .Globals.Top }}www/about.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}'+window.location.search;">Home</a>
-          <a class="nav-link {{ if eq .RootTemplate "catalog.html" }} active{{ end }}" id="catalog-link" onclick="window.location='{{ .Globals.Top }}www/catalog.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}'+window.location.search;">Catalog</a>
-          <a class="nav-link {{ if eq .RootTemplate "leaderboard.html" }} active{{ end }}" id="leaderboard-link" onclick="window.location='{{ .Globals.Top }}www/leaderboard.html{{ with .Globals.DefaultBottleSelectors }}?{{ range . }}&label-selector={{.}}{{ end }}{{ end }}'+window.location.search;">Leaderboard</a>
-        </div>
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a href="/www/catalog.html"
+          class="nav-link {{ if eq .RootTemplate "catalog.html" }} active{{ end }}">CATALOG</a>
+        <a href="/www/leaderboard.html"
+          class="nav-link {{ if eq .RootTemplate "leaderboard.html" }} active{{ end }}">LEADERBOARD</a>
+        <a href="/www/documentation.html"
+          class="nav-link {{ if eq .RootTemplate "documentation.html" }} active{{ end }}">DOCUMENTATION</a>
       </div>
+    </div>
+
   </div>
 </header>
 {{ end }}

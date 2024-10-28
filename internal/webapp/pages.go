@@ -60,7 +60,7 @@ func (a *WebApp) handleAbout(w http.ResponseWriter, r *http.Request) error {
 
 	values := TotalCount{eventsCount, manifestsCount, bottlesCount, artifactsCount, signaturesCount, blobDataBytes}
 
-	return a.executeTemplateAsResponse(ctx, w, "about.html", values, "../")
+	return a.executeTemplateAsResponse(ctx, w, "documentation.html", values, "../")
 }
 
 func (a *WebApp) getPageHandler(page string) func(w http.ResponseWriter, r *http.Request) error {

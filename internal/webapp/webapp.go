@@ -112,12 +112,12 @@ func (a *WebApp) Initialize(router chi.Router) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		// We do not use this one because it converts it to an absolute path (preventing relocation behind a reverse proxy)
 		// http.Redirect(w, r, "about.html", http.StatusFound)
-		w.Header().Set("Location", "about.html")
+		w.Header().Set("Location", "catalog.html")
 		w.WriteHeader(http.StatusFound)
 	})
 
 	// pages
-	router.Get("/about.html", httputil.RootHandler(a.handleAbout).ServeHTTP)
+	router.Get("/documentation.html", httputil.RootHandler(a.handleAbout).ServeHTTP)
 	router.Get("/catalog.html", httputil.RootHandler(a.getPageHandler("catalog.html")).ServeHTTP)
 	router.Get("/leaderboard.html", httputil.RootHandler(a.getPageHandler("leaderboard.html")).ServeHTTP)
 	router.Get("/bottle.html", httputil.RootHandler(a.handleBottle).ServeHTTP)
