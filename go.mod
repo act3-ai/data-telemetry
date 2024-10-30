@@ -1,10 +1,12 @@
 module gitlab.com/act3-ai/asce/data/telemetry
 
-go 1.22.5
+go 1.23.1
+
+toolchain go1.23.2
 
 require (
 	code.cloudfoundry.org/bytefmt v0.6.0
-	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241003165841-f535566c7143
+	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241024165733-a3a697170891
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-chi/chi/v5 v5.1.0
@@ -76,7 +78,7 @@ require (
 	github.com/notaryproject/tspclient-go v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.55.0 // indirect
+	github.com/prometheus/common v0.59.1 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/segmentio/ksuid v1.0.4 // indirect
@@ -85,12 +87,12 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/veraison/go-cose v1.1.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/mod v0.20.0 // indirect
-	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
@@ -98,8 +100,8 @@ require (
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20240921022957-49e7df575cb6 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect
-	sigs.k8s.io/controller-runtime v0.18.4 // indirect
-	sigs.k8s.io/gateway-api v1.1.0 // indirect
+	sigs.k8s.io/controller-runtime v0.19.0 // indirect
+	sigs.k8s.io/gateway-api v1.2.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
