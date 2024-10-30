@@ -1,4 +1,4 @@
-FROM docker.io/library/golang:1.23.0-bookworm as deps
+FROM docker.io/library/golang:1.23.2-bookworm as deps
 
 # Install debian packages
 RUN apt-get update -q && apt-get install -yq --no-install-recommends \
