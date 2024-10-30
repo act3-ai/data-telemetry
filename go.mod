@@ -27,7 +27,7 @@ require (
 	gitlab.com/act3-ai/asce/go-common v0.0.0-20240515134838-75dff81e3d47
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/driver/sqlite v1.5.6
-	gorm.io/gorm v1.25.11
+	gorm.io/gorm v1.25.12
 	k8s.io/api v0.31.2
 	k8s.io/apimachinery v0.31.2
 	sigs.k8s.io/yaml v1.4.0
