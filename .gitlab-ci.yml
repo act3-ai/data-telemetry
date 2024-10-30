@@ -28,7 +28,7 @@ functional test:
     POSTGRES_PASSWORD: testPassword
     POSTGRES_HOST_AUTH_METHOD: trust
   services:
-    - postgres:16-alpine
+    - postgres:17-alpine
     # We should be testing the built image as a service but we do not build the image.  See https://git.act3-ace.com/devsecops/cicd/pipeline/blob/28170656832be8e8bb75c347c8f2d71f7170adf5/golang/service.yml
     # - $CI_REGISTRY_IMAGE:ci-$CI_PIPELINE_ID
   script:
