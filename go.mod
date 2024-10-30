@@ -18,7 +18,7 @@ require (
 	github.com/notaryproject/notation-go v1.2.1
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.0
-	github.com/prometheus/client_golang v1.20.2
+	github.com/prometheus/client_golang v1.20.5
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
 	gitlab.com/act3-ai/asce/data/schema v0.0.0-20240515135820-820f65b6a194
