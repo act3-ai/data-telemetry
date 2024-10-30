@@ -15,7 +15,7 @@ require (
 	github.com/hetiansu5/urlquery v1.2.7
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/notaryproject/notation-core-go v1.1.0
-	github.com/notaryproject/notation-go v1.2.0
+	github.com/notaryproject/notation-go v1.2.1
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/prometheus/client_golang v1.20.2
