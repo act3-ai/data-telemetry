@@ -24,7 +24,7 @@ Generate documentation for the tool in various formats
 ```plaintext
       --config stringArray         server configuration file location (setable with env "ACE_TELEMETRY_CONFIG"). 
                                    The first configuration file present is used.  Others are ignored.
-                                    (default [ace-telemetry-config.yaml,HOMEDIR/Library/Application Support/ace/telemetry/config.yaml,/etc/ace/telemetry/config.yaml])
+                                    (default [ace-telemetry-config.yaml,HOMEDIR/.config/ace/telemetry/config.yaml,/etc/ace/telemetry/config.yaml])
   -v, --verbosity strings[=warn]   Logging verbosity level (also setable with environment variable ACE_TELEMETRY_VERBOSITY)
                                    Aliases: error=0, warn=4, info=8, debug=12 (default [error])
 ```

@@ -166,8 +166,8 @@ tool/.golangci-lint.$(GOLANGCILINT_VERSION):
 tool: tool/controller-gen tool/crd-ref-docs tool/ko tool/golangci-lint
 
 .PHONY: gendoc
-gendoc:
-	- rm docs/cli/*
+gendoc: build-linux
+	- rm -r docs/cli/*
 	HOME=HOMEDIR ci-dist/telemetry/linux/amd64/bin/telemetry gendocs md --only-commands docs/cli/
 
 .PHONY: apidoc

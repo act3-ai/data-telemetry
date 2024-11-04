@@ -33,6 +33,11 @@ request:
   locations:
   - name: Telemetry Server
     url: https://telemetry.example.com
+    oauth:
+	  issuer: https://issuer.example.com
+	  clientID: "123456789123456789"
+  - name: Telemetry Server
+    url: https://telemetry.example.com
     cookies:
       jwt: my-token
   - name: localhost

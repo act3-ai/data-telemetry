@@ -124,11 +124,20 @@ generate docs:
   rules:
     - if: '$CI_COMMIT_TITLE !~ /^chore\(release\):(.*)$/ && $DEP_CHECK != "true"'
   image: !reference [.go build, image]
+  before_script:
+    - apt-get update
+    - apt-get install unzip
   script:
+    - |
+      if [ "$DO_RELEASE" != "true" ]; then
+        echo "DO_RELEASE is not set. Skipping...";
+        exit 0;
+      fi
     - if [[ $NETRC ]]; then cp $NETRC ~/.netrc; else echo "machine git.act3-ace.com
         login gitlab-ci-token password $CI_JOB_TOKEN" > ~/.netrc; fi
     - go install github.com/mikefarah/yq/v4@latest
     - yq -V
+    - make build-linux
     - ci-dist/telemetry/linux/amd64/bin/telemetry template ./testdata
     - make gendoc apidoc swagger # manpage
   artifacts:

@@ -81,6 +81,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `dsn` _[SecretURL](#secreturl)_ | DSN is the database connection string |  |  |
+| `password` _[Secret](#secret)_ | Password is the database account password |  |  |
 
 
 #### Location
@@ -99,8 +100,27 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `name` _string_ | Name is the display name of the telemetry server |  |  |
 | `url` _[SecretURL](#secreturl)_ | URL is the base URL for the telemetry server (does not include the /api) |  |  |
+| `oauth` _[OAuthProvider](#oauthprovider)_ | OAuth defines an OAuth2.0 provider used for authentication. |  |  |
 | `cookies` _object (keys:string, values:[Secret](#secret))_ | Cookies to use for authentication |  |  |
 | `token` _[Secret](#secret)_ | Bearer token to use for authentication |  |  |
+
+
+#### OAuthProvider
+
+
+
+OAuthProvider defines a host and client application ID used for OAuth2.0 Device Grant authentication
+defined by RFC 8628; see https://www.rfc-editor.org/rfc/rfc8628.
+
+
+
+_Appears in:_
+- [Location](#location)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `issuer` _string_ | Issuer defines the authorization server. |  |  |
+| `clientID` _string_ | ClientID is the client application identifier. Not a secret.<br />See https://www.rfc-editor.org/rfc/rfc6749#section-2.2 for more info. |  |  |
 
 
 #### ServerConfiguration
