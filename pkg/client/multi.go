@@ -7,7 +7,7 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
 	"git.act3-ace.com/ace/data/telemetry/pkg/types"
 )
 
@@ -25,7 +25,7 @@ func NewMultiClient(clients []Client) *MultiClient {
 }
 
 // NewMultiClientConfig will create a MultiClient using slices of config file.
-func NewMultiClientConfig(locations []v1alpha2.Location) *MultiClient {
+func NewMultiClientConfig(locations []v1alpha1.Location) *MultiClient {
 	singleClients := make([]Client, 0, len(locations))
 	for _, location := range locations {
 		sc, err := NewSingleClientFromConfig(location)

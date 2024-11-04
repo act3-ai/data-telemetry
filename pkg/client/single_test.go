@@ -24,7 +24,7 @@ import (
 	"git.act3-ace.com/ace/data/telemetry/internal/db"
 	"git.act3-ace.com/ace/data/telemetry/internal/middleware"
 	ttest "git.act3-ace.com/ace/data/telemetry/internal/testing"
-	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
 	"git.act3-ace.com/ace/data/telemetry/pkg/types"
 )
 
@@ -53,7 +53,7 @@ func (s *SingleTestSuite) SetupTest() {
 
 	// Instead of an env we can use a the "flags" package to create a flag and default it to the env if set or to file::memory: if not
 	dsn := "file::memory:"
-	myDB, err := db.Open(s.ctx, v1alpha2.Database{
+	myDB, err := db.Openv1alpha1(s.ctx, v1alpha1.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
@@ -82,7 +82,7 @@ func (s *SingleTestSuite) SetupTest() {
 	s.client = sc
 
 	// mockLocation is a mock example of our config file for testing
-	mockLocation := v1alpha2.Location{
+	mockLocation := v1alpha1.Location{
 		Name:    "MyMockConfig",
 		URL:     redact.SecretURL(s.server.URL),
 		Cookies: map[string]redact.Secret{"foo": "bar"},
