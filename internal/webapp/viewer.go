@@ -17,16 +17,16 @@ import (
 	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ViewerSpecList is just a list of ViewerSpecs.
-type ViewerSpecList []v1alpha1.ViewerSpec
+type ViewerSpecList []v1alpha2.ViewerSpec
 
 // FilterAndSort returns only viewers supporting mediaType in sorted order (best first).
 func (vsl *ViewerSpecList) FilterAndSort(mediaType string) ViewerSpecList {
 	type viewerSpecWithQuality struct {
-		ViewerSpec v1alpha1.ViewerSpec
+		ViewerSpec v1alpha2.ViewerSpec
 		Quality    float32
 	}
 
@@ -72,12 +72,12 @@ const (
 // GetViewerSpecList will find annotations that denote viewers and parse them.
 func (a *WebApp) GetViewerSpecList(bottle db.Bottle) ViewerSpecList {
 	annotations := bottle.Annotations
-	viewers := make([]v1alpha1.ViewerSpec, 0, len(annotations)+len(a.defaultViewerSpecs))
+	viewers := make([]v1alpha2.ViewerSpec, 0, len(annotations)+len(a.defaultViewerSpecs))
 	for _, annotation := range annotations {
 		if path.Dir(annotation.Key) != LabelViewerPrefix {
 			continue
 		}
-		v := v1alpha1.ViewerSpec{}
+		v := v1alpha2.ViewerSpec{}
 		if err := json.Unmarshal([]byte(annotation.Value), &v); err != nil {
 			// eat errors
 			a.log.Error("Unable to decode viewer specification, skipping", "key", annotation.Key, "value", annotation.Value, "error", err)
@@ -93,7 +93,7 @@ func (a *WebApp) GetViewerSpecList(bottle db.Bottle) ViewerSpecList {
 }
 
 // FindViewers computes the viewers for each ACE Hub instance and provided spec.  Each ViewerLink will mount the bottle using the selectors.
-func (a *WebApp) FindViewers(specs []v1alpha1.ViewerSpec, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) []ViewerLink {
+func (a *WebApp) FindViewers(specs []v1alpha2.ViewerSpec, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) []ViewerLink {
 	viewers := make([]ViewerLink, 0, len(a.hubInstances))
 	for _, hubInstance := range a.hubInstances {
 		for _, spec := range specs {
@@ -140,7 +140,7 @@ func addArtifactEnvs(newSpec *hub.HubEnvTemplateSpec, artifact *db.PublicArtifac
 	newSpec.Env["ACE_OPEN_DIGEST"] = artifact.Digest.String()
 }
 
-func getViewerURL(spec v1alpha1.ViewerSpec, hubInstanceURL string, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) (*url.URL, error) {
+func getViewerURL(spec v1alpha2.ViewerSpec, hubInstanceURL string, bottle digest.Digest, partSelectors []string, artifact *db.PublicArtifact) (*url.URL, error) {
 	// Make a shallow copy of the viewer spec
 	newSpec := spec.ACEHub
 

@@ -7,7 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ClientConfig is an action for managing the client configuration.
@@ -20,7 +20,7 @@ type ClientConfig struct {
 // Run is the action method.
 func (action *ClientConfig) Run(ctx context.Context, out io.Writer) error {
 	if action.Sample {
-		_, err := fmt.Fprint(out, v1alpha1.SampleClientConfig)
+		_, err := fmt.Fprint(out, v1alpha2.SampleClientConfig)
 		return err
 	}
 

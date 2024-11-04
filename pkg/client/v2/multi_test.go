@@ -24,7 +24,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
 	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
 )
 
@@ -53,12 +53,12 @@ func (s *MultiTestSuite) SetupTest() {
 
 	dsn := "file::memory:"
 
-	myDB, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
 
-	myDB2, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB2, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)

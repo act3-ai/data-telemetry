@@ -24,14 +24,14 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
 )
 
 // TODO audit file closing
 
 // NewRequestClientFromConfig creates a http.Client from the given configuration.
-func NewRequestClientFromConfig(conf v1alpha1.ClientConfiguration) (*http.Client, error) {
+func NewRequestClientFromConfig(conf v1alpha2.ClientConfiguration) (*http.Client, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, fmt.Errorf("creating cookie jar: %w", err)

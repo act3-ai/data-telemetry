@@ -40,7 +40,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/dbtest"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
 	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	client "gitlab.com/act3-ai/asce/data/telemetry/pkg/client/v2"
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
 )
@@ -83,7 +83,7 @@ func (s *HandlersTestSuite) SetupTest() {
 		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDbDsn)
 		s.T().Cleanup(cleanup)
 	}
-	myDB, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(u.String()),
 	}, scheme)
 	s.NoError(err)

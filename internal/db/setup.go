@@ -14,7 +14,7 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/features"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // MigrateDB migrates the DB to the new schema and reprocesses bottles.
@@ -161,7 +161,7 @@ func OpenSqliteDB(dsn string) (*gorm.DB, error) {
 // Open opens a DB connection using URL formatting.
 // Also migrates the database
 // For example file:test.db, "file::memory:" or postgres://jack:secret@foo.example.com:5432,bar.example.com:5432/mydb
-func Open(ctx context.Context, conf v1alpha1.Database, scheme *runtime.Scheme) (*gorm.DB, error) {
+func Open(ctx context.Context, conf v1alpha2.Database, scheme *runtime.Scheme) (*gorm.DB, error) {
 	log := logger.FromContext(ctx)
 
 	u, e := url.Parse(string(conf.DSN))

@@ -1,11 +1,11 @@
-package v1alpha1
+package v1alpha2
 
 import (
 	"log/slog"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	"git.act3-ace.com/ace/go-common/pkg/redact"
 )
 
 // +kubebuilder:object:root=true
@@ -78,12 +78,17 @@ func (l Location) LogValue() slog.Value {
 
 // SampleClientConfig is a representative ClientConfiguration snippet.
 const SampleClientConfig = `# ACE Data Telemetry Client Configuration
-apiVersion: config.telemetry.act3-ace.io/v1alpha1
+apiVersion: config.telemetry.act3-ace.io/v1alpha2
 kind: ClientConfiguration
 
 # Only used in the upload and download commands
 request:
   locations:
+  - name: Telemetry Server
+    url: https://telemetry.example.com
+    oauth:
+			issuer: https://issuer.example.com
+			clientID: "123456789123456789"
   - name: Telemetry Server
     url: https://telemetry.example.com
     cookies:

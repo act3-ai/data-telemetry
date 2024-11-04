@@ -24,7 +24,7 @@ import (
 	"git.act3-ace.com/ace/data/telemetry/internal/db"
 	"git.act3-ace.com/ace/data/telemetry/internal/middleware"
 	ttest "git.act3-ace.com/ace/data/telemetry/internal/testing"
-	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"git.act3-ace.com/ace/data/telemetry/pkg/types"
 )
 
@@ -54,12 +54,12 @@ func (s *MultiTestSuite) SetupTest() {
 
 	dsn := "file::memory:"
 
-	myDB, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
 
-	myDB2, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB2, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
@@ -109,20 +109,20 @@ func (s *MultiTestSuite) SetupTest() {
 	s.client = NewMultiClient([]Client{client1, client2, client3})
 
 	// sample mock Location files for testing
-	mockLocationA := v1alpha1.Location{
+	mockLocationA := v1alpha2.Location{
 		Name:    "MyMockConfig",
 		URL:     redact.SecretURL(s.serverA.URL),
 		Cookies: map[string]redact.Secret{"foo": "bar"},
 		Token:   "mycooltoken",
 	}
-	mockLocationB := v1alpha1.Location{
+	mockLocationB := v1alpha2.Location{
 		Name:    "MyMockConfig2",
 		URL:     redact.SecretURL(s.serverB.URL),
 		Cookies: map[string]redact.Secret{"foo": "bar"},
 		Token:   "mycooltoken",
 	}
 
-	s.configClient = NewMultiClientConfig([]v1alpha1.Location{mockLocationA, mockLocationB})
+	s.configClient = NewMultiClientConfig([]v1alpha2.Location{mockLocationA, mockLocationB})
 }
 
 func (s *MultiTestSuite) TearDownTest() {

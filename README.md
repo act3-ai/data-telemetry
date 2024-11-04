@@ -45,7 +45,7 @@ Using the [VSCode REST Client](https://marketplace.visualstudio.com/items?itemNa
 You can select your database by creating a `config.yaml` file at the top level of the project, with the contents
 
 ```yaml
-apiVersion: config.telemetry.act3-ace.io/v1alpha1
+apiVersion: config.telemetry.act3-ace.io/v1alpha2
 kind: ServerConfiguration
 
 db:
@@ -79,7 +79,7 @@ webapp:
 The client configuration file, which is often named `client-config.yaml`, looks like:
 
 ```yaml
-apiVersion: config.telemetry.act3-ace.io/v1alpha1
+apiVersion: config.telemetry.act3-ace.io/v1alpha2
 kind: ClientConfiguration
 
 locations:
@@ -93,7 +93,7 @@ locations:
       foo: bar
 ```
 
-The configuration API docs are [here](./docs/apis/config.telemetry.act3-ace.io/v1alpha1.md).
+The configuration API docs are [here](./docs/apis/config.telemetry.act3-ace.io/v1alpha2.md).
 
 ## Development on ACE Hub
 

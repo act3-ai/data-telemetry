@@ -16,7 +16,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/schema/pkg/selectors"
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 type ScopesTestSuite struct {
@@ -32,7 +32,7 @@ func (s *ScopesTestSuite) SetupTest() {
 	scheme := runtime.NewScheme()
 	s.NoError(bottle.AddToScheme(scheme))
 	dsn := "file::memory:"
-	myDB, err := Open(s.ctx, v1alpha1.Database{
+	myDB, err := Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)

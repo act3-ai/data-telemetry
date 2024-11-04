@@ -20,11 +20,11 @@ import (
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ClientConfigOverride is a function used to override the client configuration.
-type ClientConfigOverride func(ctx context.Context, c *v1alpha1.ClientConfiguration) error
+type ClientConfigOverride func(ctx context.Context, c *v1alpha2.ClientConfiguration) error
 
 // Client is the action group for all client commands.
 type Client struct {
@@ -71,10 +71,10 @@ func (action *Client) AddClientConfigOverride(override ...ClientConfigOverride) 
 }
 
 // GetClientConfig returns the client's configuration object.
-func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha1.ClientConfiguration, error) {
+func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha2.ClientConfiguration, error) {
 	log := logger.FromContext(ctx)
 
-	c := &v1alpha1.ClientConfiguration{}
+	c := &v1alpha2.ClientConfiguration{}
 	if err := config.Load(log, action.GetConfigScheme(), c, action.ConfigFiles); err != nil {
 		return nil, err
 	}
@@ -92,13 +92,13 @@ func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha1.ClientConf
 }
 
 // matchURLConfig will find and return the config file of the url string given and if does not exist create a new config.
-func matchURLConfig(urlString string, clientConfig *v1alpha1.ClientConfiguration) (*v1alpha1.Location, error) {
+func matchURLConfig(urlString string, clientConfig *v1alpha2.ClientConfiguration) (*v1alpha2.Location, error) {
 	for _, location := range clientConfig.Locations {
 		if location.URL == redact.SecretURL(urlString) {
 			return &location, nil
 		}
 	}
-	return &v1alpha1.Location{
+	return &v1alpha2.Location{
 		Name: "",
 		URL:  redact.SecretURL(urlString),
 	}, nil
@@ -106,7 +106,7 @@ func matchURLConfig(urlString string, clientConfig *v1alpha1.ClientConfiguration
 
 // authClientOrDefault creates an OAuth *http.Client if necessary, defaulting to
 // the default http client if unnecessary or problems occur.
-func authClientOrDefault(ctx context.Context, loc *v1alpha1.Location) *http.Client {
+func authClientOrDefault(ctx context.Context, loc *v1alpha2.Location) *http.Client {
 	log := logger.FromContext(ctx)
 	httpClient := http.DefaultClient
 	if loc.OAuth.Issuer != "" && loc.OAuth.ClientID != "" {

@@ -28,7 +28,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
 	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/webapp"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	client "gitlab.com/act3-ai/asce/data/telemetry/pkg/client/v2"
 )
 
@@ -67,7 +67,7 @@ func (s *HandlersTestSuite) SetupSuite() {
 		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDbDsn)
 		s.T().Cleanup(cleanup)
 	}
-	myDB, err := db.Open(ctx, v1alpha1.Database{
+	myDB, err := db.Open(ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(u.String()),
 	}, scheme)
 	s.NoError(err)
@@ -85,7 +85,7 @@ func (s *HandlersTestSuite) SetupSuite() {
 	})
 
 	// create the webapp (the unit under test)
-	webApp, err := webapp.NewWebApp(v1alpha1.WebApp{
+	webApp, err := webapp.NewWebApp(v1alpha2.WebApp{
 		AssetDir: s.assetDir,
 	}, s.log, "test-version")
 	s.NoError(err)

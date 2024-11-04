@@ -12,7 +12,7 @@ import (
 	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 func Test_getViewerURL(t *testing.T) {
@@ -22,9 +22,9 @@ func Test_getViewerURL(t *testing.T) {
 		t.Fatal("could not parse bottle sha", "sha", bottleSha)
 	}
 	type args struct {
-		spec          v1alpha1.ViewerSpec
+		spec          v1alpha2.ViewerSpec
 		artifact      *db.PublicArtifact
-		hubInstance   v1alpha1.ACEHubInstance
+		hubInstance   v1alpha2.ACEHubInstance
 		bottle        digest.Digest
 		partSelectors []string
 	}
@@ -56,8 +56,8 @@ func Test_getViewerURL(t *testing.T) {
 	}
 
 	defaultArgs := args{
-		spec:          v1alpha1.ViewerSpec{},
-		hubInstance:   v1alpha1.ACEHubInstance{},
+		spec:          v1alpha2.ViewerSpec{},
+		hubInstance:   v1alpha2.ACEHubInstance{},
 		bottle:        bottleDigest,
 		partSelectors: []string{},
 		artifact:      &db.PublicArtifact{},
@@ -77,13 +77,13 @@ func Test_getViewerURL(t *testing.T) {
 		{
 			name: "example hub instance",
 			args: args{
-				spec: v1alpha1.ViewerSpec{
+				spec: v1alpha2.ViewerSpec{
 					Name:   "hub-viewer",
 					Accept: "text/html",
 					ACEHub: defaultHub,
 				},
 				artifact: &db.PublicArtifact{},
-				hubInstance: v1alpha1.ACEHubInstance{
+				hubInstance: v1alpha2.ACEHubInstance{
 					Name: "myHub",
 					URL:  "https://myhub.io",
 				},

@@ -13,7 +13,7 @@ import (
 
 	"git.act3-ace.com/ace/go-common/pkg/logger"
 
-	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"git.act3-ace.com/ace/data/telemetry/pkg/types"
 )
 
@@ -54,7 +54,7 @@ func NewSingleClient(httpClient *http.Client, serverURL string, token string) (*
 }
 
 // NewSingleClientFromConfig to create a single Client type.
-func NewSingleClientFromConfig(location v1alpha1.Location) (*Single, error) {
+func NewSingleClientFromConfig(location v1alpha2.Location) (*Single, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, fmt.Errorf("creating cookie jar: %w", err)

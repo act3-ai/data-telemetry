@@ -22,7 +22,7 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 //go:embed assets
@@ -38,13 +38,13 @@ type WebApp struct {
 	// watcher            *fsnotify.Watcher
 	jupyter            string
 	log                *slog.Logger
-	hubInstances       []v1alpha1.ACEHubInstance
-	defaultViewerSpecs []v1alpha1.ViewerSpec
+	hubInstances       []v1alpha2.ACEHubInstance
+	defaultViewerSpecs []v1alpha2.ViewerSpec
 	globalValues       globalValues
 }
 
 // NewWebApp creates the WebApp.
-func NewWebApp(conf v1alpha1.WebApp, log *slog.Logger, version string) (*WebApp, error) {
+func NewWebApp(conf v1alpha2.WebApp, log *slog.Logger, version string) (*WebApp, error) {
 	a := &WebApp{
 		log:     log.WithGroup("webapp"),
 		jupyter: conf.JupyterExecutable,

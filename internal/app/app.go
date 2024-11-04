@@ -20,7 +20,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
 	mware "gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/webapp"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // DatabaseType is the type of the database being used.
@@ -39,7 +39,7 @@ type App struct {
 }
 
 // NewApp create a new Telemetry application.
-func NewApp(db *gorm.DB, scheme *runtime.Scheme, webConf v1alpha1.WebApp, log *slog.Logger, version string) (*App, error) {
+func NewApp(db *gorm.DB, scheme *runtime.Scheme, webConf v1alpha2.WebApp, log *slog.Logger, version string) (*App, error) {
 	if db == nil {
 		return nil, errors.New("DB is required")
 	}

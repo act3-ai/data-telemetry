@@ -171,7 +171,7 @@ gendoc: build-linux
 	HOME=HOMEDIR ci-dist/telemetry/linux/amd64/bin/telemetry gendocs md --only-commands docs/cli/
 
 .PHONY: apidoc
-apidoc: $(addsuffix .md, $(addprefix docs/apis/config.telemetry.act3-ace.io/, v1alpha1))
+apidoc: $(addsuffix .md, $(addprefix docs/apis/config.telemetry.act3-ace.io/, v1alpha2))
 docs/apis/%.md: tool/crd-ref-docs $(wildcard pkg/apis/$*/*_types.go) 
 	@mkdir -p $(@D)
 	tool/crd-ref-docs --config=apidocs.yaml --renderer=markdown --source-path=pkg/apis/$* --output-path=$@
