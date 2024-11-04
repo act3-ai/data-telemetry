@@ -30,14 +30,13 @@ import (
 
 type MultiTestSuite struct {
 	suite.Suite
-	serverA      *httptest.Server
-	serverB      *httptest.Server
-	dataDir      string
-	blobs        map[digest.Digest][]byte
-	log          *slog.Logger
-	ctx          context.Context
-	client       *MultiClient
-	configClient *MultiClient
+	serverA *httptest.Server
+	serverB *httptest.Server
+	dataDir string
+	blobs   map[digest.Digest][]byte
+	log     *slog.Logger
+	ctx     context.Context
+	client  *MultiClient
 }
 
 func (s *MultiTestSuite) getBlobByDigest(dgst digest.Digest) ([]byte, error) {
@@ -107,22 +106,6 @@ func (s *MultiTestSuite) SetupTest() {
 
 	// initiate a new multiclient
 	s.client = NewMultiClient([]Client{client1, client2, client3})
-
-	// sample mock Location files for testing
-	mockLocationA := v1alpha1.Location{
-		Name:    "MyMockConfig",
-		URL:     redact.SecretURL(s.serverA.URL),
-		Cookies: map[string]redact.Secret{"foo": "bar"},
-		Token:   "mycooltoken",
-	}
-	mockLocationB := v1alpha1.Location{
-		Name:    "MyMockConfig2",
-		URL:     redact.SecretURL(s.serverB.URL),
-		Cookies: map[string]redact.Secret{"foo": "bar"},
-		Token:   "mycooltoken",
-	}
-
-	s.configClient = NewMultiClientConfig([]v1alpha1.Location{mockLocationA, mockLocationB})
 }
 
 func (s *MultiTestSuite) TearDownTest() {
@@ -148,7 +131,7 @@ func (s *MultiTestSuite) TestPutBlobWithToken() {
 	byteValue, err := os.ReadFile(filepath.Join(s.dataDir, "blob", "sample.txt"))
 	s.NoError(err)
 
-	err = s.configClient.PutBlob(s.ctx, digest.SHA256, byteValue)
+	err = s.client.PutBlob(s.ctx, digest.SHA256, byteValue)
 	s.NoError(err)
 }
 

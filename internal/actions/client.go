@@ -2,11 +2,16 @@ package actions
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"net/url"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"k8s.io/apimachinery/pkg/runtime"
+	"oras.land/oras-go/v2/registry/remote/credentials"
 
+	"git.act3-ace.com/ace/go-auth/pkg/oauth2/device"
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
@@ -97,4 +102,42 @@ func matchURLConfig(urlString string, clientConfig *v1alpha1.ClientConfiguration
 		Name: "",
 		URL:  redact.SecretURL(urlString),
 	}, nil
+}
+
+// authClientOrDefault creates an OAuth *http.Client if necessary, defaulting to
+// the default http client if unnecessary or problems occur.
+func authClientOrDefault(ctx context.Context, loc *v1alpha1.Location) *http.Client {
+	log := logger.FromContext(ctx)
+	httpClient := http.DefaultClient
+	if loc.OAuth.Issuer != "" && loc.OAuth.ClientID != "" {
+		// TODO: Errors here likely should be displayed
+		issuerURL, err := url.Parse(loc.OAuth.Issuer)
+		if err != nil {
+			log.ErrorContext(ctx, "parsing host oauth issuer", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err) //nolint:sloglint
+			goto Recover
+		}
+
+		// promptFn implements device.AuthPromtFn.
+		promptFn := func(ctx context.Context, uri, userCode string) error {
+			_, err := fmt.Fprintf(os.Stderr, "On the device you would like to authenticate, please visit %s?user_code=%s", uri, userCode)
+			return err
+		}
+
+		var credStore credentials.Store
+		credStore, err = credentials.NewStoreFromDocker(credentials.StoreOptions{})
+		if err != nil {
+			log.ErrorContext(ctx, "accessing docker credential store", "error", err)
+			credStore = credentials.NewMemoryStore()
+		}
+
+		authClient, err := device.NewOAuthClient(ctx, issuerURL, string(loc.OAuth.ClientID), credStore, promptFn)
+		if err != nil {
+			log.ErrorContext(ctx, "initializing oauth client", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err) //nolint:sloglint
+			goto Recover
+		}
+		httpClient = authClient
+	}
+
+Recover:
+	return httpClient
 }

@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"log/slog"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
@@ -89,7 +90,7 @@ func (s *SingleTestSuite) SetupTest() {
 		Token:   "mycooltoken",
 	}
 
-	scWithToken, err := NewSingleClientFromConfig(mockLocation)
+	scWithToken, err := NewSingleClient(http.DefaultClient, string(mockLocation.URL), string(mockLocation.Token))
 	s.NoError(err)
 	s.clientB = scWithToken
 }

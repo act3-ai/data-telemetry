@@ -39,7 +39,7 @@ func (action *Download) Run(ctx context.Context, path, telemetryServerURL string
 		return err
 	}
 
-	c, err := client.NewSingleClientFromConfig(*newconfig)
+	c, err := client.NewSingleClient(authClientOrDefault(ctx, newconfig), telemetryServerURL, "")
 	if err != nil {
 		return err
 	}

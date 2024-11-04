@@ -287,6 +287,12 @@ func doGetRequest(ctx context.Context, c *http.Client,
 		return nil, fmt.Errorf("unable to create GET request: %w", err)
 	}
 
+	for _, fn := range options {
+		if err := fn(req); err != nil {
+			return nil, err
+		}
+	}
+
 	body, err := doRequest(req, c)
 	if err != nil {
 		return nil, err
@@ -319,6 +325,12 @@ func doListRequest(ctx context.Context, c *http.Client,
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, uu.String(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create list request: %w", err)
+	}
+
+	for _, fn := range options {
+		if err := fn(req); err != nil {
+			return nil, err
+		}
 	}
 
 	body, err := doRequest(req, c)
@@ -408,6 +420,12 @@ func GetLocations(ctx context.Context, c *http.Client, handler http.Handler,
 		return nil, fmt.Errorf("unable to create locations request: %w", err)
 	}
 
+	for _, fn := range options {
+		if err := fn(req); err != nil {
+			return nil, err
+		}
+	}
+
 	body, err := doRequest(req, c)
 	if err != nil {
 		return nil, err
@@ -444,6 +462,12 @@ func GetBottlesFromMetric(ctx context.Context, c *http.Client, handler http.Hand
 		return nil, fmt.Errorf("unable to create metrics request: %w", err)
 	}
 
+	for _, fn := range options {
+		if err := fn(req); err != nil {
+			return nil, err
+		}
+	}
+
 	body, err := doRequest(req, c)
 	if err != nil {
 		return nil, err
@@ -471,6 +495,12 @@ func BottleSearch(ctx context.Context, c *http.Client, handler http.Handler,
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, uu.String(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create search request: %w", err)
+	}
+
+	for _, fn := range options {
+		if err := fn(req); err != nil {
+			return nil, err
+		}
 	}
 
 	body, err := doRequest(req, c)

@@ -32,11 +32,24 @@ type Location struct {
 	// URL is the base URL for the telemetry server (does not include the /api)
 	URL redact.SecretURL `json:"url,omitempty" datapolicy:"url"` // this URL should not contain any password but just incase
 
+	// OAuth defines an OAuth2.0 provider used for authentication.
+	OAuth OAuthProvider `json:"oauth,omitempty"`
+
 	// Cookies to use for authentication
 	Cookies map[string]redact.Secret `json:"cookies,omitempty" datapolicy:"values,token"`
 
 	// Bearer token to use for authentication
 	Token redact.Secret `json:"token,omitempty" datapolicy:"token"`
+}
+
+// OAuthProvider defines a host and client application ID used for OAuth2.0 Device Grant authentication
+// defined by RFC 8628; see https://www.rfc-editor.org/rfc/rfc8628.
+type OAuthProvider struct {
+	// Issuer defines the authorization server.
+	Issuer string `json:"issuer,omitempty"`
+	// ClientID is the client application identifier. Not a secret.
+	// See https://www.rfc-editor.org/rfc/rfc6749#section-2.2 for more info.
+	ClientID string `json:"clientID,omitempty"`
 }
 
 // LogValue implements slog.LogValuer.
@@ -71,6 +84,11 @@ kind: ClientConfiguration
 # Only used in the upload and download commands
 request:
   locations:
+  - name: Telemetry Server
+    url: https://telemetry.example.com
+    oauth:
+	  issuer: https://issuer.example.com
+	  clientID: "123456789123456789"
   - name: Telemetry Server
     url: https://telemetry.example.com
     cookies:
