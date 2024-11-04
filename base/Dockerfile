@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM docker.io/library/python:3.12-slim as prod-ipynb-deps
+FROM docker.io/library/python:3.13-slim as prod-ipynb-deps
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
