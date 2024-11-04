@@ -10,9 +10,9 @@
   <hr />
   <div class="row sticky-top flex-nowrap" style="align-items: center; background-color: #212121;">
     <h4 class="col-1 text-center">View</h4>
-    <h4 class="col-4 text-center">Labels</h4>
+    <h4 class="col-3 text-center">Labels</h4>
     {{ range $index, $labelParam := $.Values.Params.LabelSelectors }}
-    <span class="col-3 text-center">
+    <span class="col-2 text-center">
       {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelParam "" ) }} <span
         class="badge rounded-pill bg-label label-pill col justify-content-center" style="max-width: 8rem;"
         title="{{ . }}">
@@ -21,11 +21,11 @@
         <i class="bi bi-x fs-3" style="vertical-align: middle;"
           onclick='this.dispatchEvent(new CustomEvent("removeSearchFilter", { bubbles: true, detail: { "filterValue" : {{ $labelParam }} } }));'>
         </i>
-    </span>
+      </span>
     </span>
     {{ end }}
     {{ range $index, $metricParam := $.Values.Params.Metrics }}
-    <span class="col-3 text-center">
+    <span class="col-2 text-center">
       {{ if (eq $.Values.Params.SortByMetric $metricParam) }}
       {{ if $.Values.Params.MetricSortAscending }}
       <button class="btn btn-primary" onclick="onMetricSort(this, {{ $metricParam }}, false);">
@@ -48,7 +48,7 @@
         <i class="bi bi-x fs-3" style="vertical-align: middle;"
           onclick='this.dispatchEvent(new CustomEvent("removeSearchFilter", { bubbles: true, detail: { "filterValue" : {{ $metricParam }} } }));'>
         </i>
-    </span>
+      </span>
     </span>
     {{ end }}
     {{ end }}
@@ -68,24 +68,24 @@
               class="bottle-attribute-icon-bottle" />
           </a>
         </h4>
-        <div class="col-4 justify-content-center" id="labels"
+        <div class="col-3 justify-content-center" id="labels"
           style="display: grid; grid-template-columns: max-content max-content; margin: .5em;">
           {{ $count := 0 }}
           {{ range $index, $entryLabel := $entry.Labels }}
 
           {{ $isParam := false }}
           {{ range $j, $labelSelector := $.Values.Params.LabelSelectors }}
-            {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelSelector "" ) }}
-              {{ if eq . $entryLabel.Key }}
-                {{ $isParam = true }}
-                {{ break }}
-              {{ end }}
-            {{ end }}
+          {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelSelector "" ) }}
+          {{ if eq . $entryLabel.Key }}
+          {{ $isParam = true }}
+          {{ break }}
+          {{ end }}
+          {{ end }}
           {{ end }}
           {{ if $isParam }}
-            {{ continue }}
+          {{ continue }}
           {{ else }}
-            {{ $count = add1 $count }}
+          {{ $count = add1 $count }}
           {{ end }}
 
           {{ if (lt $count 6) }}
@@ -104,23 +104,23 @@
         {{ range $lsIndex, $labelSelector := $.Values.Params.LabelSelectors }}
         {{ range $labelIndex, $label := $entry.Labels }}
         {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $labelSelector "" ) }} {{ if (eq $label.Key .) }} <h6
-          class="col-3 ps-5" title="{{ $label.Value }}">{{ abbrev 20 $label.Value }}</h6>
-          {{ end }}
-          {{ end }}
-          {{ end }}
-          {{ end }}
+          class="col-2 text-center" title="{{ $label.Value }}">{{ abbrev 20 $label.Value }}</h6>
+        {{ end }}
+        {{ end }}
+        {{ end }}
+        {{ end }}
 
-          {{ range $paramIndex, $metricParam := $.Values.Params.Metrics }}
-          {{ range $metricIndex, $metric := $entry.Metrics }}
-          {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $metricParam "" ) }} {{ if (eq $metric.Name .) }} <h6
-            class="col-3 ps-5" title="{{ $metric.Value }}">{{ abbrev 15 (toString $metric.Value) }}</h6>
-            {{ end }}
-            {{ end }}
-            {{ end }}
-            {{ end }}
-            <a class="stretched-link" data-bs-toggle="collapse" data-bs-target="#collapse{{$index}}"
-              aria-expanded="false" aria-controls="collapse{{$index}}">
-            </a>
+        {{ range $paramIndex, $metricParam := $.Values.Params.Metrics }}
+        {{ range $metricIndex, $metric := $entry.Metrics }}
+        {{ with (regexReplaceAll "(=(.*)|>(.*)|<(.*))" $metricParam "" ) }} {{ if (eq $metric.Name .) }} <h6
+          class="col-2 text-center" title="{{ $metric.Value }}">{{ abbrev 15 (toString $metric.Value) }}</h6>
+        {{ end }}
+        {{ end }}
+        {{ end }}
+        {{ end }}
+        <a class="stretched-link" data-bs-toggle="collapse" data-bs-target="#collapse{{$index}}" aria-expanded="false"
+          aria-controls="collapse{{$index}}">
+        </a>
       </div>
 
       <div id="collapse{{$index}}" class="accordion-collapse collapse" data-bs-parent="#metric-table-accordion"
@@ -200,7 +200,7 @@
   function onMetricSort(button, metric, ascending) {
     button.dispatchEvent(new CustomEvent("onMetricSortButtonClick", {
       bubbles: true,
-      detail: {"metricName": metric, "ascending": ascending},
+      detail: { "metricName": metric, "ascending": ascending },
     }));
   }
 </script>

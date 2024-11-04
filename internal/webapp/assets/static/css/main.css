@@ -348,3 +348,7 @@ a {
 #bottle_details_button {
   margin: 5px 0px 5px 0px !important;
 }
+
+.p-6 {
+  padding: 1.5rem;
+}

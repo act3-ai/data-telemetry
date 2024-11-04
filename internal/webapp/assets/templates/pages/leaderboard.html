@@ -4,7 +4,7 @@
 
 <body>
   {{ template "navbar" . }}
-  <main class="mx-3">
+  <main class="p-6">
     <section id="leaderboard-view">
       <div id="bottle-cards-spinner" class="spinner-border text-primary htmx-indicator" role="status">
       </div>
@@ -12,7 +12,7 @@
         {{ template "bottle-search-bar" . }}
       </div>
 
-      <div class="row mt-4 fade-out fade-in">
+      <div class="mt-4 fade-out fade-in">
         <div hx-trigger="load, onValidSearch from:document" hx-get="{{ .Globals.Top }}www/search/bottle/table"
           hx-include=".bottle-search-field" hx-swap="innerHTML swap:1s" class="row mt-4 fade-out fade-in">
         </div>
