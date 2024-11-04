@@ -29,7 +29,7 @@ import (
 	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
 	"gitlab.com/act3-ai/asce/data/telemetry/internal/webapp"
 	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/client"
+	client "gitlab.com/act3-ai/asce/data/telemetry/pkg/client/v2"
 )
 
 // Make sure you run `make template` to ensure that the files are all generated in the testdata directory

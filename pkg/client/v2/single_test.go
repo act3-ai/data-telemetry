@@ -45,7 +45,7 @@ func (s *SingleTestSuite) getBlobByDigest(dgst digest.Digest) ([]byte, error) {
 }
 
 func (s *SingleTestSuite) SetupTest() {
-	s.dataDir = filepath.Join("..", "..", "testdata")
+	s.dataDir = filepath.Join("..", "..", "..", "testdata")
 	s.log = test.Logger(s.T(), 0)
 	s.ctx = logger.NewContext(context.Background(), s.log)
 

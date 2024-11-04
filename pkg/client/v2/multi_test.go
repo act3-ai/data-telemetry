@@ -47,7 +47,7 @@ func (s *MultiTestSuite) SetupTest() {
 	scheme := runtime.NewScheme()
 	s.NoError(bottle.AddToScheme(scheme))
 
-	s.dataDir = filepath.Join("..", "..", "testdata")
+	s.dataDir = filepath.Join("..", "..", "..", "testdata")
 	s.log = test.Logger(s.T(), -8)
 	s.ctx = logger.NewContext(context.Background(), s.log)
 
