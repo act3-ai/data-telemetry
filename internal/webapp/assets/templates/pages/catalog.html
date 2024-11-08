@@ -4,23 +4,20 @@
 
 <body>
   {{ template "navbar" . }}
-  <main class="mx-3">
+  <main class="mx-4">
     <section>
       <div id="bottle-cards-spinner" class="spinner-border text-primary htmx-indicator" role="status"></div>
-      <div class="col-xl-12 text-center text-lg-start sticky-top" style="background-color: #212121;">
+      <div class="col-xl-12 text-center text-lg-start sticky-top">
         {{ template "bottle-search-bar" . }}
       </div>
-      <div 
-          hx-trigger="onValidSearch from:document,load" 
-          hx-get="{{ .Globals.Top }}www/search/bottle/cards" 
-          hx-include=".bottle-search-field" 
-          hx-swap="innerHTML swap:1s" 
-          class="row mt-4 fade-out fade-in" 
-          id="bottle-cards">
+      <div hx-trigger="onValidSearch from:document,load" hx-get="{{ .Globals.Top }}www/search/bottle/cards"
+        hx-include=".bottle-search-field" hx-swap="innerHTML swap:1s" class="row mt-4 fade-out fade-in"
+        id="bottle-cards">
       </div>
     </section>
     {{ template "selector-help" }}
   </main>
   {{ template "scripts" . }}
 </body>
+
 </html>

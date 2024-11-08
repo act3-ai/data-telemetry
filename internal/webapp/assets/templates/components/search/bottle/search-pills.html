@@ -2,19 +2,22 @@
 <ul class="list-inline" id="search-pill-list">
     {{ with .Values.Params }}
     <li>
-        <input class="visually-hidden bottle-search-field" name="created-before" value="{{ toString .CreatedBefore }}" />
+        <input class="visually-hidden bottle-search-field" name="created-before" value="{{ toString .CreatedBefore }}"
+            aria-label="search pill created before" />
     </li>
     <li>
-        <input class="visually-hidden bottle-search-field" name="sort-by-metric" value="{{ .SortByMetric }}" />
+        <input class="visually-hidden bottle-search-field" name="sort-by-metric" value="{{ .SortByMetric }}"
+            aria-label="search pill sort by metric" />
     </li>
     <li>
-        <input class="visually-hidden bottle-search-field" name="metric-sort-ascending" value="{{ .MetricSortAscending }}" />
+        <input class="visually-hidden bottle-search-field" name="metric-sort-ascending"
+            value="{{ .MetricSortAscending }}" aria-label="search pill metric sort ascending" />
     </li>
     {{ range .LabelSelectors }}
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-label">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/label.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/label.svg" alt="label" />
             {{ . }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -27,7 +30,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-metric">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" alt="metrics" />
             {{ . }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -40,7 +43,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/author.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/author.svg" alt="author" />
             {{ .Author }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -53,7 +56,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" alt="description" />
             {{ .Description }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -66,7 +69,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" alt="signature-fingerprint" />
             {{ toString .SignatureFingerprint }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -80,7 +83,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-annotation">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/signature.svg" alt="signature-annotation" />
             {{ . }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -93,7 +96,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/parent.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/parent.svg" alt="parent" />
             {{ toString .ParentsOf }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -106,7 +109,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/child.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/child.svg" alt="child" />
             {{ toString .ChildrenOf }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -119,7 +122,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-warning">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" alt="deprecated-by" />
             {{ toString .DeprecatedBy }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -132,7 +135,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecates.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecates.svg" alt="deprecates" />
             {{ toString .Deprecates }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -145,7 +148,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-            src="{{ $.Globals.Top }}www/static/img/bottle-attributes/database-svg.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/database-svg.svg" alt="database-svg" />
             {{ .BottleRepo }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>
@@ -158,7 +161,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-warning">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg" alt="deprecated-by" />
             Showing Deprecated
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#show-deprecated-checkbox", "on-show-deprecated-remove", {}); '></i>
@@ -170,7 +173,7 @@
     <li class="list-inline-item">
         <span class="badge rounded-pill bg-info">
             <img class="pe-2 bottle-attribute-icon-pill"
-                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/part.svg" />
+                src="{{ $.Globals.Top }}www/static/img/bottle-attributes/part.svg" alt="part" />
             {{ toString . }}
             <i class="bi bi-x fs-3" style="vertical-align: middle;"
                 hx-on:click='htmx.remove(this.parentNode.parentNode); htmx.trigger("#search-pill-list", "onPillRemove", {}); '></i>

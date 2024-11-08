@@ -11,27 +11,27 @@
 .bg-label,
 .bg-metric,
 .bg-annotation {
-  color: white;
+  color: var(--asce-text-primary);
   padding: 10px 8px;
   font-size: .875rem;
   font-weight: 400;
   margin-right: 10px;
+  margin-bottom: 5px;
 }
 
 .bg-label:hover,
 .bg-metric:hover {
-  color: white !important;
+  color: var(--asce-text-primary) !important;
   background-color: RGBA(255, 255, 255, 0.1) !important;
 }
 
-.bg-label,
-.bg-label:hover {
-  border: RGB(34, 120, 49) 2px solid !important;
+.bg-label{
+  border: #32D9BA 2px solid !important;
 }
 
 .bg-metric,
 .bg-metric:hover {
-  border: RGB(12, 92, 155) 2px solid !important;
+  border: #0277BD 2px solid !important;
 }
 
 .bg-annotation,
@@ -39,9 +39,23 @@
   border: RGB(236, 243, 158) 2px solid !important;
 }
 
+.bg-info {
+  background-color:#0277BD !important;
+}
+
+.bg-warning {
+  background-color: #EF6966 !important;
+}
+
+.btn-transparent {
+  background-color: transparent !important;
+  border: 1px solid !important;
+  color: var(--asce-text-primary) !important;
+  font-size: 1.25rem !important;
+}
+
 .btn-check:checked+.btn::before {
   content: ' ';
-  /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 512 512' id='IconChangeColor'%3E%3Ctitle%3Eionicons-v5-e%3C/title%3E%3Cpolyline points='416 128 192 384 96 288' style='fill:none%3Bstroke:%23000%3Bstroke-linecap:square%3Bstroke-miterlimit:10%3Bstroke-width:44px'%3E%3C/polyline%3E%3C/svg%3E"); */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='14' zoomAndPan='magnify' viewBox='0 0 30 30.000001' height='14' preserveAspectRatio='xMidYMid meet' version='1.0' id='IconChangeColor'%3E%3Cdefs%3E%3CclipPath id='id1'%3E%3Cpath d='M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656 ' clip-rule='nonzero' id='mainIconPathAttribute'%3E%3C/path%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23id1)'%3E%3Cpath fill='rgb(13.729858%25  12.159729%25  12.548828%25)' d='M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125 ' fill-opacity='1' fill-rule='nonzero' id='mainIconPathAttribute'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
   width: 14px;
   height: 14px;
@@ -64,6 +78,10 @@
   color: #0d6efd;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.btn-danger {
+  background-color: #EF6966 !important;
 }
 
 .line-clamp {
@@ -177,7 +195,7 @@ body {
 
 .row ul,
 .row ol {
-  padding-left: 2rem !important;
+  padding-left: 1rem !important;
 }
 
 .table {
@@ -220,7 +238,7 @@ body {
 
 .accordion-button {
   background-color: rgb(27, 29, 36);
-  color: white;
+  color: var(--asce-text-primary);
 }
 
 .border {
@@ -230,6 +248,26 @@ body {
 .card>.card-img-top>p.text-light,
 .popover-header {
   color: rgb(27, 29, 36) !important;
+}
+
+.bottle-attribute-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5em;
+}
+
+.bottle-card-link {
+  display: block;
+  text-decoration: none;
+  color: var(--asce-text-primary);
+}
+
+.bottle-card-link:hover {
+  color: var(--asce-text-primary);
+}
+
+.bottle-card:hover {
+  border-color: var(--primary) !important;
 }
 
 code,
@@ -251,7 +289,7 @@ a {
 }
 
 .text-white {
-  color: white !important;
+  color: var(--asce-text-primary) !important;
 }
 
 .modal-content,
@@ -261,7 +299,7 @@ a {
 
 .modal-content>.modal-body>ul>li>.badge {
   background-color: black;
-  color: white !important;
+  color: var(--asce-text-primary) !important;
 }
 
 .modal-content>.modal-body>ul>li>.badge:hover {
@@ -271,7 +309,7 @@ a {
 
 .modal-content>.modal-body>p>.badge {
   background-color: black !important;
-  color: white !important;
+  color: var(--asce-text-primary) !important;
 
 }
 
@@ -308,24 +346,9 @@ a {
   max-width: 75%;
 }
 
-.bottle-attribute-icon {
-  height: 2em !important;
-  width: 2em !important;
-  margin-right: 0.5em !important;
-  margin-bottom: 0.5em;
-  border-radius: 5px !important;
-  background-color: black !important;
-}
-
 .bottle-attribute-icon-pill {
   height: 2.5em !important;
   width: 2.5em !important;
-}
-
-.bottle-attribute-icon-bottle {
-  display: block !important;
-  width: 3em !important;
-  height: 3em !important;
 }
 
 /* animations */
