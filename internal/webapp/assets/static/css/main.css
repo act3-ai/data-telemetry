@@ -216,6 +216,13 @@ body {
   border: 1px solid #535353;
 }
 
+.wrap-text {
+  white-space: normal !important;; 
+  word-wrap: break-word !important;; 
+  overflow-wrap: break-word !important;
+  word-break: break-all !important;
+}
+
 .accordion-header {
   background-color: rgb(27, 29, 36);
   border-radius: 0.375rem 0.375rem 0 0;
@@ -260,6 +267,7 @@ body {
   display: block;
   text-decoration: none;
   color: var(--asce-text-primary);
+  height: 100%;
 }
 
 .bottle-card-link:hover {

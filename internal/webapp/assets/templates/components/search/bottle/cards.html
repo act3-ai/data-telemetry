@@ -44,15 +44,14 @@
 {{ end }}
 
 {{ range $index, $entry := .Values.Entries }}
-
 <div class="col-lg-4 mb-4" {{ if eq (len $.Values.Entries) (add1 $index) }}
     hx-get="{{ $.Globals.Top }}www/search/bottle/cards?page={{ add1 $.Values.Params.Page }}" hx-trigger="revealed"
     hx-swap="afterend" hx-indicator="#bottle-cards-spinner" {{ end }}>
 
-    <div class="bottle-card card {{ if .IsDeprecated }}border-warning {{ end }}h-100">
-        <div class="card-body">
-            <a class="bottle-card-link" aria-label="bottle card link"
-                href="bottle.html?digest={{ index $entry.Digests 0 }}">
+    <a class="bottle-card-link" aria-label="bottle card link" href="bottle.html?digest={{ index $entry.Digests 0 }}"
+        style="text-decoration: none; color: inherit;">
+        <div class="bottle-card card {{ if .IsDeprecated }}border-warning {{ end }}h-100">
+            <div class="card-body">
                 <div class="d-flex align-items-center">
                     {{ if $entry.IsDeprecated }}
                     <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/deprecated-by.svg"
@@ -61,58 +60,59 @@
                     <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/bottle.svg"
                         class="bottle-attribute-icon" alt="bottle icon" />
                     {{ end }}
-                    <small class="card-subtitle text-muted ms-3">
+                    <small class="card-subtitle text-muted ms-3 wrap-text">
                         {{ index $entry.Digests 0 }}
                     </small>
                 </div>
-            </a>
-            {{ if (gt (len $entry.Authors) 0) }}
-            {{ with $entry.Authors }}
-            <div class="d-flex align-items-center mt-3 fw-light">
-                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/authors.svg" alt="authors"
-                    class="bottle-attribute-icon" />
-                <div class="ms-3">
-                    {{ range $i, $author := . }}{{if $i}},{{end}}{{ .Name }}{{ end }}
+
+                {{ if (gt (len $entry.Authors) 0) }}
+                {{ with $entry.Authors }}
+                <div class="d-flex align-items-center mt-3 fw-light">
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/authors.svg" alt="authors"
+                        class="bottle-attribute-icon" />
+                    <div class="ms-3">
+                        {{ range $i, $author := . }}{{if $i}},{{end}}{{ .Name }}{{ end }}
+                    </div>
                 </div>
-            </div>
-            {{ end }}
-            {{ end }}
-            {{ $uniqueLabels := RemoveLabels $CommonLabels $entry.Labels }}
-            {{ if (gt (len $uniqueLabels) 0) }}
-            <div class="d-flex mt-3">
-                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/labels.svg" alt="labels"
-                    class="bottle-attribute-icon" />
-                <div class="ms-3">
-                    {{ range $uniqueLabels }}
-                    <span class="badge rounded-pill bg-label">{{ .Key }}={{ .Value }}</span>
-                    {{ end }}
+                {{ end }}
+                {{ end }}
+                {{ $uniqueLabels := RemoveLabels $CommonLabels $entry.Labels }}
+                {{ if (gt (len $uniqueLabels) 0) }}
+                <div class="d-flex mt-3">
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/labels.svg" alt="labels"
+                        class="bottle-attribute-icon" />
+                    <div class="ms-3">
+                        {{ range $uniqueLabels }}
+                        <span class="badge rounded-pill bg-label">{{ .Key }}={{ .Value }}</span>
+                        {{ end }}
+                    </div>
                 </div>
-            </div>
-            {{ end }}
-            {{ if (gt (len $entry.Description) 0) }}
-            <div class="d-flex mt-3">
-                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" alt="description"
-                    class="bottle-attribute-icon" />
-                <div class="ms-3">
-                    <p class="card-text">
-                        {{ $entry.Description }}
-                    </p>
+                {{ end }}
+                {{ if (gt (len $entry.Description) 0) }}
+                <div class="d-flex mt-3">
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/description.svg" alt="description"
+                        class="bottle-attribute-icon" />
+                    <div class="ms-3">
+                        <p class="card-text">
+                            {{ $entry.Description }}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            {{ end }}
-            {{ if (gt (len $entry.Metrics) 0) }}
-            <div class="d-flex mt-3">
-                <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" alt="metrics"
-                    class="bottle-attribute-icon" />
-                <div class="ms-2">
-                    {{ range $entry.Metrics }}
-                    <span class="badge rounded-pill bg-metric">{{ .Name }}={{ .Value }}</span>
-                    {{ end }}
+                {{ end }}
+                {{ if (gt (len $entry.Metrics) 0) }}
+                <div class="d-flex mt-3">
+                    <img src="{{ $.Globals.Top }}www/static/img/bottle-attributes/metrics.svg" alt="metrics"
+                        class="bottle-attribute-icon" />
+                    <div class="ms-2">
+                        {{ range $entry.Metrics }}
+                        <span class="badge rounded-pill bg-metric">{{ .Name }}={{ .Value }}</span>
+                        {{ end }}
+                    </div>
                 </div>
+                {{ end }}
             </div>
-            {{ end }}
         </div>
-    </div>
+    </a>
 </div>
 {{ end }}
 {{ end }}
