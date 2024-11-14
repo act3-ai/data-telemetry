@@ -3,35 +3,40 @@
 {{ template "head" . }}
 {{ $globals := .Globals }}
 {{ $ := .Values }}
+
 <body>
   {{ template "navbar" . }}
   <main class="mx-3 mt-3">
-      {{ if gt (len $.DeprecatedBy) 0 }}
+    {{ if gt (len $.DeprecatedBy) 0 }}
     <div class="alert alert-warning" role="alert">
       <h4 class="alert-heading">This bottle is Deprecated</h4>
       Click <a href="catalog.html?deprecates={{ $.Digest }}">here</a> to view the bottles that deprecate this one.
     </div>
-      {{ end }}
+    {{ end }}
     <section id="overview" class="row">
-      <h1 class="display-5">ACE Data Bottle <small class="display-6 text-muted">{{ $.Bottle.APIVersion }}</small></h1>
-      <div>
-        <img src="{{ $globals.Top }}www/static/img/bottle-attributes/bottle.svg"  class="bottle-attribute-icon" />
-        <small class="text-muted text-wrap text-break">{{ $.Digest }}</small>
-      </div>
-      <small class="text-muted" style="margin-top: 0.5em;">Aliases
-        {{ range $.Digests }}
-          <a class="btn btn-sm btn-secondary {{ if eq . $.Digest }}active{{ end }}" 
-            role="button" href="?digest={{ . }}">{{ .Algorithm }}</a>
-        {{ end }}
-      </small>
-
       <div class="col-xl-9 col-lg-8">
+        <h1 class="display-5 text-white">ACE Data Bottle <small
+            class="display-6 text-white">{{ $.Bottle.APIVersion }}</small></h1>
+        <div class="icon-text-container">
+          <img src="{{ $globals.Top }}www/static/img/bottle-attributes/bottle.svg" class="bottle-attribute-icon"
+            alt="bottle icon" />
+          <p class="text-white" style="font-size: 14px;">{{ $.Digest }}</p>
+        </div>
+        <div class="mt-4">
+          <small class="text-white" style="margin-top: 0.5em;">Aliases:
+            {{ range $.Digests }}
+            <a class="btn btn-sm alias-button {{ if eq . $.Digest }} active{{ end }}"
+              href="{{ $globals.Top }}www/bottle.html?digest={{ . }}">{{ .Algorithm }}</a>
+            {{ end }}
+          </small>
+        </div>
+        <!-- Labels and metrics section -->
         <form action="similarBottles" method="get" id="tags" class="my-3 bottle-labels-metrics">
           <div class="row">
             <div class="col-12">
               <div class="d-flex flex-wrap gap-1">
                 <div class="col">
-                  <p>Labels and Metrics:</p>
+                  <h4>Labels and Metrics</h4>
                   <p style="font-size: 14px;">Select one or many to filter for similar bottles</p>
                 </div>
                 <div class="col text-end">
@@ -41,52 +46,65 @@
             </div>
             <div class="col-12">
               <div class="row">
-                <div class="col-1">
-                  <img src="{{ $globals.Top }}www/static/img/bottle-attributes/labels.svg"  class="bottle-attribute-icon" />
-                  Labels: 
+                <div class="col-2">
+                  <img src="{{ $globals.Top }}www/static/img/bottle-attributes/labels.svg" class="bottle-attribute-icon"
+                    alt="label icon" />
+                  Labels:
                 </div>
-                <div class="col-10" style="margin-top: 1em;">
+                <div class="col-10">
                   {{ range $.Bottle.Labels }}
-                  <input type="checkbox" class="btn-check btn-label" name="requirement" id="{{.Key}}={{.Value}}" value="{{.Key}}={{.Value}}" autocomplete="off">
+                  <input type="checkbox" class="btn-check btn-label" name="requirement" id="{{.Key}}={{.Value}}"
+                    value="{{.Key}}={{.Value}}" autocomplete="off">
                   <label class="btn bg-label badge rounded-pill" for="{{.Key}}={{.Value}}">{{.Key}}={{.Value}}</label>
                   {{ end }}
                 </div>
               </div>
             </div>
-            <div class="col-12 mt-3">
+            <div class="col-12 mt-4">
               <div class="row">
-                <div class="col-1">
-                  <img src="{{ $globals.Top }}www/static/img/bottle-attributes/metrics.svg"  class="bottle-attribute-icon" />
+                <div class="col-2">
+                  <img src="{{ $globals.Top }}www/static/img/bottle-attributes/metrics.svg"
+                    class="bottle-attribute-icon" alt="metrics icon" />
                   Metrics:
                 </div>
-                <div class="col-10" style="margin-top: 1em;"> 
+                <div class="col-10">
                   {{ range $.Bottle.Metrics }}
-                  <input type="checkbox" class="btn-check btn-metric" name="metric" id="metric-{{ .Name }}" value="{{ .Name }}" autocomplete="off">
-                  <label class="btn bg-metric badge rounded-pill" for="metric-{{ .Name }}" title="{{ .Description }}">{{ .Name }}={{ .Value }}</label>
+                  <label class="btn bg-metric badge rounded-pill" for="metric-{{ .Name }}"
+                    title="{{ .Description }}">{{ .Name }}={{ .Value }}</label>
+                  <input type="checkbox" class="btn-check btn-metric" name="metric" id="metric-{{ .Name }}"
+                    value="{{ .Name }}" autocomplete="off">
+
                   {{ end }}
                 </div>
               </div>
             </div>
             <div class="col-12">
-              <div class="d-flex flex-wrap gap-1 mt-2">    
+              <div class="d-flex flex-wrap gap-1 mt-2">
                 {{ range $.Bottle.Parts }}
-                  {{ range $key, $value := .Labels }}
-                  <input type="checkbox" class="btn-check" name="requirement" id="{{$key}}={{$value}}" value="{{$key}}={{$value}}" autocomplete="off">
-                  <label class="btn bg-label badge rounded-pill d-none" for="{{$key}}={{$value}}">{{$key}}={{$value}}</label>
-                  {{ end }}
+                {{ range $key, $value := .Labels }}
+                <label class="btn bg-label badge rounded-pill d-none"
+                  for="{{$key}}={{$value}}">{{$key}}={{$value}}</label>
+                <input type="checkbox" class="btn-check" name="labels" id="{{$key}}={{$value}}"
+                  value="{{$key}}={{$value}}" autocomplete="off">
+
+                {{ end }}
                 {{ end }}
               </div>
             </div>
           </div>
-          
         </form>
-        <a style="text-decoration: none; color: #FFFFFF;" href="#description-icon">
-          <img id="description-icon" src="{{ $globals.Top }}www/static/img/bottle-attributes/description.svg"  class="bottle-attribute-icon" style="float: left; margin: 1em;" />
-        </a>
-        <p class="lead" style="white-space: pre-line;">{{ $.Bottle.Description }}</p>
+        <!-- Description section -->
+        <section id="description">
+          <h4 id="description" class="icon-text-container">
+            <img id="description-icon" src="{{ $globals.Top }}www/static/img/bottle-attributes/description.svg"
+              class="bottle-attribute-icon" alt="description icon" />
+            <a class="section-header" href="#description-icon">Description</a>
+          </h4>
+          <p class="lead">{{ $.Bottle.Description }}</p>
+        </section>
         <div class="input-group my-4">
-          <span type="text" class="form-control copy-bottle-digest" aria-label="Recipient's username"
-            aria-describedby="basic-addon2"><code>ace-dt bottle pull bottle:{{ $.Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}</code>
+          <span type="text" class="form-control copy-bottle-digest" aria-label="digest">
+            <code>ace-dt bottle pull bottle:{{ $.Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}</code>
           </span>
           <button class="btn btn-primary" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
             data-bs-trigger="click" title="Copied to clipboard!" id="copy-btn"
@@ -95,29 +113,211 @@
           </button>
         </div>
 
-      </div>
-      <div class="col-xl-3 col-lg-4 ps-4">
+        <!-- Parts Section -->
+        <div id="parts">
+          <h4 id="parts" class="icon-text-container">
+            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/part.svg" class="bottle-attribute-icon"
+              alt="part icon" />
+            <a class="section-header" href="#parts">Parts</a>
+            <span class="badge rounded-pill bg-dark ms-2">Size: {{ ByteSize $.TotalSize }}
+            </span>
+          </h4>
+          <p class="text-white">
+            These individual pieces make up the bottle. When pulling a bottle you can use the labels to form a selector
+            to only download what you want. Adding part selectors in the box below will append them to the pull command
+            and the url.
+          </p>
+          <div class="d-flex flex-row align-items-center">
+            <h5 style="color:#e0e0e0">Part Selector</h5>
+            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#selector-help"
+              aria-label="selector help" id="add-part-btn">
+              <i class="bi bi-info-circle-fill" style="color: #0065B1;"></i>
+            </button>
+          </div>
+          <form action="" method="get" id="part-selector-form" class="my-3">
+            <!-- TODO: What is this digest input for - it is currently set to not display-->
+            <input type="text" class="d-none" name="digest" value="{{ $.Digest }}" id="digest">
+            <div class="row mt-2">
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="part-selector" placeholder="key=value,key2value2,..."
+                  onchange="document.getElementById('part-selector-hidden').value = this.value;">
+              </div>
+              <div class="col-auto">
+                <button class="fs-4 btn btn-link" id="add-part-btn" aria-label="add part">
+                  <i class="bi bi-plus-circle-fill" style="color: #0065B1;"></i>
+                </button>
+              </div>
+            </div>
+            {{ range $i, $e := $.PartSelectors }}
+            <div class="row mt-2">
+              <div class="col-sm-6" id="selectorDiv{{$i}}">
+                <input type="text" class="form-control" name="partSelector" id="part-selector" value="{{ . }}">
+              </div>
+              <!-- TODO: This does not work -->
 
+              <div id="removeSelectorButton{{$i}}" class="col-auto">
+                <button class="fs-4 btn btn-link" type="button" onclick="removeSelector({{$i}});return false;"
+                  aria-label="Remove Selector">
+                  <i class="bi bi-dash-circle-fill" style="color: #0065B1;"></i>
+                </button>
+              </div>
+
+            </div>
+            {{ end }}
+            <label for="part-selector-hidden" class="d-none">Part Selector</label>
+            <input type="text" class="d-none" name="partSelector" id="part-selector-hidden">
+          </form>
+          <section id="part-table" class="mb-5" style="max-height: 20em; overflow: auto;">
+            <form action="similarBottles" method="get" id="tags" class="my-3">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Select</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Part Digest</th>
+                    <th scope="col">Labels</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{ range $.Bottle.Parts }}
+                  <tr>
+                    <td>
+                      <input type="checkbox" value="{{ .Digest }}" name="part-digest" aria-label="select part checkbox">
+                    </td>
+                    <td>
+                      <pre>{{ .Name }}</pre>
+                    </td>
+                    <td>
+                      <span class="badge rounded-pill bg-secondary">{{ ByteSize .Size }}</span>
+                    </td>
+                    <td style="
+                          word-wrap: break-word;
+                          min-width: 160px;
+                          max-width: 280px;
+                        ">
+                      <small style="overflow: hidden">{{ .Digest }}</small>
+                    </td>
+                    <td>
+                      {{ range $key, $value := .Labels }}
+                      <label class="bg-label badge rounded-pill"
+                        for="part-{{$key}}={{$value}}">{{$key}}={{$value}}</label>
+                      {{ end }}
+                    </td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+              <button class="btn btn-sm btn-primary ms-auto" type="submit"
+                title="Select parts to find bottles with matching parts" style="float: left;">View Similar</button>
+            </form>
+          </section>
+        </div>
+
+        <!-- Artifcacts section -->
+        <section id="artifacts" class="mb-5">
+          <h4 id="artifacts" class="icon-text-container">
+            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/public-artifacts.svg"
+              class="bottle-attribute-icon" alt="public artifacts icon" />
+            <a class="section-header" href="#artifacts">Artifacts</a>
+          </h4>
+          <p class="text-white">
+            Associated files can be viewed and downloaded below
+          </p>
+          <div class="row row-cols-1 row-cols-md-5 g-4">
+            {{ range $.Bottle.PublicArtifacts }}
+            <div class="col">
+              <div class="card h-100">
+                <!-- Any others images we want to display 
+                    https://en.wikipedia.org/wiki/Comparison_of_web_browsers#Image_format_support -->
+                {{ if or (eq .MediaType "image/jpeg") (eq .MediaType "image/gif") (eq .MediaType "image/png") (eq .MediaType "image/webp") (eq .MediaType "image/svg+xml") }}
+                <img src="/api/blob?digest={{ .Digest }}" class="card-img-top"
+                  style="max-height:180px;-o-object-fit: contain;object-fit: contain;" alt="artifact icon" />
+                {{ else }}
+                <div class="card-img-top d-flex flex-column align-items-center justify-content-center p-3"
+                  style="height:180px;background-color:#4e6773;">
+                  <div style="font-size: 3.0rem;">
+                    {{ if or (eq .MediaType "text/html") (eq .MediaType "text/markdown") }}
+                    <i class="bi bi-file-earmark-code-fill text-light"></i>
+                    {{ else if or (eq .MediaType "text/csv") (eq .MediaType "text/tsv") }}
+                    <i class="bi bi-file-earmark-spreadsheet-fill text-light"></i>
+                    {{ else if eq .MediaType "text/plain" }}
+                    <i class="bi bi-file-earmark-text-fill text-light"></i>
+                    {{ else if eq .MediaType "application/zip" }}
+                    <i class="bi bi-file-earmark-zip-fill text-light"></i>
+                    {{ else if eq .MediaType "application/pdf" }}
+                    <i class="bi bi-file-earmark-pdf-fill text-light"></i>
+                    {{ else if hasPrefix "application" .MediaType }}
+                    <i class="bi bi-file-earmark-binary-fill text-light"></i>
+                    {{ else if hasPrefix "image" .MediaType }}
+                    <i class="bi bi-file-earmark-image-fill text-light"></i>
+                    {{ else }}
+                    <i class="bi bi-file-earmark-fill text-light"></i>
+                    {{ end }}
+                  </div>
+                  <p class="text-light text-wrap text-break">{{ .MediaType }}</p>
+                </div>
+                {{ end }}
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">{{ .Name }}</h5>
+                  <p class="card-text">
+                    <code>{{ .Path }}</code>
+                  </p>
+                  <div class="mt-auto d-grid gap-2 d-md-block">
+                    <button class="btn btn-sm btn-primary" hx-get="artifact/{{ $.Digest }}/{{ .Path }}" hx-target="body"
+                      hx-swap="innerHTML">View</button>
+                    <button class="btn btn-sm btn-primary"
+                      hx-get="{{ $globals.Top }}www/artifact/{{ $.Digest }}/{{ .Path }}?_type=raw" hx-target="body"
+                      hx-swap="innerHTML" download="{{ base .Path }}"><i class="bi bi-download" title="Download"></i>
+                      Download
+                    </button>
+                    {{ with (index $.ArtifactViewers .Path) }}
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Open in ACE Hub
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {{ range . }}
+                        <li><a class="dropdown-item" href="{{ .URL }}" target="_blank" rel="noopener noreferrer"> On
+                            <strong>{{ .Location }}</strong> with <strong>{{ .Viewer }}</strong> viewer</a></li>
+                        {{ end }}
+                      </ul>
+                    </div>
+                    {{ end }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </section>
+      </div>
+      <!-- Right column cards and buttons -->
+      <div class="col-xl-3 col-lg-4 ps-4 pe-4">
         {{ with $.Bottle.Authors }}
         <div class="card mb-3">
-          <h5 class="card-header fw-light">
-            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/authors.svg" class="bottle-attribute-icon" />
+          <h5 class="card-header fw-light ps-2">
+            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/authors.svg" class="bottle-attribute-icon"
+              alt="authors icon" />
             Authors
           </h5>
-          <ul class="pt-3" style="padding-left: 1rem !important;">
+          <ul class="pt-3 ps-1">
             {{ range . }}
             <li class="list-group-item">
               <div>
-                <img src="{{ $globals.Top }}www/static/img/bottle-attributes/author.svg" class="bottle-attribute-icon" />
-                <strong>{{ .Name }}</strong>
+                <img src="{{ $globals.Top }}www/static/img/bottle-attributes/author.svg" class="bottle-attribute-icon"
+                  alt="author icon" />
+                <strong style="color: #e0e0e0">{{ .Name }}</strong>
               </div>
               <div>
-                <i class="bi bi-envelope me-2"></i><a class="link-secondary" href="mailto:{{ .Email }}">&lt;{{ .Email
-                  }}&gt;</a>
+                <i class="bi bi-envelope me-2 ms-1"></i>
+                <a class="link-secondary" href="mailto:{{ .Email }}">&lt;{{ .Email }}&gt;</a>
               </div>
               {{ with .URL }}
-              <div>
-                <i class="bi bi-globe me-2"></i><a class="link-secondary" href="{{ . }}"> {{ . }} </a>
+              <div class="icon-text-container">
+                <i class="bi bi-globe me-2 ms-1"></i>
+                <a class="link-secondary wrapped-link" href="{{ . }}"> {{ . }} </a>
               </div>
               {{ end }}
             </li>
@@ -128,20 +328,22 @@
 
         {{ with $.Bottle.Sources }}
         <div class="card mb-3">
-          <h5 class="card-header fw-light">Data Source(s) <a href="catalog.html?parents-of={{ $.Digest }}" class="btn btn-primary">View</a></h5>
-          <ul class="pt-3" style="padding-left: 1rem !important;">
+          <h5 class="card-header fw-light ps-2">Data Source(s) <a href="catalog.html?parents-of={{ $.Digest }}"
+              class="btn btn-secondary btn-sm">View</a></h5>
+          <ul class="pt-3 ps-1 pe-4">
             {{ range . }}
             <li class="list-group-item">
               {{ if .BottleDigest }}
-              <div>
-                <i class="bi bi-table me-2"></i><a class="link-secondary" 
+              <div class="icon-text-container">
+                <i class="bi bi-table me-2 ms-1"></i>
+                <a class="link-secondary wrapped-link"
                   href="?digest={{ .BottleDigest }}{{ with urlParse .URI }}{{ with .fragment }}{{ range splitList "|" . }}&partSelector={{.}}{{ end }}{{ end }}{{ end }}">
                   {{ .Name }}
                 </a>
               </div>
               {{ else }}
               <div>
-                <i class="bi bi-globe me-2"></i><a class="link-secondary" href="{{ .URI }}"> {{ .Name}} </a>
+                <i class="bi bi-globe me-2 ms-1"></i><a class="link-secondary" href="{{ .URI }}"> {{ .Name}} </a>
               </div>
               {{ end }}
             </li>
@@ -149,36 +351,38 @@
           </ul>
         </div>
         {{ end }}
-
         <div class="card mb-3">
-          <h5 class="card-header fw-light">
-            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/annotation.svg"  class="bottle-attribute-icon" />
+          <h5 class="card-header fw-light ps-2">
+            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/annotation.svg" class="bottle-attribute-icon"
+              alt="annotation icon" />
             Annotations
           </h5>
-          <ul class="pt-3" style="padding-left: 1rem !important;">
+          <ul class="pt-3 ps-2">
             {{ range $.Bottle.Annotations }}
             <li class="list-group-item">
               <span class="text-secondary">
-                <a class="link-secondary" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="{{ .Value | squote }}">{{ .Key }}</a>
+                <a class="link-secondary" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover"
+                  data-bs-placement="top" data-bs-content="{{ .Value | squote }}">{{ .Key }}</a>
               </span>
             </li>
             {{ end }}
           </ul>
         </div>
-
         <div class="card mb-3">
-          <h5 class="card-header fw-light">
-            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/signature.svg"  class="bottle-attribute-icon" />
+          <h5 class="card-header fw-light ps-2">
+            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/signature.svg" class="bottle-attribute-icon"
+              alt="signature icon" />
             Signatures
           </h5>
-          <ul class="pt-3" style="padding-left: 1rem !important;">
+          <ul class="pt-3 ps-2">
             {{ range $index, $sig := $.Signatures }}
             <li class="list-group-item">
               {{ if gt $index 0 }}
               <hr>
               {{ end }}
               <div>
-                <button class="btn btn-primary" data-bs-toggle="popover" data-bs-html="true" data-bs-placement="left" title="Bottle Signature" data-bs-content="
+                <button class="btn btn-secondary btn-sm" data-bs-toggle="popover" data-bs-html="true"
+                  data-bs-placement="left" title="Bottle Signature" data-bs-content="
                     <ul>
                     <li>
                       <b>Public Key Fingerprint</b></br>
@@ -191,27 +395,31 @@
                       <a class='btn btn-primary' type='button' title='Find bottles with signatures made with this key' href='catalog.html?signature-fingerprint={{ $sig.Signature.PublicKeyFingerPrint }}'>
                       <i class='bi bi-search'></i>
                       </a><br>
-                      <small class='text-muted' title='{{ $sig.Signature.PublicKeyFingerPrint }}'>{{ toString $sig.Signature.PublicKeyFingerPrint | trunc 12 }}...</small></br>
+                      <small title='{{ $sig.Signature.PublicKeyFingerPrint }}'>{{ toString $sig.Signature.PublicKeyFingerPrint | trunc 12 }}...</small></br>
                     </span
                     </li>
                     <li>
                       <b>Creation Date:</b><br> {{ toString $sig.Signature.CreatedAt | trunc 19  }}
                     </li>
-                    </ul>"
-                    style="margin-right: 1em; margin-bottom: 1em;">
-                    <img src="{{ $globals.Top }}www/static/img/bottle-attributes/signature.svg" style="max-width: 2em;"/>
-                    </button>
-                  <span title="Trusted">Trusted:
-                {{ if $sig.Trusted }}
-                  <i title="This signature is trusted" alt="This signature is trusted" class="bi bi-check-lg"></i>
-                {{ else }}
-                  <i title="This signature is not trusted" alt="This signature is not trusted" class="bi bi-x-lg"></i>
-                {{ end }}
-                  </span>
-                  <br>
-                  {{ range $sig.Signature.Annotations }}
-                  <label class="bg-annotation badge rounded-pill" style="max-width: 95%; margin-bottom: 1em; white-space: normal;">{{.Key}}={{.Value}}</label>
+                    </ul>" style="margin-right: 1em; margin-bottom: 1em;">
+                  <img src="{{ $globals.Top }}www/static/img/bottle-attributes/signature.svg" alt="signature icon"
+                    class="signature-icon" />
+                </button>
+                <span>
+                  {{ if $sig.Trusted }}
+                  Trusted
+                  <i class="bi bi-shield-check-fill" style="color: #18B57E" alt="trusted signature icon"></i>
+                  {{ else }}
+                  Not Trusted
+                  <i class="bi bi-shield-fill-x" style="color: #EF6966" alt="not trusted signature icon"></i>
                   {{ end }}
+                </span>
+                <br>
+                {{ range $sig.Signature.Annotations }}
+                <label for="control-element" class="badge rounded-pill bg-annotation"
+                  style="max-width: 95%; margin-bottom: 1em; white-space: normal;"
+                  alt="signature pill">{{.Key}}={{.Value}}</label>
+                {{ end }}
               </div>
             </li>
             {{ end }}
@@ -220,44 +428,45 @@
 
         <div class="card mb-3">
           <h5 class="card-header fw-light">
-            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/pull.svg" class="bottle-attribute-icon" />
+            <img src="{{ $globals.Top }}www/static/img/bottle-attributes/pull.svg" class="bottle-attribute-icon"
+              alt="" />
             Usage
           </h5>
-          <ul class="pt-3" style="padding-left: 1rem !important; list-style: none;">
+          <ul class="pt-2 pe-4" style="padding-left: 1rem !important; list-style: none;">
             <li class="list-group-item">
-              <span class="text-secondary">
+              <span class="text-white">
                 {{ $.TotalBottlePulls }} total pulls
               </span>
             </li>
             <li class="list-group-item">
-              <span class="text-secondary">
+              <span class="text-white">
                 {{ len $.BottlePullUserNums }} unique user pulls
               </span>
             </li>
-              {{ if gt (len $.BottlePullUserNums) 0 }}
-              <li>
-                <table class="table">
-                  <tr>
-                    <th scope="col">Username</th>
-                    <th scope="col">Pulls</th>
-                  </tr>
-                  {{ range $username, $pulls := $.BottlePullUserNums }}
-                  <tr>
-                    <td scope="row">{{ $username }}</td>
-                    <td>{{ $pulls }}</td>
-                  </tr>
-                  {{ end }}
-                </table>
-              </li>
-              {{ end }}
+            {{ if gt (len $.BottlePullUserNums) 0 }}
+            <li>
+              <table class="table">
+                <tr>
+                  <th scope="col">Username</th>
+                  <th scope="col">Pulls</th>
+                </tr>
+                {{ range $username, $pulls := $.BottlePullUserNums }}
+                <tr>
+                  <td>{{ $username }}</td>
+                  <td>{{ $pulls }}</td>
+                </tr>
+                {{ end }}
+              </table>
+            </li>
+            {{ end }}
             <!-- TODO Add top K usernames from pul events -->
           </ul>
         </div>
 
         <div id="actions" class="d-grid gap-2 mx-auto mt-4">
           <button class="btn btn-primary position-relative" type="button" data-bs-toggle="modal"
-            data-bs-target="#additional-downloads" aria-expanded="false" 
-            aria-controls="additional-downloads" id="additional-downloads-btn">
+            data-bs-target="#additional-downloads" aria-expanded="false" aria-controls="additional-downloads"
+            id="additional-downloads-btn">
             Additional Locations
             <span class="
                   position-absolute
@@ -271,232 +480,85 @@
               {{ len $.Manifestations }}
               <span class="visually-hidden">unread messages</span>
             </span>
-          </button>  
+          </button>
           <!-- Button trigger modal -->
           <div class="btn-group">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-              Bottle Details 
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Bottle Details
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-              <li data-bs-toggle="modal" data-bs-target="#bottle-raw-json" id="json-details-btn">JSON</li>
-              <li data-bs-toggle="modal" data-bs-target="#bottle-raw-yaml" id="yaml-details-btn">YAML</li>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+              <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#bottle-raw-json" id="json-details-btn">
+                JSON</li>
+              <li class="dropdown-item" data-bs-toggle="modal" data-bs-target="#bottle-raw-yaml" id="yaml-details-btn">
+                YAML</li>
             </ul>
           </div>
           {{ if or (gt (len $.DeprecatedBy) 0) (gt (len $.Deprecates) 0) }}
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deprecation" id="deprecated-btn">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deprecation"
+            id="deprecated-btn">
             Deprecated Bottles
           </button>
           {{ end }}
           {{ if (ne $.LatestAPIVersion $.Bottle.APIVersion) }}
-            <div class="border rounded-3" style="padding:1em; border-color:var(--bs-warning) !important">
-              <p>
-                This bottle is based on an <a href="#" data-bs-toggle="modal" data-bs-target="#update-bottle-schema" id="outdated-bottle-link">outdated schema version</a> and cannot be opened in ACE Hub.</p>
-            </div>
+          <div class="border rounded-3" style="padding:1em; border-color:var(--bs-warning) !important">
+            <p>
+              This bottle is based on an <a href="#" data-bs-toggle="modal" data-bs-target="#update-bottle-schema"
+                id="outdated-bottle-link">outdated schema version</a> and cannot be opened in ACE Hub.</p>
+          </div>
           {{ else }}
-            {{ with $.Viewers }}
-            <div class="btn-group">
-              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Open Bottle in ACE Hub
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                {{ range . }}
-                  <li><a class="dropdown-item" href="{{ .URL }}" target="_blank" rel="noopener noreferrer"> On <strong>{{ .Location }}</strong> with <strong>{{ .Viewer }}</strong> viewer</a></li>
-                {{ end }}
-              </ul>
-            </div>
-            {{ end }}
+          {{ with $.Viewers }}
+          <div class="btn-group">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Open Bottle in ACE Hub
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              {{ range . }}
+              <li><a class="dropdown-item" href="{{ .URL }}" target="_blank" rel="noopener noreferrer"> On
+                  <strong>{{ .Location }}</strong> with <strong> <button class="fs-4"
+                      onclick="removeSelector({$i});return false;"></button>,
+          </div>
+          {{ end }}
+          {{ end }}
           {{ end }}
         </div>
       </div>
     </section>
-    <section id="artifacts" class="mb-5">
-      <h4 id="artifacts">
-        <img src="{{ $globals.Top }}www/static/img/bottle-attributes/public-artifacts.svg"  class="bottle-attribute-icon" />
-        <a style="text-decoration: none; color: #FFFFFF;" href="#artifacts">Artifacts</a>
-      </h4>
-      <p class="text-muted">
-        Associated files can be viewed and downloaded below
-      </p>
-      <div class="row row-cols-1 row-cols-md-5 g-4">
-        {{ range $.Bottle.PublicArtifacts }}
-        <div class="col">
-          <div class="card h-100">
-            <!-- Any others images we want to display 
-              https://en.wikipedia.org/wiki/Comparison_of_web_browsers#Image_format_support -->
-            {{ if or (eq .MediaType "image/jpeg") (eq .MediaType "image/gif") (eq .MediaType "image/png") (eq .MediaType "image/webp") (eq .MediaType "image/svg+xml") }}
-            <img src="/api/blob?digest={{ .Digest }}" class="card-img-top" style="max-height:180px;-o-object-fit: contain;object-fit: contain;" alt="Artifact Image" />
-            {{ else }}
-            <div class="card-img-top d-flex flex-column align-items-center justify-content-center p-3" style="height:180px;background-color:#868e96;">
-              <div style="font-size: 3.0rem;">
-                {{ if or (eq .MediaType "text/html") (eq .MediaType "text/markdown") }}
-                <i class="bi bi-file-earmark-code-fill text-light"></i>
-                {{ else if or (eq .MediaType "text/csv") (eq .MediaType "text/tsv") }}
-                <i class="bi bi-file-earmark-spreadsheet-fill text-light"></i>
-                {{ else if eq .MediaType "text/plain" }}
-                <i class="bi bi-file-earmark-text-fill text-light"></i>
-                {{ else if eq .MediaType "application/zip" }}
-                <i class="bi bi-file-earmark-zip-fill text-light"></i>
-                {{ else if eq .MediaType "application/pdf" }}
-                <i class="bi bi-file-earmark-pdf-fill text-light"></i>
-                {{ else if hasPrefix "application" .MediaType }}
-                <i class="bi bi-file-earmark-binary-fill text-light"></i>
-                {{ else if hasPrefix "image" .MediaType }}
-                <i class="bi bi-file-earmark-image-fill text-light"></i>
-                {{ else }}
-                <i class="bi bi-file-earmark-fill text-light"></i>
-                {{ end }}
-              </div>
-              <p class="text-light text-wrap text-break">{{ .MediaType }}</p>
-            </div>
-            {{ end }}
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{{ .Name }}</h5>
-              <p class="card-text">
-                <code>{{ .Path }}</code>
-              </p>
-              <div class="mt-auto d-grid gap-2 d-md-block">
-                <a class="btn btn-sm btn-primary" role="button"
-                  href="artifact/{{ $.Digest }}/{{ .Path }}">View</a>
-
-                  <a class="btn btn-sm btn-primary" role="button" href="{{ $globals.Top }}www/artifact/{{ $.Digest }}/{{ .Path }}?_type=raw"
-                    download="{{ base .Path }}"><i class="bi bi-download" title="Download"></i>
-                    Download
-                  </a>
-                  {{ with (index $.ArtifactViewers .Path) }}
-                  <div class="btn-group">
-                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Open in ACE Hub
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      {{ range . }}
-                        <li><a class="dropdown-item" href="{{ .URL }}" target="_blank" rel="noopener noreferrer"> On <strong>{{ .Location }}</strong> with <strong>{{ .Viewer }}</strong> viewer</a></li>
-                      {{ end }}
-                    </ul>
-                  </div>
-                {{ end }}
-              </div>
-            </div>
-          </div>
-        </div>
-        {{ end }}
-      </div>
-    </section>
-
-    <section id="parts" class="mb-5">
-        <div id="parts" class="my-5">
-          <h4 id="parts">
-          <img src="{{ $globals.Top }}www/static/img/bottle-attributes/part.svg"  class="bottle-attribute-icon" />
-          <a style="text-decoration: none; color: #FFFFFF;" href="#parts">Parts</a> <span class="badge rounded-pill bg-dark">Size: {{ ByteSize $.TotalSize }}</span>
-          </h4>
-          <p class="text-muted">
-            These individual pieces make up the bottle. When pulling a bottle you can use the labels to form a selector
-            to only download what you want.
-          </p>
-          <div class="d-flex flex-row">
-            <h5>Part Selector</h5>
-            <a class="mx-2" href="#" data-bs-toggle="modal" data-bs-target="#selector-help" id="add-part-btn"><i class="bi bi-info-circle-fill"></i></a>
-          </div>
-          <form action="" method="get" id="part-selector-form" class="my-3">
-            <input type="text" class="d-none" name="digest" value="{{ $.Digest }}">
-            <!-- <label class="form-label" for="part-selector">Part selector</label> -->
-            <div class="row mt-2">
-              <div class="col-sm-6">
-                <input type="text" class="form-control" id="part-selector"
-                  placeholder="key=value,key2value2,..." onchange="document.getElementById('part-selector-hidden').value = this.value;">
-              </div>
-              <div class="col-auto">
-                <button class="btn-unstyled fs-4" type="submit" id="add-part-btn"><i class="bi bi-plus-circle-fill"></i></button>
-              </div>
-            </div>
-            {{ range $i, $e := $.PartSelectors }}
-            <div class="row mt-2">
-              <div class="col-sm-6" id="selectorDiv{{$i}}">
-                <input type="text" class="form-control" name="partSelector" id="part-selector" value="{{ . }}">
-              </div>
-              <div id="removeSelectorButton{{$i}}" class="col-auto">
-                <a class="fs-4" href="#" onclick="removeSelector({{$i}});return false;">
-                  <i class="bi bi-dash-circle-fill"></i></a>
-              </div>
-            </div>
-            {{ end }}
-            <input type="text" class="d-none" name="partSelector" id="part-selector-hidden">
-          </form>
-          
-        </div>
-
-        <section id="part-table" class="mb-5" style="max-height: 20em; overflow: auto;">
-      <form action="similarBottles" method="get" id="tags" class="my-3">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Select</th>
-              <th scope="col">Name</th>
-              <th scope="col">Size</th>
-              <th scope="col">Part Digest</th>
-              <th scope="col">Labels</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{ range $.Bottle.Parts }}
-            <tr>
-              <td>
-                <input type="checkbox" value="{{ .Digest }}" name="part-digest">
-              </td>
-              <td>
-                <pre>{{ .Name }}</pre>
-              </td>
-              <td>
-                <span class="badge rounded-pill bg-secondary">{{ ByteSize .Size }}</span>
-              </td>
-              <td style="
-                    word-wrap: break-word;
-                    min-width: 160px;
-                    max-width: 280px;
-                  ">
-                <small style="overflow: hidden">{{ .Digest }}</small>
-              </td>
-              <td>
-                {{ range $key, $value := .Labels }}
-                <label class="bg-label badge rounded-pill" for="part-{{$key}}={{$value}}">{{$key}}={{$value}}</label>
-                {{ end }}
-              </td>
-            </tr>
-            {{ end }}
-          </tbody>
-        </table>
-        <button class="btn btn-sm btn-primary ms-auto" type="submit" title="Select parts to find bottles with matching parts" style="float: left;">View Similar</button>
-      </form>
-    </section>
-    </section>
-    
+    <!-- Lineage section -->
     <section id="lineage" class="mb-5">
       <div>
         <div class="row" style="margin: auto; padding-bottom: 1em;">
-          <h4 id="lineage" class="col"><a style="text-decoration: none; color: #FFFFFF;" href="#lineage">Lineage</a></h4>
+          <h4 id="lineage" class="col"><a class="section-header" href="#lineage">Lineage</a>
+          </h4>
           <div class="col">
             <p>Ancestor Generations</p>
-            <div class="btn-group">
-              <button type="button" class="btn btn-secondary" onclick='updateLineageGenerationParam("numGenAncestors" , {{ add $.Params.NumGenAncestors -1 }})'>-</button>
-              <p class="bg-secondary" style="padding: 0.5em; margin: auto;">{{ $.Params.NumGenAncestors }}</p>
-              <button type="button" class="btn btn-secondary" onclick='updateLineageGenerationParam("numGenAncestors" , {{ add $.Params.NumGenAncestors 1 }})'>+</button>
+            <div class="btn-group ms-4">
+              <button type="button" class="btn btn-transparent"
+                onclick='updateLineageGenerationParam("numGenAncestors" , {{ add $.Params.NumGenAncestors -1 }})'>-</button>
+              <p class="bg-transparent" style="padding: 0.5em; margin: auto;">{{ $.Params.NumGenAncestors }}</p>
+              <button type="button" class="btn btn-transparent"
+                onclick='updateLineageGenerationParam("numGenAncestors" , {{ add $.Params.NumGenAncestors 1 }})'>+</button>
             </div>
           </div>
           <div class="col">
             <p>Descendent Generations</p>
-            <div class="btn-group">
-              <button type="button" class="btn btn-secondary" onclick='updateLineageGenerationParam("numGenDescendants", {{ add $.Params.NumGenDescendants -1 }})'>-</button>
-              <p class="bg-secondary" style="padding: 0.5em; margin: auto;">{{ $.Params.NumGenDescendants }}</p>
-              <button type="button" class="btn btn-secondary" onclick='updateLineageGenerationParam("numGenDescendants", {{ add $.Params.NumGenDescendants 1 }})'>+</button>
+            <div class="btn-group ms-5">
+              <button type="button" class="btn btn-transparent"
+                onclick='updateLineageGenerationParam("numGenDescendants", {{ add $.Params.NumGenDescendants -1 }})'>-</button>
+              <p class="bg-transparent" style="padding: 0.5em; margin: auto;">{{ $.Params.NumGenDescendants }}</p>
+              <button type="button" class="btn btn-transparent"
+                onclick='updateLineageGenerationParam("numGenDescendants", {{ add $.Params.NumGenDescendants 1 }})'>+</button>
             </div>
           </div>
         </div>
 
         <!-- Lineage graph -->
         <div id="lineage-graph" class="border rounded px-4 py-5 ">
-            <div class="row text-center">
-              {{ if $.LineageGraphHTML }}
-                {{ $.LineageGraphHTML }}
-              {{ end }}
+          <div class="row text-center">
+            {{ if $.LineageGraphHTML }}
+            {{ $.LineageGraphHTML }}
+            {{ end }}
           </div>
         </div>
       </div>
@@ -506,7 +568,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Download Locations</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="locations-btn"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              id="locations-btn"></button>
           </div>
           <div class="modal-body mb-5">
             <p class="lead">
@@ -549,7 +612,8 @@
                           max-width: 600px;
                         ">
                       <div class="input-group">
-                        <span type="text" class="form-control" aria-describedby="basic-addon2"><code>ace-dt bottle pull {{ .Repository }}@{{ .Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}</code>
+                        <span type="text" class="form-control">
+                          <code>ace-dt bottle pull {{ .Repository }}@{{ .Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}</code>
                         </span>
                         <button class="btn btn-primary" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
                           data-bs-trigger="click" title="Copied to clipboard!" id="clipboard-copy-btn"
@@ -636,7 +700,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Raw Bottle Config (JSON)</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="config-submit-btn"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              id="config-submit-btn"></button>
           </div>
           <div class="modal-body">
             <pre>{{ $.PrettyJSON | toString }}</pre>
@@ -655,7 +720,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Raw Bottle Config (YAML)</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="config-submit-btn"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              id="config-submit-btn"></button>
           </div>
           <div class="modal-body">
             <pre>{{ $.PrettyYAML | toString }}</pre>
@@ -675,35 +741,36 @@
   </main>
   {{ template "scripts" . }}
   <script>
-  // HACK remvoe empty selectors before submitting
-  var partSelectForm = document.getElementById('part-selector-form');
+    // HACK remvoe empty selectors before submitting
+    var partSelectForm = document.getElementById('part-selector-form');
 
-  var myDefaultAllowList = bootstrap.Tooltip.Default.allowList
-  myDefaultAllowList.button = ['type', 'data-bs-toggle', 'data-bs-placement', 'data-bs-trigger', 'title', 'onclick']
+    var myDefaultAllowList = bootstrap.Tooltip.Default.allowList
+    myDefaultAllowList.button = ['type', 'data-bs-toggle', 'data-bs-placement', 'data-bs-trigger', 'title', 'onclick']
 
-  partSelectForm.addEventListener('submit', function () {
-    var allInputs = partSelectForm.getElementsByTagName('input');
+    partSelectForm.addEventListener('submit', function () {
+      var allInputs = partSelectForm.getElementsByTagName('input');
 
-    for (var i = 0; i < allInputs.length; i++) {
-      var input = allInputs[i];
+      for (var i = 0; i < allInputs.length; i++) {
+        var input = allInputs[i];
 
-      if (input.name && !input.value) {
+        if (input.name && !input.value) {
           input.name = '';
+        }
+      }
+    });
+
+    function updateLineageGenerationParam(paramName, value) {
+      // we wont let it be negative
+      if (value < 0) { return }
+
+      if ('URLSearchParams' in window) {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(paramName, value);
+        var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString() + "#lineage";
+        window.location = newRelativePathQuery;
       }
     }
-  });
-
-  function updateLineageGenerationParam(paramName, value) {
-    // we wont let it be negative
-    if (value < 0) { return }
-
-    if ('URLSearchParams' in window) {
-      var searchParams = new URLSearchParams(window.location.search);
-      searchParams.set(paramName, value);
-      var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString() + "#lineage";
-      window.location = newRelativePathQuery;
-    }
-  }
   </script>
 </body>
+
 </html>
