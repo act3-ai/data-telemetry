@@ -29,7 +29,7 @@ RUN echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release 
 
 # Install Ubuntu packages
 RUN apt-get update && apt-get install -yq \
-pgadmin4-web \
+pgadmin4-web=8.12 \
 && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
