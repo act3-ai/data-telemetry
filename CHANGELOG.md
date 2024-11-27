@@ -1,3 +1,10 @@
+## [2.0.1](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.0...v2.0.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* update modals in various places on bottle details page ([47504e9](https://git.act3-ace.com/ace/data/telemetry/commit/47504e9a5cbaf2d08c9eb29e75a11d9d7410f75a))
+
 # [2.0.0](https://git.act3-ace.com/ace/data/telemetry/compare/v1.0.1...v2.0.0) (2024-11-27)
 
 
