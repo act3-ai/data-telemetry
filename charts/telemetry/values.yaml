@@ -6,7 +6,7 @@ image:
   repository: reg.git.act3-ace.com/ace/data/telemetry
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2.0.1"
+  tag: "v2.0.2"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

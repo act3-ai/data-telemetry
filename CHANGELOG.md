@@ -1,3 +1,10 @@
+## [2.0.2](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.1...v2.0.2) (2024-11-27)
+
+
+### Bug Fixes
+
+* pinned pgadmin version to 8.12 ([dc1257a](https://git.act3-ace.com/ace/data/telemetry/commit/dc1257af197758298f290f7d4e34ce61d7cc8374))
+
 ## [2.0.1](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.0...v2.0.1) (2024-11-27)
 
 
