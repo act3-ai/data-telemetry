@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"log/slog"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
@@ -14,18 +15,18 @@ import (
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	bottle "git.act3-ace.com/ace/data/schema/pkg/apis/data.act3-ace.io"
-	"git.act3-ace.com/ace/go-common/pkg/httputil"
-	"git.act3-ace.com/ace/go-common/pkg/logger"
-	"git.act3-ace.com/ace/go-common/pkg/redact"
-	"git.act3-ace.com/ace/go-common/pkg/test"
+	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 
-	"git.act3-ace.com/ace/data/telemetry/internal/api"
-	"git.act3-ace.com/ace/data/telemetry/internal/db"
-	"git.act3-ace.com/ace/data/telemetry/internal/middleware"
-	ttest "git.act3-ace.com/ace/data/telemetry/internal/testing"
-	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"git.act3-ace.com/ace/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
+	ttest "gitlab.com/act3-ai/asce/data/telemetry/v2/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
 )
 
 type SingleTestSuite struct {
@@ -53,7 +54,7 @@ func (s *SingleTestSuite) SetupTest() {
 
 	// Instead of an env we can use a the "flags" package to create a flag and default it to the env if set or to file::memory: if not
 	dsn := "file::memory:"
-	myDB, err := db.Openv1alpha1(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
@@ -82,14 +83,14 @@ func (s *SingleTestSuite) SetupTest() {
 	s.client = sc
 
 	// mockLocation is a mock example of our config file for testing
-	mockLocation := v1alpha1.Location{
+	mockLocation := v1alpha2.Location{
 		Name:    "MyMockConfig",
 		URL:     redact.SecretURL(s.server.URL),
 		Cookies: map[string]redact.Secret{"foo": "bar"},
 		Token:   "mycooltoken",
 	}
 
-	scWithToken, err := NewSingleClientFromConfig(mockLocation)
+	scWithToken, err := NewSingleClient(http.DefaultClient, string(mockLocation.URL), string(mockLocation.Token))
 	s.NoError(err)
 	s.clientB = scWithToken
 }

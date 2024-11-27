@@ -23,8 +23,8 @@ import (
 
 	latest "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io/v1"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
 )
 
 type bottleResultEntry struct {

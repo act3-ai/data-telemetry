@@ -14,30 +14,29 @@ import (
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	bottle "git.act3-ace.com/ace/data/schema/pkg/apis/data.act3-ace.io"
-	"git.act3-ace.com/ace/go-common/pkg/httputil"
-	"git.act3-ace.com/ace/go-common/pkg/logger"
-	"git.act3-ace.com/ace/go-common/pkg/redact"
-	"git.act3-ace.com/ace/go-common/pkg/test"
+	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 
-	"git.act3-ace.com/ace/data/telemetry/internal/api"
-	"git.act3-ace.com/ace/data/telemetry/internal/db"
-	"git.act3-ace.com/ace/data/telemetry/internal/middleware"
-	ttest "git.act3-ace.com/ace/data/telemetry/internal/testing"
-	"git.act3-ace.com/ace/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"git.act3-ace.com/ace/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
+	ttest "gitlab.com/act3-ai/asce/data/telemetry/v2/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
 )
 
 type MultiTestSuite struct {
 	suite.Suite
-	serverA      *httptest.Server
-	serverB      *httptest.Server
-	dataDir      string
-	blobs        map[digest.Digest][]byte
-	log          *slog.Logger
-	ctx          context.Context
-	client       *MultiClient
-	configClient *MultiClient
+	serverA *httptest.Server
+	serverB *httptest.Server
+	dataDir string
+	blobs   map[digest.Digest][]byte
+	log     *slog.Logger
+	ctx     context.Context
+	client  *MultiClient
 }
 
 func (s *MultiTestSuite) getBlobByDigest(dgst digest.Digest) ([]byte, error) {
@@ -54,12 +53,12 @@ func (s *MultiTestSuite) SetupTest() {
 
 	dsn := "file::memory:"
 
-	myDB, err := db.Openv1alpha1(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
 
-	myDB2, err := db.Openv1alpha1(s.ctx, v1alpha1.Database{
+	myDB2, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
@@ -107,22 +106,6 @@ func (s *MultiTestSuite) SetupTest() {
 
 	// initiate a new multiclient
 	s.client = NewMultiClient([]Client{client1, client2, client3})
-
-	// sample mock Location files for testing
-	mockLocationA := v1alpha1.Location{
-		Name:    "MyMockConfig",
-		URL:     redact.SecretURL(s.serverA.URL),
-		Cookies: map[string]redact.Secret{"foo": "bar"},
-		Token:   "mycooltoken",
-	}
-	mockLocationB := v1alpha1.Location{
-		Name:    "MyMockConfig2",
-		URL:     redact.SecretURL(s.serverB.URL),
-		Cookies: map[string]redact.Secret{"foo": "bar"},
-		Token:   "mycooltoken",
-	}
-
-	s.configClient = NewMultiClientConfig([]v1alpha1.Location{mockLocationA, mockLocationB})
 }
 
 func (s *MultiTestSuite) TearDownTest() {
@@ -148,7 +131,7 @@ func (s *MultiTestSuite) TestPutBlobWithToken() {
 	byteValue, err := os.ReadFile(filepath.Join(s.dataDir, "blob", "sample.txt"))
 	s.NoError(err)
 
-	err = s.configClient.PutBlob(s.ctx, digest.SHA256, byteValue)
+	err = s.client.PutBlob(s.ctx, digest.SHA256, byteValue)
 	s.NoError(err)
 }
 

@@ -12,8 +12,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/runner"
 	vv "gitlab.com/act3-ai/asce/go-common/pkg/version"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/cmd/telemetry/cli"
-	"gitlab.com/act3-ai/asce/data/telemetry/docs"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/cmd/telemetry/cli"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/docs"
 )
 
 // getVersionInfo retreives the proper version information for this executable.

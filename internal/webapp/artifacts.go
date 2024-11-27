@@ -25,8 +25,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
 )
 
 // TODO consider using GO's filesystem abstraction to build a filesystem for the artifacts based on their path in the bottle

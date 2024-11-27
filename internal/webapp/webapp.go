@@ -22,7 +22,7 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 //go:embed assets

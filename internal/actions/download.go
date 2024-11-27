@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	client "gitlab.com/act3-ai/asce/data/telemetry/pkg/client/v2"
+	client "gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/client"
 )
 
 // Download is the action for the download operations.

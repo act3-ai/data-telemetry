@@ -8,7 +8,7 @@ import (
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 )
 

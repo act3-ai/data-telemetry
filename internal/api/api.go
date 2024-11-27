@@ -11,7 +11,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
 )
 
 // API implements the REST API.

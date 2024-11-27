@@ -7,7 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ClientConfig is an action for managing the client configuration.

@@ -18,7 +18,7 @@ import (
 
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
 )
 
 // extendedAncestors represents a collection of ancestors that include all types.

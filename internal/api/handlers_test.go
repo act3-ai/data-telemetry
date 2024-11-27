@@ -35,14 +35,14 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/dbtest"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
-	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	client "gitlab.com/act3-ai/asce/data/telemetry/pkg/client/v2"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/dbtest"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
+	ttest "gitlab.com/act3-ai/asce/data/telemetry/v2/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	client "gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/client"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
 )
 
 type HandlersTestSuite struct {

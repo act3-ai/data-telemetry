@@ -5,7 +5,7 @@
 package v1alpha2
 
 import (
-	"git.act3-ace.com/ace/go-common/pkg/redact"
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 

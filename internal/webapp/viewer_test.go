@@ -11,8 +11,8 @@ import (
 
 	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 func Test_getViewerURL(t *testing.T) {

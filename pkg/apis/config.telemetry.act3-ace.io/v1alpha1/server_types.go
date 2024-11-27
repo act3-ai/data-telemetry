@@ -142,7 +142,7 @@ webapp:
   - name: "VS Code"
     accept: "image/*,application/json,text/plain;q=0.5, application/vnd.act3-ace.bottle;q=0.9"
     acehub:
-      image: reg.git.act3-ace.com/ace/hub/vscode-server
+      image: reg.gitlab.com/act3-ai/asce/hub/vscode-server
       resources:
         cpu: "2"
         memory: "2Gi"

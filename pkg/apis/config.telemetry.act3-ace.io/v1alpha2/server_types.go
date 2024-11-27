@@ -7,8 +7,9 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"git.act3-ace.com/ace/go-common/pkg/redact"
 	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
+
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 )
 
 // +kubebuilder:object:root=true

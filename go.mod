@@ -1,4 +1,4 @@
-module gitlab.com/act3-ai/asce/data/telemetry
+module gitlab.com/act3-ai/asce/data/telemetry/v2
 
 go 1.23.1
 

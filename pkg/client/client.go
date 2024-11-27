@@ -8,7 +8,7 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	"git.act3-ace.com/ace/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
 )
 
 // GetArtifactDataFunc returns the data for an artifact with the given digest.

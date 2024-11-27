@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/actions"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/actions"
+	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // NewClientConfigCmd creates a new "config" subcommand.
