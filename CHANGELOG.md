@@ -1,3 +1,52 @@
+# [2.0.0](https://git.act3-ace.com/ace/data/telemetry/compare/v1.0.1...v2.0.0) (2024-11-27)
+
+
+* Merge branch 'spacing-issue' into 'main' ([8c6fb35](https://git.act3-ace.com/ace/data/telemetry/commit/8c6fb35fadfe599998b2e705a496e4141c2a46ff))
+
+
+### Bug Fixes
+
+* accessibility issues and add navigation changes ([33c56ef](https://git.act3-ace.com/ace/data/telemetry/commit/33c56ef897eb431057531c0dd79817b451f7bdb5))
+* **ci:** gendocs ([7206f4c](https://git.act3-ace.com/ace/data/telemetry/commit/7206f4c38db689fe124d3490cbf87da4d2175f35))
+* **deps:** update dependency devsecops/cicd/pipeline to v19.0.35 ([8e8a8e6](https://git.act3-ace.com/ace/data/telemetry/commit/8e8a8e6a0121d7bb1ef93dd08921fc7f19adf63c))
+* **deps:** update dependency devsecops/cicd/pipeline to v19.0.36 ([bd77421](https://git.act3-ace.com/ace/data/telemetry/commit/bd77421d37c4d582978ce12edb4a5dcb690f43d4))
+* **deps:** update docker.io/library/golang docker tag to v1.23.2 ([b5f92ff](https://git.act3-ace.com/ace/data/telemetry/commit/b5f92ffd26a31b4e82d4ccba9e09c20af8ac8e97))
+* **deps:** update git.act3-ace.com/ace/go-common digest to ba34560 ([645d9d0](https://git.act3-ace.com/ace/data/telemetry/commit/645d9d05fa38c1838255e825a0c766c9d96b513e))
+* **deps:** update git.act3-ace.com/ace/hub/api/v6 digest to a3a6971 ([4ca5ae5](https://git.act3-ace.com/ace/data/telemetry/commit/4ca5ae5a855015e01ac2bac26b8f3dc4209d28d8))
+* **deps:** update git.act3-ace.com/ace/hub/api/v6 digest to f535566 ([c69461a](https://git.act3-ace.com/ace/data/telemetry/commit/c69461a8b9f06ff0674ed40de88d3db208ae6733))
+* **deps:** update github.com/gomarkdown/markdown digest to 72d49d9 ([6466b3f](https://git.act3-ace.com/ace/data/telemetry/commit/6466b3ff0aa69d5b82ce52d90e052f40fe8ad263))
+* **deps:** update kubernetes packages to v0.31.2 ([fbc11ba](https://git.act3-ace.com/ace/data/telemetry/commit/fbc11ba9c58eececbe7747493e7c755de04d3d59))
+* **deps:** update module code.cloudfoundry.org/bytefmt to v0.16.0 ([ab953b8](https://git.act3-ace.com/ace/data/telemetry/commit/ab953b8e0bb4b0e66fd10d07c3171f50b769c0fd))
+* **deps:** update module github.com/notaryproject/notation-go to v1.2.1 ([bb3d3f0](https://git.act3-ace.com/ace/data/telemetry/commit/bb3d3f00cebb564e69d64b56e75f837566406695))
+* **deps:** update module github.com/prometheus/client_golang to v1.20.5 ([5ba6878](https://git.act3-ace.com/ace/data/telemetry/commit/5ba68786255576dea3126363513ca6c2aaaf5187))
+* **deps:** update module gorm.io/gorm to v1.25.12 ([23e50d2](https://git.act3-ace.com/ace/data/telemetry/commit/23e50d23a702840408d9aab2f3e51687d44b6f12))
+* **deps:** update postgres docker tag to v17 ([13d5e75](https://git.act3-ace.com/ace/data/telemetry/commit/13d5e75043aa81d534f3e1f0f8e14e03dd90a340))
+* make full card clickable ([404e4a9](https://git.act3-ace.com/ace/data/telemetry/commit/404e4a9cf5be4fe47e79fa899264c7b10b17e2f4))
+* **module:** added v1alpha2 version of config ([8d8229c](https://git.act3-ace.com/ace/data/telemetry/commit/8d8229c50fb90e3666ced1665386eede251be885))
+* **module:** make v1 client use v1 config ([fcea927](https://git.act3-ace.com/ace/data/telemetry/commit/fcea927fb7b264ff0a48bafc61e151c8d032834a))
+* **module:** make v1 client use v1 config ([68e6d08](https://git.act3-ace.com/ace/data/telemetry/commit/68e6d087c11c173d5377f31748e56b629f42f283))
+* **module:** moved client module code to v2 package ([5d0ea1a](https://git.act3-ace.com/ace/data/telemetry/commit/5d0ea1a0c35de048cda16e383633932cd5be24db))
+* **module:** restored client v1 ([22d4189](https://git.act3-ace.com/ace/data/telemetry/commit/22d4189fa458a4d22bd4ccf10701bb3e2e459764))
+* Search bar fixes and accessibility fixes for catalog page ([424e403](https://git.act3-ace.com/ace/data/telemetry/commit/424e403303225d31e6d5559a6d6347d1194a9194))
+* Update bottle details page UI ([733dae5](https://git.act3-ace.com/ace/data/telemetry/commit/733dae50be83b885cb29be12a28e28590be1eec5))
+* versioned package to v2 ([dc69521](https://git.act3-ace.com/ace/data/telemetry/commit/dc6952192d9b9c7b02cf11ce7b63a78266051226))
+
+
+### Features
+
+* add oauth support ([a112487](https://git.act3-ace.com/ace/data/telemetry/commit/a112487a88f4df6b05308dcb63d7556d9ed03fa2))
+
+
+### Fix
+
+* Updated some of the spacing on the leaderboard ([9a7b802](https://git.act3-ace.com/ace/data/telemetry/commit/9a7b8026595a5ea2db9a5ea1130d5a06deb1e5c0))
+
+
+### BREAKING CHANGES
+
+* `NewMultiClientConfig` removed, and `NewSingleClientFromConfig` removed
+* `NewMultiClientConfig` removed, and `NewSingleClientFromConfig` removed
+
 ## [1.0.1](https://git.act3-ace.com/ace/data/telemetry/compare/v1.0.0...v1.0.1) (2024-09-04)
 
 
