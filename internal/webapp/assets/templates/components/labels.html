@@ -1,25 +1,34 @@
-<h1 id="labels-and-selectors"><a style="text-decoration: none; color: #FFFFFF;" href="#labels-and-selectors">Labels and Selectors</a></h1>
-
-<p>
-  Labels are simple key-value pairs that can be added to bottles and parts of
-  bottles. We will primarily discuss how labels are used on bottles but they
-  apply identically to parts as well. The concept of labels that ACE Data uses
-  is the same as Kubernetes
-  <a
-    href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/"
-    >labels</a
-  >. The syntax for keys and values of labels are restricted in the same way as
-  Kubernetes.
-</p>
-
-<h2>Labels</h2>
-
-<p>
-  Labels are the way that bottle authors can classify and identify sets of bottles. Commonly labels
-  are used to specify the:
-</p>
+<h2 id="labels-and-selectors"><a style="text-decoration: none; color: #e0e0e0;" href="#labels-and-selectors">Labels</a>
+</h2>
 
 <ul>
+  <li>
+    Simple key-value pairs that can be added to bottles and parts of bottles
+  </li>
+  <li>
+    Concept is the same as Kubernetes
+    <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/" target="_blank">labels</a>
+  </li>
+  <li>
+    Values are restricted in the same way as Kubernetes
+  </li>
+  <li>
+    Bottle authors can classify and identify sets of bottles with labels
+  </li>
+  <li>
+    Used to identify anything a user might want to use to select bottles
+  </li>
+  <li>
+    Also used on parts of bottles
+  </li>
+</ul>
+
+
+<h4>
+  Common uses for labels in ASCE Data Telemetry
+</h4>
+
+<ul class="badge-list">
   <li>
     Project that created it, e.g.
     <span class="badge rounded-pill bg-label text-white">project=COACH</span>
@@ -38,58 +47,54 @@
     Source code version, e.g.
     <span class="badge rounded-pill bg-label text-white">version=v0.2.4</span>
   </li>
+  <li>
+    A data set with both training and test sets contained within it as different parts, e.g.
+    <span class="badge rounded-pill bg-label text-white">subset=train</span> and
+    <span class="badge rounded-pill bg-label text-white">subset=test</span>
+    <br>
+    This allows a user to restrict/limit what they download if only a few parts are required
+  </li>
+
 </ul>
 
-<p>
-  In short labels are used to identify anything a user might want to use to
-  select bottles. The selection of bottles based on labels is done with label
-  selectors.
-</p>
+<h2>Selectors</h2>
 
-<p>
-  Labels can also be used on parts of bottles. For example a bottle representing
-  a data set might have both the training and test sets contained within it as
-  different parts. In that case you would want to label them set with something
-  like <span class="badge rounded-pill bg-label text-white">subset=train</span> and
-  <span class="badge rounded-pill bg-label text-white">subset=test</span>, respectively.
-  That way a user can restrict/limit what they download if only a few parts are
-  required.
-</p>
-<h2>Label Selectors</h2>
+<ul>
+  <li>
+    Used to restrict the set of bottles
+  </li>
+  <li>
+    Can make arbitrary groups of bottles by picking which selectors must match
+  </li>
+  <li>
+    Syntax is the same as Kubernetes
+    <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors"
+      target="_blank">label
+      selectors</a>
+  <li>
+    Composed of zero or more requirements
+  </li>
+  <li>
+    All requirements must match for a selector to match
+  </li>
+</ul>
 
-<p>
-  Label selectors (or simply selectors) are used to restrict the set of bottles.
-  Assuming users label their bottles appropriately, you can effectively make
-  arbitrary groups of bottles by picking which selectors must match.
-</p>
-
-<p>
-  The syntax used is the same as Kubernetes
-  <a
-    href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors"
-    >label selectors</a
-  >. Eventually this might be extended to become a superset of what Kubernetes provides.
-</p>
-
-<p>
-  A selector is composed of zero or more requirements. For example, the selector
-  <code>project=COACH,type=model</code> has two requirements
-  <code>project=COACH</code> and <code>type=model</code> that must match the
-  bottle in order to be selected. All requirements must match for a selector to
-  match. So the <code>,</code> in
-  <code>project=COACH,type=model</code> semantically means AND. When multiple
-  multiple selectors are specified, any one of those selectors must match. So semantically
-  selectors are OR&rsquo;d together. In mathematical terms this is disjunctive
-  normal form (e.g., (r₀ ∧ r₁ ∧ &hellip;) ∨ (r₃ ∧ &hellip;)). In electrial
-  engineering terms this is the &ldquo;sum of products&rdquo; form (i.e., r₀ r₁
-  + r₃).
-</p>
-
-<p>
-  There many ways to specify a requirement. Above we only showed the simplest
-  form <code>somekey=somevalue</code>. Note that whitespace within a requirement
-  is insignificant. Here are all the available ways to specify a requirement:
-</p>
+<h4>
+  Selectors in ASCE Data Telemetry
+</h4>
+<ul>
+  <li>
+    Using a comma( , ) to separate requirements semantically means AND, e.g.
+    <code>project=COACH,type=model</code>
+  </li>
+  <li>
+    Whitespace within a requirement is insignificant
+  </li>
+  <li>
+    In some situations there is a temporary restriction that inequality requirements (7 and 8 below) only work when the
+    value is an integer
+  </li>
+</ul>
 
 <ol>
   <li>
@@ -125,8 +130,3 @@
     greater than <code>7</code>
   </li>
 </ol>
-
-<p>
-  In some situations there is a temporary restriction that inequality
-  requirements (7 and 8) only work when the value is an integer.
-</p>

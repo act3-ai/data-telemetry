@@ -63,6 +63,10 @@ a {
   stroke-width: 2;
 }
 
+.badge-list li {
+  margin-bottom: 10px;
+}
+
 .bg-annotation {
   border: #FFB74D 2px solid !important;
   color: var(--asce-text-primary);
@@ -230,6 +234,18 @@ a {
   color: var(--asce-text-primary);
 }
 
+code {
+  color: #32D9BA !important;
+}
+
+.custom-modal-width {
+  max-width: 60%; 
+}
+
+.pre {
+  color: #32D9BA !important;
+}
+
 .dropdown-menu {
   background-color: var(--asce-secondary-background);
   border-radius: 4px;
@@ -265,6 +281,11 @@ a {
 }
 
 .form-control.copy-bottle-digest code {
+  color: #32D9BA !important;
+  max-width: 75%;
+}
+
+.form-control code {
   color: #32D9BA !important;
   max-width: 75%;
 }
@@ -342,10 +363,6 @@ time[title] {
 
 .modal-content>.modal-body>.table-responsive>.table-hover>tbody>tr:hover>* {
   background-color: #b0b5ba !important;
-  color: rgb(0, 0, 0) !important;
-}
-
-.modal-content>.modal-body>.table-responsive>table {
   color: rgb(0, 0, 0) !important;
 }
 
@@ -449,11 +466,6 @@ body {
 .signature-icon {
   height: 24px;
   width: 24px;
-}
-
-.table {
-  border: 0;
-  color: rgb(250, 250, 250) !important;
 }
 
 .table {

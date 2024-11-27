@@ -119,6 +119,13 @@ build with ko:
     GOMAXPROCS: 8
     GOMEMLIMIT: 17179869184 # 16*(2^30)
 
+govulncheck:
+  variables:
+    KUBERNETES_CPU_REQUEST: 3
+    KUBERNETES_CPU_LIMIT: 8
+    KUBERNETES_MEMORY_REQUEST: 4Gi
+    KUBERNETES_MEMORY_LIMIT: 12Gi
+
 generate docs:
   stage: Semantic Release
   rules:

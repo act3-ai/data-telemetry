@@ -564,11 +564,11 @@
       </div>
     </section>
     <section id="additional-downloads" class="modal fade" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-fullscreen-xl-down modal-dialog-centered">
+      <div class="modal-dialog custom-modal-width modal-fullscreen-xl-down modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Download Locations</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
               id="locations-btn"></button>
           </div>
           <div class="modal-body mb-5">
@@ -595,32 +595,25 @@
                     <td>
                       <pre>{{ .Repository }}</pre>
                     </td>
-
-                    <!-- <td
-                        style="
-                          word-wrap: break-word;
-                          min-width: 150px;
-                          max-width: 150px;
-                        "
-                      >
-                        <small style="overflow: hidden">{{ .Digest }}</small>
-                      </td> -->
                     <td>{{ .AuthRequired | ternary "Required" "None" }}</td>
                     <td style="
                           word-wrap: break-word;
                           min-width: 200px;
-                          max-width: 600px;
+                          max-width: 425px;
                         ">
                       <div class="input-group">
                         <span type="text" class="form-control">
                           <code>ace-dt bottle pull {{ .Repository }}@{{ .Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}</code>
                         </span>
-                        <button class="btn btn-primary" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
-                          data-bs-trigger="click" title="Copied to clipboard!" id="clipboard-copy-btn"
-                          onclick="copyToClipboard('ace-dt bottle pull {{ .Repository }}@{{ .Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}')">
-                          <i class="bi bi-clipboard"></i> Copy
-                        </button>
+
                       </div>
+                    <td>
+                      <button class="btn btn-primary" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-trigger="click" title="Copied to clipboard!" id="clipboard-copy-btn"
+                        onclick="copyToClipboard('ace-dt bottle pull {{ .Repository }}@{{ .Digest }}{{ range $.PartSelectors }} -l {{ . | squote }}{{ end }}')">
+                        <i class="bi bi-clipboard"></i> Copy
+                      </button>
+                    </td>
                     </td>
                   </tr>
                   {{ end }}
@@ -636,60 +629,74 @@
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Deprecated Bottles</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
               id="deprecated-btn"></button>
           </div>
           <div class="modal-body mb-5">
+            {{ if $.DeprecatedBy }}
             <p class="lead">
               This bottle is deprecated by the following bottles:
             </p>
-            <pre>
-              <table class="table ">
-                <thead>
-                  <tr style="color: black">
-                    <th style="color: black" scope="col">Bottle Digest</th>
-                    <th style="color: black" scope="col">Bottle Details</th>
-                  </tr>
-                </thead>
-                <tbody style="color: black">
-                  {{ range $deprecator := $.DeprecatedBy }}
-                  <tr>
-                      <td style="word-wrap: break-word; min-width: 160px; max-width: 220px; white-space: normal;"><small>{{ $deprecator }}</small></td>
-                    <td>
-                      <div class="d-grid gap-2">
-                        <a class="btn btn-sm btn-primary" href="bottle.html?digest={{ $deprecator }}" id="bottle-details-btn">Bottle Details</a>
-                      </div>
-                    </td>
-                  </tr>
-                  {{ end }}
-                </tbody>
-              </table>
-            </pre>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 70%;">Bottle Digest</th>
+                  <th scope="col" style="width: 30%;">Bottle Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{ range $deprecator := $.DeprecatedBy }}
+                <tr>
+                  <td style="word-wrap: break-word; white-space: normal;">
+                    <small>{{ $deprecator }}</small>
+                  </td>
+                  <td>
+                    <a class="btn btn-sm btn-primary" href="bottle.html?digest={{ $deprecator }}"
+                      id="bottle-details-btn">Bottle Details</a>
+                  </td>
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+            <br>
+            {{ else }}
+            <p class="lead">
+              This bottle is not deprecated by any other bottles.
+            </p>
+            {{ end }}
+            <br>
+            {{ if $.Deprecates }}
             <p class="lead">
               This bottle deprecates the following bottles:
             </p>
-            <pre>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="color: black" scope="col">Bottle Digest</th>
-                    <th style="color: black" scope="col">Bottle Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{ range $deprecates := $.Deprecates }}
-                  <tr>
-                      <td style="word-wrap: break-word; min-width: 160px; max-width: 220px; white-space: normal; color: black;"><small>{{ $deprecates }}</small></td>
-                    <td>
-                      <div class="d-grid gap-2">
-                        <a class="btn btn-sm btn-primary" href="bottle.html?digest={{ $deprecates }}" id="bottle-details-btn">Bottle Details</a>
-                      </div>
-                    </td>
-                  </tr>
-                  {{ end }}
-                </tbody>
-              </table>
-            </pre>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 70%;">Bottle Digest</th>
+                  <th scope="col" style="width: 30%;">Bottle Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{ range $deprecates := $.Deprecates }}
+                <tr>
+                  <td style="word-wrap: break-word; white-space: normal;">
+                    <small>{{ $deprecates }}</small>
+                  </td>
+                  <td>
+                    <a class="btn btn-sm btn-primary" href="bottle.html?digest={{ $deprecates }}"
+                      id="bottle-details-btn">Bottle Details</a>
+                  </td>
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+            {{ else }}
+            <p class="lead">
+              This bottle does not deprecate any other bottles.
+            </p>
+            {{ end }}
           </div>
         </div>
       </div>
@@ -700,7 +707,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Raw Bottle Config (JSON)</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
               id="config-submit-btn"></button>
           </div>
           <div class="modal-body">
@@ -720,7 +727,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Raw Bottle Config (YAML)</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
               id="config-submit-btn"></button>
           </div>
           <div class="modal-body">
