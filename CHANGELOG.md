@@ -1,3 +1,10 @@
+## [2.0.4](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.3...v2.0.4) (2024-12-02)
+
+
+### Bug Fixes
+
+* removed arm64 target for acehub image ([13fa5af](https://git.act3-ace.com/ace/data/telemetry/commit/13fa5af176fcf64c632b7a59e302171ba9f33182))
+
 ## [2.0.3](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.2...v2.0.3) (2024-12-02)
 
 
