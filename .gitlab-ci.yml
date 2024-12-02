@@ -89,6 +89,7 @@ acehub image:
   variables:
     CONTEXT: .acehub/
     DESTINATION_PATH: /hub
+    BUILDKIT_FLAGS: --opt platform=linux/amd64
 
 slim image:
   extends:
