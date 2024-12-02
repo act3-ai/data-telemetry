@@ -1,3 +1,10 @@
+## [2.0.3](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.2...v2.0.3) (2024-12-02)
+
+
+### Bug Fixes
+
+* unpinned acehub pgadmin version ([378da7d](https://git.act3-ace.com/ace/data/telemetry/commit/378da7d39888ea625dc1a12e0fa0dcb1968eccf1))
+
 ## [2.0.2](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.1...v2.0.2) (2024-11-27)
 
 
