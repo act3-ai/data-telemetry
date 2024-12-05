@@ -1,6 +1,6 @@
 include:
   - project: devsecops/cicd/pipeline
-    ref: v19.0.37
+    ref: v20.2.1
     file: main.yml
 
 variables:
