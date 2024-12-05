@@ -7,7 +7,7 @@ toolchain go1.23.2
 require (
 	code.cloudfoundry.org/bytefmt v0.16.0
 	git.act3-ace.com/ace/go-auth v0.0.0-20241024134738-dfc3a5ec2ac3
-	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241024165733-a3a697170891
+	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241203160221-3a1e07ae7102
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-chi/chi/v5 v5.1.0
@@ -23,14 +23,14 @@ require (
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/prometheus/client_golang v1.20.5
 	github.com/spf13/cobra v1.8.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	gitlab.com/act3-ai/asce/data/schema v0.0.0-20240515135820-820f65b6a194
 	gitlab.com/act3-ai/asce/go-common v0.0.0-20240515134838-75dff81e3d47
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/driver/sqlite v1.5.6
 	gorm.io/gorm v1.25.12
-	k8s.io/api v0.31.2
-	k8s.io/apimachinery v0.31.2
+	k8s.io/api v0.31.3
+	k8s.io/apimachinery v0.31.3
 	oras.land/oras-go/v2 v2.5.0
 	sigs.k8s.io/yaml v1.4.0
 )
@@ -114,7 +114,7 @@ require (
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20240921022957-49e7df575cb6 // indirect
 	sigs.k8s.io/controller-runtime v0.19.0 // indirect
-	sigs.k8s.io/gateway-api v1.2.0 // indirect
+	sigs.k8s.io/gateway-api v1.2.1 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
