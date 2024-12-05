@@ -13,7 +13,7 @@ require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
-	github.com/gomarkdown/markdown v0.0.0-20240930133441-72d49d9543d8
+	github.com/gomarkdown/markdown v0.0.0-20241205020045-f7e15b2f3e62
 	github.com/gorilla/schema v1.4.1
 	github.com/hetiansu5/urlquery v1.2.7
 	github.com/microcosm-cc/bluemonday v1.0.27
