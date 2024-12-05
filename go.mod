@@ -26,7 +26,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	gitlab.com/act3-ai/asce/data/schema v0.0.0-20240515135820-820f65b6a194
 	gitlab.com/act3-ai/asce/go-common v0.0.0-20240515134838-75dff81e3d47
-	gorm.io/driver/postgres v1.5.9
+	gorm.io/driver/postgres v1.5.11
 	gorm.io/driver/sqlite v1.5.6
 	gorm.io/gorm v1.25.12
 	k8s.io/api v0.31.3
