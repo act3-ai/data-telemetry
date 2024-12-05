@@ -2,7 +2,7 @@ module gitlab.com/act3-ai/asce/data/telemetry/v2
 
 go 1.23.1
 
-toolchain go1.23.2
+toolchain go1.23.4
 
 require (
 	code.cloudfoundry.org/bytefmt v0.16.0
