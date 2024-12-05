@@ -53,7 +53,7 @@ build binaries:
   extends: .go build
   variables:
     EXECUTABLE: telemetry
-  image: docker.io/library/golang:1.23.2-bookworm 
+  image: docker.io/library/golang:1.23.4-bookworm 
   before_script:
     - apt-get update
     - apt-get install unzip
