@@ -45,8 +45,8 @@ function addSelector(type, value) {
 }
 
 function removeSelector(type, index) {
-    var input = document.getElementById(type + "SelectorDiv" + index);
-    var btn = document.getElementById(type + "RemoveSelectorButton" + index);
+    var input = document.getElementById(type + "selectorDiv" + index);
+    var btn = document.getElementById(type + "removeSelectorButton" + index);
 
     var parent = input.parentNode;
 

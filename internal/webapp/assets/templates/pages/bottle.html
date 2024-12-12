@@ -153,10 +153,9 @@
               <div class="col-sm-6" id="selectorDiv{{$i}}">
                 <input type="text" class="form-control" name="partSelector" id="part-selector" value="{{ . }}">
               </div>
-              <!-- TODO: This does not work -->
 
               <div id="removeSelectorButton{{$i}}" class="col-auto">
-                <button class="fs-4 btn btn-link" type="button" onclick="removeSelector({{$i}});return false;"
+                <button class="fs-4 btn btn-link" type="button" onclick="removeSelector('',{{$i}});return false;"
                   aria-label="Remove Selector">
                   <i class="bi bi-dash-circle-fill" style="color: #0065B1;"></i>
                 </button>
@@ -517,7 +516,7 @@
               {{ range . }}
               <li><a class="dropdown-item" href="{{ .URL }}" target="_blank" rel="noopener noreferrer"> On
                   <strong>{{ .Location }}</strong> with <strong> <button class="fs-4"
-                      onclick="removeSelector({$i});return false;"></button>,
+                      onclick="removeSelector('',{$i});return false;"></button>,
           </div>
           {{ end }}
           {{ end }}
