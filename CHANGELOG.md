@@ -1,3 +1,24 @@
+# [2.1.0](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.4...v2.1.0) (2024-12-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency devsecops/cicd/pipeline to v19.0.37 ([f37250f](https://git.act3-ace.com/ace/data/telemetry/commit/f37250f3b9ca7106ad24e49a66ef52e93dbcf499))
+* **deps:** update dependency devsecops/cicd/pipeline to v20 ([46f7eb7](https://git.act3-ace.com/ace/data/telemetry/commit/46f7eb7056135b878107429e9b3b30c35e120362))
+* **deps:** update dependency go to v1.23.3 ([83e8825](https://git.act3-ace.com/ace/data/telemetry/commit/83e882507bdd230e88455127435c1dd78d89d869))
+* **deps:** update docker.io/library/golang docker tag to v1.23.3 ([879adad](https://git.act3-ace.com/ace/data/telemetry/commit/879adad862984b1661a82b5f5e1c71530e6a72d1))
+* **deps:** update docker.io/library/python docker tag to v3.13 ([953b712](https://git.act3-ace.com/ace/data/telemetry/commit/953b71271cfc4a366da13ebf9fd8cddd9c1d4e68))
+* **deps:** update git.act3-ace.com/ace/hub/api/v6 digest to a3a6971 ([56cce76](https://git.act3-ace.com/ace/data/telemetry/commit/56cce767be16d71156ce262bbb78d41dd27bee0f))
+* **deps:** update github.com/gomarkdown/markdown digest to d03b890 ([025837b](https://git.act3-ace.com/ace/data/telemetry/commit/025837bc22c740c09c6f3e62c2aa2405a0b8b271))
+* **deps:** update module code.cloudfoundry.org/bytefmt to v0.18.0 ([3bd0294](https://git.act3-ace.com/ace/data/telemetry/commit/3bd02944fdf606b930b6c1c26ed4c49e5def84f2))
+* **deps:** update module gorm.io/driver/postgres to v1.5.11 ([65f3354](https://git.act3-ace.com/ace/data/telemetry/commit/65f33549d312e97c40c22977dc7368a34dd02988))
+* update leaderboard to fix spacing and accessibility issues ([414d6fa](https://git.act3-ace.com/ace/data/telemetry/commit/414d6fa93fd6e906ed30beda2aea25b049fb5a1c))
+
+
+### Features
+
+* Added HX-Boost to make navigation faster ([4320bea](https://git.act3-ace.com/ace/data/telemetry/commit/4320bea587ecbd009ba99aa210f65681a6571bd2))
+
 ## [2.0.4](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.3...v2.0.4) (2024-12-02)
 
 
