@@ -8,12 +8,6 @@ a {
   border-radius: 0 0 0.375rem 0.375rem;
 }
 
-.accordion-body {
-  background-color: #303030;
-  border: 1px solid #535353;
-  border-radius: 0 0 0.375rem 0.375rem;
-}
-
 .accordion-button {
   background-color: rgb(27, 29, 36);
   color: var(--asce-text-primary);
@@ -26,18 +20,8 @@ a {
   min-height: 6em;
 }
 
-.accordion-header {
-  background-color: rgb(27, 29, 36);
-  border: 1px solid #535353;
-  border-radius: 0.375rem 0.375rem 0 0;
-  min-height: 6em;
-}
-
-.accordion-item {
-  background-color: rgb(27, 29, 36);
-  border: 1px solid #535353;
-  border-radius: 0.375rem;
-  color: rgb(250, 250, 250);
+.accordion-header:hover {
+  border-color: var(--primary) !important;
 }
 
 .accordion-item {
@@ -212,6 +196,13 @@ a {
   color: var(--asce-text-primary) !important;
 }
 
+.btn-expand {
+  background-color: transparent !important;
+  color: #0065b1 !important;
+  width: auto;
+  padding: 0.25rem 0.5rem;
+}
+
 .btn-unstyled {
   background: none !important;
   border: none;
@@ -244,6 +235,10 @@ code {
 
 .pre {
   color: #32D9BA !important;
+}
+
+.dropdown-item:hover {
+  color: var(--asce-text-primary);
 }
 
 .dropdown-menu {
@@ -444,6 +439,7 @@ body {
   --asce-primary-background: #282C34;
   --asce-secondary-background: #21252C;
   --asce-text-primary: #e0e0e0;
+  --pill-fill: #0065b1;
 }
 
 .rounded-pill {
@@ -488,6 +484,10 @@ body {
 
 .text-black {
   color: black !important;
+}
+
+.text-muted {
+  color: #969696 !important;
 }
 
 .text-white {
