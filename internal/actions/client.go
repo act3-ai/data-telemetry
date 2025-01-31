@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/go-chi/chi/v5"
 	"k8s.io/apimachinery/pkg/runtime"
 	"oras.land/oras-go/v2/registry/remote/credentials"
 
@@ -56,13 +55,12 @@ func (action *Client) NewHandler(ctx context.Context) (http.Handler, error) {
 		return nil, err
 	}
 
-	router := chi.NewRouter()
-	router.Use(middleware.DatabaseMiddleware(myDB))
+	serveMux := http.NewServeMux()
 
 	myAPI := api.API{}
-	myAPI.Initialize(router, scheme)
+	myAPI.Initialize(serveMux, scheme)
 
-	return router, nil
+	return middleware.DatabaseMiddleware(myDB)(serveMux), nil
 }
 
 // AddClientConfigOverride adds an override function that will be called in GetConfig to edit config after loading.
@@ -76,7 +74,7 @@ func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha2.ClientConf
 
 	c := &v1alpha2.ClientConfiguration{}
 	if err := config.Load(log, action.GetConfigScheme(), c, action.ConfigFiles); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not load config: %w", err)
 	}
 
 	// Loop through override functions, applying each to the configuration

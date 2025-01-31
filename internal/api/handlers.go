@@ -13,8 +13,6 @@ import (
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
-	// _ "github.com/opencontainers/go-digest/blake3" // Requires master of go-digest (not version v1.0.0).
-
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
@@ -53,7 +51,7 @@ func handleGetBottlesFromMetric(w http.ResponseWriter, r *http.Request) error {
 	// add selectors
 	tx = tx.Scopes(db.FilterBySelectors(params.Selectors))
 
-	// parse order, optional, valid values are ascending or decending
+	// parse order, optional, valid values are ascending or descending
 	order := "ASC"
 	if params.Descending {
 		order = "DESC"
@@ -71,7 +69,10 @@ func handleGetBottlesFromMetric(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	return httputil.WriteJSON(w, map[string]any{"Results": entries})
+	if err := httputil.WriteJSON(w, map[string]any{"Results": entries}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 func handleGetLocation(w http.ResponseWriter, r *http.Request) error {
@@ -106,8 +107,10 @@ func handleGetLocation(w http.ResponseWriter, r *http.Request) error {
 
 	// TODO We could consider returning the bottle config (then the requester would know the content digests of each part)
 	// TODO we could also consider returning all the known manifests so they know the layer digests of parts (there can be many layer digests for the same content digest)
-
-	return httputil.WriteJSON(w, map[string]any{"Results": entries})
+	if err := httputil.WriteJSON(w, map[string]any{"Results": entries}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 // handleGetSignatures is an HTTP handler function that responds with an array of signature validation summaries in JSON.
@@ -149,7 +152,10 @@ func handleGetSignatures(w http.ResponseWriter, r *http.Request) error {
 		})
 	}
 
-	return httputil.WriteJSON(w, map[string]any{"Results": dtoEntries})
+	if err := httputil.WriteJSON(w, map[string]any{"Results": dtoEntries}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 // handleGetSigValid is an HTTP handler function that responds with an array of signature validation status data in JSON.
@@ -194,7 +200,10 @@ func handleGetSigValid(w http.ResponseWriter, r *http.Request) error {
 			Validated: true, // if it exists in the database, it has been validated
 		})
 	}
-	return httputil.WriteJSON(w, map[string]any{"Results": dtoEntries})
+	if err := httputil.WriteJSON(w, map[string]any{"Results": dtoEntries}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 type listResultEntry struct {
@@ -285,7 +294,7 @@ func genericGetData(table, mediaType string) http.Handler {
 		case http.MethodHead:
 			return nil
 		default:
-			return httputil.NewHTTPError(fmt.Errorf("Method %s is not allowed", r.Method), http.StatusMethodNotAllowed, "Only GET and HEAD are allowed on this endpoint.")
+			return httputil.NewHTTPError(fmt.Errorf("method %s is not allowed", r.Method), http.StatusMethodNotAllowed, "Only GET and HEAD are allowed on this endpoint.")
 		}
 	})
 }
@@ -480,7 +489,10 @@ func handleBottleSearch(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	return httputil.WriteJSON(w, map[string]any{"Results": entries})
+	if err := httputil.WriteJSON(w, map[string]any{"Results": entries}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 func handleContentSearch(w http.ResponseWriter, r *http.Request) error {
@@ -515,5 +527,8 @@ func handleContentSearch(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	return httputil.WriteJSON(w, map[string][]digest.Digest{"Results": entries})
+	if err := httputil.WriteJSON(w, map[string]any{"Results": entries}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }

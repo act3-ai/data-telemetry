@@ -2,6 +2,7 @@ package actions
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -60,7 +61,7 @@ func (action *Telemetry) GetServerConfig(ctx context.Context) (*v1alpha2.ServerC
 
 	c := &v1alpha2.ServerConfiguration{}
 	if err := config.Load(log, action.GetConfigScheme(), c, action.ConfigFiles); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not load config: %w", err)
 	}
 
 	// Loop through override functions, applying each to the configuration

@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"gorm.io/gorm"
@@ -34,8 +32,8 @@ const (
 
 // App implements the top level application (REST + HTML).
 type App struct {
-	Router chi.Router
-	DB     *gorm.DB
+	HTTPHandler http.Handler
+	DB          *gorm.DB
 }
 
 // NewApp create a new Telemetry application.
@@ -44,64 +42,67 @@ func NewApp(db *gorm.DB, scheme *runtime.Scheme, webConf v1alpha2.WebApp, log *s
 		return nil, errors.New("DB is required")
 	}
 
-	r := chi.NewRouter()
-
-	a := &App{r, db}
+	mainMux := http.NewServeMux()
 
 	// add some middleware
-	r.Use(
-		// NOTE from a security perspective sharing your server version is considered a security issue by some, but not by me.
-		// The troubleshooting value out weights the security concerns.
-		httputil.ServerHeaderMiddleware(fmt.Sprintf("telemetry/%s", version)),
+	// NOTE from a security perspective sharing your server version is considered a security issue by some, but not by me.
+	// The troubleshooting value out weights the security concerns.
+	wrappedMainMuxHandler := httputil.ServerHeaderMiddleware(fmt.Sprintf("telemetry/%s", version))(
+		httputil.TracingMiddleware(
+			httputil.LoggingMiddleware(log)(
+				mware.DatabaseMiddleware(db)(
+					httputil.PrometheusMiddleware(
+						// Set a timeout value on the request context (ctx), that will signal
+						// through ctx.Done() that the request has timed out and further
+						// processing should be stopped.
+						httputil.TimeoutMiddleware(mainMux, 60*time.Second))))))
+	// mware.RecovererMiddleware,
 
-		httputil.TracingMiddleware,
-		httputil.LoggingMiddleware(log),
-		mware.DatabaseMiddleware(db),
-		httputil.PrometheusMiddleware,
-		// mware.RecovererMiddleware,
-	)
+	a := &App{wrappedMainMuxHandler, db}
 
 	prometheus.DefaultRegisterer.MustRegister(httputil.HTTPDuration)
 
-	// Set a timeout value on the request context (ctx), that will signal
-	// through ctx.Done() that the request has timed out and further
-	// processing should be stopped.
-	r.Use(middleware.Timeout(60 * time.Second))
-
 	// TODO this should be exposed on its own port
-	r.Get("/metrics", promhttp.Handler().ServeHTTP)
+	mainMux.Handle("GET /metrics", promhttp.Handler())
 
-	r.Get("/health", httputil.RootHandler(healthHandler).ServeHTTP)
-	r.Get("/readiness", httputil.RootHandler(readinessHandler).ServeHTTP)
-	r.Get("/version", versionHandler(version).ServeHTTP)
+	mainMux.Handle("GET /health", httputil.RootHandler(healthHandler))
+	mainMux.Handle("GET /readiness", httputil.RootHandler(readinessHandler))
+	mainMux.Handle("GET /version", versionHandler(version))
 
 	// Setup the REST API
-	r.Route("/api", func(router chi.Router) {
-		myAPI := api.API{}
-		myAPI.Initialize(router, scheme)
-	})
+	myAPI := api.API{}
+	apiMux := http.NewServeMux()
+	mainMux.Handle("/api/", http.StripPrefix("/api", apiMux))
+	myAPI.Initialize(apiMux, scheme)
 
 	// Setup the Web App (leaderboard, catalog, ...)
 	webApp, err := webapp.NewWebApp(webConf, log, version)
 	if err != nil {
 		return nil, err
 	}
-	r.Route("/www", func(router chi.Router) {
-		webApp.Initialize(router)
-	})
+	webMux := http.NewServeMux()
+	mainMux.Handle("/www/", http.StripPrefix("/www", webMux))
+	webApp.Initialize(webMux)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	mainMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// We do not use this one because it converts it to an absolute path (preventing relocation behind a reverse proxy)
 		// http.Redirect(w, r, "www/", http.StatusFound)
-		w.Header().Set("Location", "www/")
-		w.WriteHeader(http.StatusFound)
+		if r.Method == http.MethodGet {
+			w.Header().Set("Location", "/www/")
+			w.WriteHeader(http.StatusFound)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
 	})
 
 	return a, nil
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) error {
-	return httputil.WriteJSON(w, map[string]string{"status": "healthy"})
+	if err := httputil.WriteJSON(w, map[string]string{"status": "healthy"}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 func readinessHandler(w http.ResponseWriter, r *http.Request) error {
@@ -116,7 +117,10 @@ func readinessHandler(w http.ResponseWriter, r *http.Request) error {
 	if err := db.Ping(); err != nil {
 		return fmt.Errorf("readiness handler pinging: %w", err)
 	}
-	return httputil.WriteJSON(w, map[string]string{"status": "ready"})
+	if err := httputil.WriteJSON(w, map[string]string{"status": "ready"}); err != nil {
+		return fmt.Errorf("could not write JSON results: %w", err)
+	}
+	return nil
 }
 
 func versionHandler(version string) http.Handler {

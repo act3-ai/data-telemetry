@@ -3,13 +3,13 @@ package client
 import (
 	"context"
 	"log/slog"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/opencontainers/go-digest"
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -64,25 +64,19 @@ func (s *MultiTestSuite) SetupTest() {
 	s.NoError(err)
 
 	// initializing 2 apis for different clients
-	routerA := chi.NewRouter()
-	routerA.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
-	routerA.Route("/api", func(router chi.Router) {
-		a := api.API{}
-		a.Initialize(router, scheme)
-	})
+	apiA := api.API{}
+	apiMuxA := http.NewServeMux()
+	apiA.Initialize(apiMuxA, scheme)
+	routerA := http.NewServeMux()
+	routerA.Handle("/api/", http.StripPrefix("/api", apiMuxA))
+	wrappedRouterA := httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(routerA))
 
-	routerB := chi.NewRouter()
-	routerB.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB2),
-	)
-	routerB.Route("/api", func(router chi.Router) {
-		a := api.API{}
-		a.Initialize(router, scheme)
-	})
+	apiB := api.API{}
+	apiMuxB := http.NewServeMux()
+	apiB.Initialize(apiMuxB, scheme)
+	routerB := http.NewServeMux()
+	routerB.Handle("/api/", http.StripPrefix("/api", apiMuxB))
+	wrappedRouterB := httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB2)(routerB))
 
 	// process and load the blobs
 	s.blobs = make(map[digest.Digest][]byte)
@@ -93,8 +87,8 @@ func (s *MultiTestSuite) SetupTest() {
 	s.NoError(err)
 
 	// different clients will talk to different servers
-	s.serverA = httptest.NewServer(routerA)
-	s.serverB = httptest.NewServer(routerB)
+	s.serverA = httptest.NewServer(wrappedRouterA)
+	s.serverB = httptest.NewServer(wrappedRouterB)
 
 	client1, err := NewSingleClient(s.serverA.Client(), s.serverA.URL, "mycooltoken")
 	s.NoError(err)

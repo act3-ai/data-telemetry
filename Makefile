@@ -41,6 +41,11 @@ build: deps
 	@mkdir -p bin
 	go build -tags "sqlite_fts5" -o bin/telemetry ./cmd/telemetry 
 
+.PHONY: build-debug
+build-debug: deps
+	@mkdir -p bin
+	go build -gcflags="all=-N -l" -tags "sqlite_fts5" -o bin/telemetry ./cmd/telemetry 
+
 .PHONY: build-linux
 build-linux: deps
 	@mkdir -p ci-dist

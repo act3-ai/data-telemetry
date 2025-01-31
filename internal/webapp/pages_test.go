@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
 
@@ -72,26 +71,23 @@ func (s *HandlersTestSuite) SetupSuite() {
 	}, scheme)
 	s.NoError(err)
 
-	router := chi.NewRouter()
-	router.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
-
 	// create a temporary API so we can load data
-	router.Route("/_api", func(router chi.Router) {
-		a := &api.API{}
-		a.Initialize(router, scheme)
-	})
+	a := &api.API{}
+	apiMux := http.NewServeMux()
+	a.Initialize(apiMux, scheme)
+
+	serveMux := http.NewServeMux()
+	serveMux.Handle("/_api/", http.StripPrefix("/_api", apiMux))
 
 	// create the webapp (the unit under test)
 	webApp, err := webapp.NewWebApp(v1alpha2.WebApp{
 		AssetDir: s.assetDir,
 	}, s.log, "test-version")
 	s.NoError(err)
-	webApp.Initialize(router)
+	webApp.Initialize(serveMux)
 
-	s.server = httptest.NewServer(router)
+	wrappedServeMux := httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(serveMux))
+	s.server = httptest.NewServer(wrappedServeMux)
 
 	// upload test data
 	uploadURL, err := url.Parse(s.server.URL + "/_api")

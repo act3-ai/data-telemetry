@@ -2,6 +2,7 @@ package actions
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -54,8 +55,10 @@ func (action *Serve) Run(ctx context.Context) error {
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
-		Handler:      myApp.Router,
+		Handler:      myApp.HTTPHandler,
 	}
-
-	return httputil.Serve(ctx, srv, 10*time.Second)
+	if err := httputil.Serve(ctx, srv, 10*time.Second); err != nil {
+		return fmt.Errorf("problem occurred in serve action: %w", err)
+	}
+	return nil
 }

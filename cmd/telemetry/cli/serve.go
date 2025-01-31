@@ -3,6 +3,8 @@ package cli
 import (
 	"github.com/spf13/cobra"
 
+	"gitlab.com/act3-ai/asce/go-common/pkg/config"
+
 	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/actions"
 	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 )

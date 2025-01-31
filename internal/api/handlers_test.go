@@ -22,7 +22,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/stretchr/testify/suite"
@@ -88,16 +87,13 @@ func (s *HandlersTestSuite) SetupTest() {
 	}, scheme)
 	s.NoError(err)
 
-	router := chi.NewRouter()
-	router.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
+	serveMux := http.NewServeMux()
+	wrappedServeMux := httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(serveMux))
 
 	a := &api.API{}
-	a.Initialize(router, scheme)
+	a.Initialize(serveMux, scheme)
 
-	s.server = httptest.NewServer(router)
+	s.server = httptest.NewServer(wrappedServeMux)
 }
 
 func (s *HandlersTestSuite) TearDownTest() {

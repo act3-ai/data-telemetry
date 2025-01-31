@@ -17,7 +17,6 @@ import (
 	"github.com/Masterminds/sprig/v3"
 
 	// "github.com/fsnotify/fsnotify".
-	"github.com/go-chi/chi/v5"
 
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
@@ -105,40 +104,48 @@ func NewWebApp(conf v1alpha2.WebApp, log *slog.Logger, version string) (*WebApp,
 }
 
 // Initialize the routes.
-func (a *WebApp) Initialize(router chi.Router) {
-	httputil.FileServer(router, "/static", a.staticFS)
+func (a *WebApp) Initialize(serveMux *http.ServeMux) {
+	serveMux.Handle("GET /static/", http.StripPrefix("/static", http.FileServerFS(a.staticFS)))
 
 	// redirect / to the about page
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	serveMux.HandleFunc("/{$}", func(w http.ResponseWriter, r *http.Request) {
 		// We do not use this one because it converts it to an absolute path (preventing relocation behind a reverse proxy)
 		// http.Redirect(w, r, "about.html", http.StatusFound)
-		w.Header().Set("Location", "catalog.html")
-		w.WriteHeader(http.StatusFound)
+		if r.Method == http.MethodGet {
+			w.Header().Set("Location", "catalog.html")
+			w.WriteHeader(http.StatusFound)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
 	})
 
 	// pages
-	router.Get("/documentation.html", httputil.RootHandler(a.handleAbout).ServeHTTP)
-	router.Get("/catalog.html", httputil.RootHandler(a.getPageHandler("catalog.html")).ServeHTTP)
-	router.Get("/leaderboard.html", httputil.RootHandler(a.getPageHandler("leaderboard.html")).ServeHTTP)
-	router.Get("/bottle.html", httputil.RootHandler(a.handleBottle).ServeHTTP)
-	router.Get("/similarBottles", httputil.RootHandler(a.handleSimilarBottles).ServeHTTP)
+	serveMux.Handle("GET /documentation.html", httputil.RootHandler(a.handleAbout))
+	serveMux.Handle("GET /catalog.html", httputil.RootHandler(a.getPageHandler("catalog.html")))
+	serveMux.Handle("GET /leaderboard.html", httputil.RootHandler(a.getPageHandler("leaderboard.html")))
+	serveMux.Handle("GET /bottle.html", httputil.RootHandler(a.handleBottle))
+	serveMux.Handle("GET /similarBottles", httputil.RootHandler(a.handleSimilarBottles))
 
-	// components
-	router.Route("/search", func(router chi.Router) {
-		router.Get("/", httputil.RootHandler(a.handleBottleSearchIsValid).ServeHTTP)
-		router.Route("/bottle", func(router chi.Router) {
-			router.Get("/cards", httputil.RootHandler(a.handleBottleSearch).ServeHTTP)
-			router.Get("/table", httputil.RootHandler(a.handleBottleSearch).ServeHTTP)
-		})
-		router.Route("/metric", func(router chi.Router) {
-			router.Get("/dropdown", httputil.RootHandler(a.handleMetricSearch).ServeHTTP)
-		})
-		router.Route("/label", func(router chi.Router) {
-			router.Get("/list", httputil.RootHandler(a.handleCommonLabelSearch).ServeHTTP)
-		})
-	})
+	// search components
+	searchMux := http.NewServeMux()
+	serveMux.Handle("/search/", http.StripPrefix("/search", searchMux))
+	searchMux.Handle("GET /", httputil.RootHandler(a.handleBottleSearchIsValid))
+
+	bottleComponentMux := http.NewServeMux()
+	searchMux.Handle("GET /bottle/", http.StripPrefix("/bottle", bottleComponentMux))
+	bottleComponentMux.Handle("GET /cards", httputil.RootHandler(a.handleBottleSearch))
+	bottleComponentMux.Handle("GET /table", httputil.RootHandler(a.handleBottleSearch))
+
+	metricComponentMux := http.NewServeMux()
+	searchMux.Handle("GET /metric/", http.StripPrefix("/metric", metricComponentMux))
+	metricComponentMux.Handle("GET /dropdown", httputil.RootHandler(a.handleMetricSearch))
+
+	labelComponentMux := http.NewServeMux()
+	searchMux.Handle("GET /label/", http.StripPrefix("/label", labelComponentMux))
+	labelComponentMux.Handle("GET /list", httputil.RootHandler(a.handleCommonLabelSearch))
 	// Note that we want to serve <img> requests (Sec-Fetch-Dest=image) with actual images and not html.
-	router.Get("/artifact/{bottle}/*", func(w http.ResponseWriter, r *http.Request) {
+
+	serveMux.HandleFunc("GET /artifact/{bottle}/{path...}", func(w http.ResponseWriter, r *http.Request) {
 		qs := r.URL.Query()
 		h := a.handleArtifact
 		switch qs.Get("_type") {

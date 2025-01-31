@@ -1,6 +1,6 @@
 include:
   - project: devsecops/cicd/pipeline
-    ref: v20.2.1
+    ref: v20.2.8
     file: main.yml
 
 variables:
@@ -53,7 +53,7 @@ build binaries:
   extends: .go build
   variables:
     EXECUTABLE: telemetry
-  image: docker.io/library/golang:1.23.4-bookworm 
+  image: docker.io/library/golang:1.23.5-bookworm 
   before_script:
     - apt-get update
     - apt-get install unzip

@@ -14,7 +14,6 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/features"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
 	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
@@ -163,46 +162,6 @@ func OpenSqliteDB(dsn string) (*gorm.DB, error) {
 // Also migrates the database
 // For example file:test.db, "file::memory:" or postgres://jack:secret@foo.example.com:5432,bar.example.com:5432/mydb
 func Open(ctx context.Context, conf v1alpha2.Database, scheme *runtime.Scheme) (*gorm.DB, error) {
-	log := logger.FromContext(ctx)
-
-	u, e := url.Parse(string(conf.DSN))
-	if e != nil {
-		return nil, fmt.Errorf("parsing DSN: %w", e)
-	}
-
-	if conf.Password != "" {
-		u.User = url.UserPassword(u.User.Username(), string(conf.Password))
-	}
-	log.InfoContext(ctx, "Database connection", "dsn", u.Redacted())
-
-	var db *gorm.DB
-	var err error
-	switch u.Scheme {
-	case "postgres":
-		db, err = OpenPostgresDB(u.String())
-	case "file":
-		db, err = OpenSqliteDB(u.String())
-	default:
-		return nil, fmt.Errorf("unknown database type \"%s\"", u.Scheme)
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	db = db.WithContext(ctx)
-
-	if err := MigrateDB(ctx, db, scheme); err != nil {
-		return nil, err
-	}
-
-	return db, nil
-}
-
-// Open opens a DB connection using URL formatting.
-// Also migrates the database
-// For example file:test.db, "file::memory:" or postgres://jack:secret@foo.example.com:5432,bar.example.com:5432/mydb
-// uses v1alpha1 db config
-func Openv1alpha1(ctx context.Context, conf v1alpha1.Database, scheme *runtime.Scheme) (*gorm.DB, error) {
 	log := logger.FromContext(ctx)
 
 	u, e := url.Parse(string(conf.DSN))

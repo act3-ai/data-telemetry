@@ -10,9 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/opencontainers/go-digest"
 	"github.com/stretchr/testify/suite"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 	"k8s.io/apimachinery/pkg/runtime"
 
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
@@ -59,15 +62,11 @@ func (s *SingleTestSuite) SetupTest() {
 	}, scheme)
 	s.NoError(err)
 
-	router := chi.NewRouter()
-	router.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
-	router.Route("/api", func(router chi.Router) {
-		a := &api.API{}
-		a.Initialize(router, scheme)
-	})
+	a := &api.API{}
+	apiMux := http.NewServeMux()
+	a.Initialize(apiMux, scheme)
+	serveMux := http.NewServeMux()
+	serveMux.Handle("/api/", http.StripPrefix("/api", httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(apiMux))))
 
 	// process and load the blobs
 	s.blobs = make(map[digest.Digest][]byte)
@@ -76,7 +75,7 @@ func (s *SingleTestSuite) SetupTest() {
 		return nil
 	})
 	s.NoError(err)
-	s.server = httptest.NewServer(router)
+	s.server = httptest.NewServer(serveMux)
 	// Use Client & URL from our local test server
 	sc, err := NewSingleClient(s.server.Client(), s.server.URL, "mycooltoken")
 	s.NoError(err)
