@@ -13,9 +13,9 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/version"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/cmd/telemetry/cli/client"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/actions"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/cmd/telemetry/cli/client"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/actions"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // NewTelemetryCmd create a new root command.

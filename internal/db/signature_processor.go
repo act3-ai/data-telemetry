@@ -20,8 +20,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	telemsig "gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/signature"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
+	telemsig "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/signature"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 )
 
 // SignatureProcessorVersion is the current version of the processor code.  This is incremented after each measurable change to the SignatureProcessor().

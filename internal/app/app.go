@@ -15,10 +15,10 @@ import (
 
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/api"
-	mware "gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/webapp"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
+	mware "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/webapp"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // DatabaseType is the type of the database being used.

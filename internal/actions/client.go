@@ -16,10 +16,10 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/middleware"
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ClientConfigOverride is a function used to override the client configuration.

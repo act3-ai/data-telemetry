@@ -7,7 +7,7 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 )
 
 // Implement the Client interface.

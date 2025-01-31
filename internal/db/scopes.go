@@ -14,7 +14,7 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v2/internal/features"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/features"
 )
 
 // FilterByDigest will use the digest to filter the query for an object type
