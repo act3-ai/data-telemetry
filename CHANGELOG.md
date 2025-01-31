@@ -1,3 +1,18 @@
+# [3.0.0](https://git.act3-ace.com/ace/data/telemetry/compare/v2.1.0...v3.0.0) (2025-01-31)
+
+
+* build!: correctly trigger breaking semantic release ([215c680](https://git.act3-ace.com/ace/data/telemetry/commit/215c6809457a43df06d0995fbc40e9931bc082b1))
+
+
+### Bug Fixes
+
+* **linting:** updated golangci-lint ([aa8223e](https://git.act3-ace.com/ace/data/telemetry/commit/aa8223e7ac31a5213c8c0b276582d83184bf9541))
+
+
+### BREAKING CHANGES
+
+* trigger v3 semantic release
+
 # [2.1.0](https://git.act3-ace.com/ace/data/telemetry/compare/v2.0.4...v2.1.0) (2024-12-12)
 
 
