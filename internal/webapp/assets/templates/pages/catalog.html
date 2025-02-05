@@ -7,7 +7,7 @@
   <main class="mx-4">
     <section>
       <div id="bottle-cards-spinner" class="spinner-border text-primary htmx-indicator" role="status"></div>
-      <div class="col-xl-12 text-center text-lg-start sticky-top">
+      <div class="col-xl-12 text-center text-lg-start sticky-top" style="background-color: var(--asce-primary-background);">
         {{ template "bottle-search-bar" . }}
       </div>
       <div hx-trigger="onValidSearch from:document,load" hx-get="{{ .Globals.Top }}www/search/bottle/cards"
