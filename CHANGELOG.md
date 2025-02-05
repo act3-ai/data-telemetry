@@ -1,3 +1,10 @@
+## [3.0.1](https://git.act3-ace.com/ace/data/telemetry/compare/v3.0.0...v3.0.1) (2025-02-05)
+
+
+### Bug Fixes
+
+* **ui:** added background to search bar ([408b81b](https://git.act3-ace.com/ace/data/telemetry/commit/408b81b9283d7d334fe9044fce8593fcb5e2ddf6))
+
 # [3.0.0](https://git.act3-ace.com/ace/data/telemetry/compare/v2.1.0...v3.0.0) (2025-01-31)
 
 
