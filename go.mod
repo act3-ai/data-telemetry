@@ -5,7 +5,7 @@ go 1.23.5
 require (
 	code.cloudfoundry.org/bytefmt v0.29.0
 	git.act3-ace.com/ace/go-auth v0.0.0-20250131153406-d1eca23d223d
-	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20241203160221-3a1e07ae7102
+	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20250118111308-d56eb09953c3
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-echarts/go-echarts/v2 v2.3.3
@@ -119,9 +119,9 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
-	k8s.io/utils v0.0.0-20241104100929-3ea5e8cea738 // indirect
-	sigs.k8s.io/controller-runtime v0.19.0 // indirect
+	k8s.io/utils v0.0.0-20241210054802-24370beab758 // indirect
+	sigs.k8s.io/controller-runtime v0.19.3 // indirect
 	sigs.k8s.io/gateway-api v1.2.1 // indirect
 	sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.4.2 // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.5.0 // indirect
 )
