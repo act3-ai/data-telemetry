@@ -1,3 +1,16 @@
+## [3.0.2](https://git.act3-ace.com/ace/data/telemetry/compare/v3.0.1...v3.0.2) (2025-02-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency nbconvert to v7.16.6 ([eb62abb](https://git.act3-ace.com/ace/data/telemetry/commit/eb62abb706232066357b7a1b33aaa434af260963))
+* **deps:** update git.act3-ace.com/ace/hub/api/v6 digest to d56eb09 ([a5dfc27](https://git.act3-ace.com/ace/data/telemetry/commit/a5dfc27c117575ef594166e39aacd3a449356655))
+* **deps:** update github.com/gomarkdown/markdown digest to 7a1f277 ([ba57008](https://git.act3-ace.com/ace/data/telemetry/commit/ba570080fc2b99978c58488daea6807d53f6fbc5))
+* **deps:** update kubernetes packages to v0.32.2 ([91ff1b8](https://git.act3-ace.com/ace/data/telemetry/commit/91ff1b8208631a27c8fcb8f64f08eabc1ee55328))
+* **deps:** update module code.cloudfoundry.org/bytefmt to v0.29.0 ([1550b84](https://git.act3-ace.com/ace/data/telemetry/commit/1550b841b6ffb8aa35f0fe97fe1e485fda645fb5))
+* **deps:** update module github.com/notaryproject/notation-go to v1.3.0 ([3f030fd](https://git.act3-ace.com/ace/data/telemetry/commit/3f030fd03fd93371d3a15e495b462e7422fff1cb))
+* **deps:** update module gorm.io/driver/sqlite to v1.5.7 ([6716e9f](https://git.act3-ace.com/ace/data/telemetry/commit/6716e9f3f38c1495ce095cebb53bb698b586883a))
+
 ## [3.0.1](https://git.act3-ace.com/ace/data/telemetry/compare/v3.0.0...v3.0.1) (2025-02-05)
 
 
