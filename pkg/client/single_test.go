@@ -12,20 +12,19 @@ import (
 
 	"github.com/opencontainers/go-digest"
 	"github.com/stretchr/testify/suite"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
-	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 	"k8s.io/apimachinery/pkg/runtime"
 
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
 	ttest "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/testing"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 )
 
 type SingleTestSuite struct {
