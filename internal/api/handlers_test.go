@@ -76,10 +76,10 @@ func (s *HandlersTestSuite) SetupTest() {
 
 	if u.Scheme == "postgres" {
 		// If using postgres, create a temporary database for each test
-		testPgDbDsn, cleanup, err := dbtest.CreateTempPostgresDb(s.T().Name(), u.String())
+		testPgDBDsn, cleanup, err := dbtest.CreateTempPostgresDB(s.T().Name(), u.String())
 		s.NoError(err, "could not create test database in postgres with DNS %s", u.String())
-		u, err = url.Parse(testPgDbDsn)
-		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDbDsn)
+		u, err = url.Parse(testPgDBDsn)
+		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDBDsn)
 		s.T().Cleanup(cleanup)
 	}
 	myDB, err := db.Open(s.ctx, v1alpha2.Database{
