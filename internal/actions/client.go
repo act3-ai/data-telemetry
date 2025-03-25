@@ -10,7 +10,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"oras.land/oras-go/v2/registry/remote/credentials"
 
-	"git.act3-ace.com/ace/go-auth/pkg/oauth2/device"
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
@@ -20,6 +19,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/oauth2/device"
 )
 
 // ClientConfigOverride is a function used to override the client configuration.
