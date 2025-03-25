@@ -102,6 +102,10 @@ func (l *Lint) Shellcheck(ctx context.Context,
 
 	p := pool.New().WithContext(ctx).WithMaxGoroutines(4)
 	for _, filename := range filenames {
+		// HACK: This will try to scan binaries
+		if strings.HasPrefix(filename, "telemetry") {
+			continue
+		}
 		p.Go(func(ctx context.Context) error {
 			return dag.Shellcheck().
 				Check(src.File(filename)).
