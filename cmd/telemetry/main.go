@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -28,13 +29,12 @@ func getVersionInfo() vv.Info {
 func main() {
 	info := getVersionInfo()
 	root := cli.NewTelemetryCmd(info)
-	log := logger.FromContext(context.Background())
+	ctx := context.Background()
 
 	// add embedded documentation command
 	embeddedDocs, err := docs.Embedded(root)
 	if err != nil {
-		log.Error("could not embed docs", "msg", err.Error())
-		os.Exit(1)
+		panic(fmt.Errorf("could not embed docs: %w", err))
 	}
 
 	root.AddCommand(
@@ -52,7 +52,7 @@ func main() {
 		log.DebugContext(ctx, "Software details", "info", info)
 	}
 
-	if err := runner.Run(root, "ACE_TELEMETRY_VERBOSITY"); err != nil {
+	if err := runner.Run(ctx, root, "ACE_TELEMETRY_VERBOSITY"); err != nil {
 		// fmt.Fprintln(os.Stderr, "Error occurred", err)
 		os.Exit(1)
 	}
