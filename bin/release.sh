@@ -22,34 +22,33 @@ set -x
 
 # Extract the major version of a release.
 parseMajor() {
-    res=$(echo -n $1 | sed 's/v//' | cut -d "." -f 1)
-    echo -n $res
+    echo -n "$(echo -n "$1" | sed 's/v//' | cut -d "." -f 1)"
 }
 
 # Extract the minor version of a release.
 parseMinor() {
-    echo -n $(echo -n $1 | sed 's/v//' | cut -d "." -f 2)
+    echo -n "$(echo -n "$1" | sed 's/v//' | cut -d "." -f 2)"
 }
 
 # Extract the patch version of a release.
 parsePatch() {
-    echo -n $(echo -n $1 | sed 's/v//' | cut -d "." -f 3)
+    echo -n "$(echo -n "$1" | sed 's/v//' | cut -d "." -f 3)"
 }
 
 # Determines if the target version is the latest patch release of all releases
 # with the same major and minor version.
 isLatestPatch() {
     allTags="$1"
-    targetMajor=$2
-    targetMinor=$3
-    targetPatch=$4
+    targetMajor="$2"
+    targetMinor="$3"
+    targetPatch="$4"
 
     sameMajorMinors=$(echo "$allTags" | grep -P "^v$targetMajor\.$targetMinor\.\d+$")
 
     result="true"
     for v in $sameMajorMinors
     do
-        if [ $(parsePatch $v) -gt $targetPatch ]; then
+        if [ "$(parsePatch "$v")" -gt "$targetPatch" ]; then
             result="false"
             break
         fi
@@ -62,15 +61,15 @@ isLatestPatch() {
 # with the same major version.
 isLatestMinor() {
     allTags="$1"
-    targetMajor=$2
-    targetMinor=$3
+    targetMajor="$2"
+    targetMinor="$3"
 
     sameMajors=$(echo "$allTags" | grep -P "^v$targetMajor\.\d+\.\d+$")
 
     result="true"
-    for v in $sameMajorMinors
+    for v in $sameMajors
     do
-        if [ $(parseMinor $v) -gt $targetMinor ]; then
+        if [ "$(parseMinor "$v")" -gt "$targetMinor" ]; then
             result="false"
             break
         fi
@@ -82,14 +81,14 @@ isLatestMinor() {
 # Determines if the target version is the latest major release.
 isLatestMajor() {
     allTags="$1"
-    targetMajor=$2
+    targetMajor="$2"
 
-    sameMajors=$(echo "$allTags" | grep -P "^v\d+\.\d+\.\d+$")
+    allFullTags=$(echo "$allTags" | grep -P "^v\d+\.\d+\.\d+$")
 
     result="true"
-    for v in $sameMajorMinors
+    for v in $allFullTags
     do
-        if [ $(parseMajor $v) -gt $targetMajor ]; then
+        if [ "$(parseMajor "$v")" -gt "$targetMajor" ]; then
             result="false"
             break
         fi
@@ -108,32 +107,32 @@ resolveExtraTags() {
     ref="$1"
     targetVersion="$2"
 
-    allTags=$(oras repo tags --exclude-digest-tags $ref | grep -P "^v\d+\.\d+\.\d+$" | sort -Vr)
+    allTags=$(oras repo tags --exclude-digest-tags "$ref" | grep -P "^v\d+\.\d+\.\d+$" | sort -Vr)
 
-    targetMajor=$(parseMajor $targetVersion)
-    targetMinor=$(parseMinor $targetVersion)
-    targetPatch=$(parsePatch $targetVersion)
+    targetMajor=$(parseMajor "$targetVersion")
+    targetMinor=$(parseMinor "$targetVersion")
+    targetPatch=$(parsePatch "$targetVersion")
 
-    latestPatch=$(isLatestPatch "$allTags" $targetMajor $targetMinor $targetPatch)
-    latestMinor=$(isLatestMinor "$allTags" $targetMajor $targetMinor)
-    latestMajor=$(isLatestMajor "$allTags" $targetMajor)
+    latestPatch=$(isLatestPatch "$allTags" "$targetMajor" "$targetMinor" "$targetPatch")
+    latestMinor=$(isLatestMinor "$allTags" "$targetMajor" "$targetMinor")
+    latestMajor=$(isLatestMajor "$allTags" "$targetMajor")
 
     extraTags=""
 
     # if latest patch (for the same major.minor releases), add "vX.X" tag
-    if [ $latestPatch = "true"  ]; then
+    if [ "$latestPatch" = "true"  ]; then
         extraTags="$extraTags v${targetMajor}.${targetMinor}"
         # if also latest minor (for the same major releases), add "vX" tag
-        if [ $latestMinor = "true" ]; then
+        if [ "$latestMinor" = "true" ]; then
             extraTags="$extraTags v${targetMajor}"
             # if also latest major add "latest" tag
-            if [ $latestMajor = "true" ]; then
+            if [ "$latestMajor" = "true" ]; then
                 extraTags="$extraTags latest"
             fi
         fi
     fi
 
-    echo -n $extraTags
+    echo -n "$extraTags"
 }
 
 # publishImages pushes variations of telemetry images to their appropriate OCI references.
@@ -142,25 +141,25 @@ publishImages() {
     fullVersion=v$(cat VERSION)
     repo=reg.git.act3-ace.com/ace/data/telemetry
 
-    extraTags=$(resolveExtraTags $repo $fullVersion)
+    extraTags=$(resolveExtraTags "$repo" "$fullVersion")
 
     # ipynb image index
     standardRepoRef="${repo}:${fullVersion}"
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-ipynb-index --version=$fullVersion --platforms=$platforms --address $standardRepoRef
+    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
 
-    oras tag $(oras discover $standardRepoRef | head -n 1) $extraTags
+    oras tag "$(oras discover "$standardRepoRef" | head -n 1)" "$extraTags"
 
     # slim image index
     slimRepoRef="${repo}/slim:${fullVersion}"
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-index --version=$fullVersion --address $slimRepoRef --platforms=$platforms
+    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
 
-    oras tag $(oras discover $slimRepoRef | head -n 1) $extraTags
+    oras tag "$(oras discover "$slimRepoRef" | head -n 1)" "$extraTags"
 
     # ace hub image (linux/amd64)
     hubRepoRef="${repo}/hub:${fullVersion}"
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN image-hub --version=$fullVersion --secret-name act3_token --secretValue env:GITLAB_API_TOKEN publish --address $hubRepoRef
+    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN image-hub --version="$fullVersion" --secret-name act3_token --secretValue env:GITLAB_API_TOKEN publish --address "$hubRepoRef"
 
-    oras tag $(oras discover $hubRepoRef | head -n 1) $extraTags
+    oras tag "$(oras discover "$hubRepoRef" | head -n 1)" "$extraTags"
 
     # update artifacts.txt for ace-dt scan, and for documenting
     # TODO: sed would be ideal, try to fix:
@@ -208,7 +207,7 @@ prepare)
     version=$(cat VERSION)
 
     # build for all supported platforms
-    dagger call with-netrc --netrc=file:~/.netrc build-platforms --version=$version export --path=./bin
+    dagger call with-netrc --netrc=file:~/.netrc build-platforms --version="$version" export --path=./bin
 
     echo "Please review the local changes, especially releases/$version.md"
     ;;
@@ -242,7 +241,7 @@ publish)
     dagger -i call release publish-chart --ociRepo oci://reg.git.act3-ace.com/ace/data/telemetry/charts --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret env:GITLAB_REG_TOKEN
 
     # upload release assets (binaries)
-    dagger call release upload-assets --version=$version --assets=./bin --token=env:GITLAB_REG_TOKEN
+    dagger call release upload-assets --version="$version" --assets=./bin --token=env:GITLAB_REG_TOKEN
 
     # publish slim, ipynb, and hub images
     publishImages
