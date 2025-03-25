@@ -10,10 +10,10 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil/promhttputil"
 	"gorm.io/gorm"
 	"k8s.io/apimachinery/pkg/runtime"
-
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
 	mware "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
@@ -51,7 +51,7 @@ func NewApp(db *gorm.DB, scheme *runtime.Scheme, webConf v1alpha2.WebApp, log *s
 		httputil.TracingMiddleware(
 			httputil.LoggingMiddleware(log)(
 				mware.DatabaseMiddleware(db)(
-					httputil.PrometheusMiddleware(
+					promhttputil.PrometheusMiddleware(
 						// Set a timeout value on the request context (ctx), that will signal
 						// through ctx.Done() that the request has timed out and further
 						// processing should be stopped.
@@ -60,7 +60,7 @@ func NewApp(db *gorm.DB, scheme *runtime.Scheme, webConf v1alpha2.WebApp, log *s
 
 	a := &App{wrappedMainMuxHandler, db}
 
-	prometheus.DefaultRegisterer.MustRegister(httputil.HTTPDuration)
+	prometheus.DefaultRegisterer.MustRegister(promhttputil.HTTPDuration)
 
 	// TODO this should be exposed on its own port
 	mainMux.Handle("GET /metrics", promhttp.Handler())
