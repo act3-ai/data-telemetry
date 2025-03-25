@@ -185,7 +185,7 @@ prepare)
     # auto-gen kube api
     dagger call generate export --path=./pkg/apis/config.telemetry.act3-ace.io
 
-    # dagger call lint all
+    dagger call lint all
 
     # run unit, functional, and webapp tests
     dagger call with-netrc --netrc=file:~/.netrc test all
