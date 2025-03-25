@@ -121,7 +121,7 @@ resolveExtraTags() {
 
     # if latest patch (for the same major.minor releases), add "vX.X" tag
     if [ "$latestPatch" = "true"  ]; then
-        extraTags="$extraTags v${targetMajor}.${targetMinor}"
+        extraTags="v${targetMajor}.${targetMinor}"
         # if also latest minor (for the same major releases), add "vX" tag
         if [ "$latestMinor" = "true" ]; then
             extraTags="$extraTags v${targetMajor}"
@@ -147,19 +147,22 @@ publishImages() {
     standardRepoRef="${repo}:${fullVersion}"
     dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
 
-    oras tag "$(oras discover "$standardRepoRef" | head -n 1)" "$extraTags"
+    # shellcheck disable=SC2086
+    oras tag "$(oras discover "$standardRepoRef" | head -n 1)" $extraTags
 
     # slim image index
     slimRepoRef="${repo}/slim:${fullVersion}"
     dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
 
-    oras tag "$(oras discover "$slimRepoRef" | head -n 1)" "$extraTags"
+    # shellcheck disable=SC2086
+    oras tag "$(oras discover "$slimRepoRef" | head -n 1)" $extraTags
 
     # ace hub image (linux/amd64)
     hubRepoRef="${repo}/hub:${fullVersion}"
     dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN image-hub --version="$fullVersion" --secret-name act3_token --secretValue env:GITLAB_API_TOKEN publish --address "$hubRepoRef"
 
-    oras tag "$(oras discover "$hubRepoRef" | head -n 1)" "$extraTags"
+    # shellcheck disable=SC2086
+    oras tag "$(oras discover "$hubRepoRef" | head -n 1)" $extraTags
 
     # update artifacts.txt for ace-dt scan, and for documenting
     # TODO: sed would be ideal, try to fix:
