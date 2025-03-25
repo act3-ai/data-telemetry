@@ -104,7 +104,7 @@ require (
 	github.com/zitadel/logging v0.6.1 // indirect
 	github.com/zitadel/oidc/v3 v3.34.1 // indirect
 	github.com/zitadel/schema v1.3.0 // indirect
-	gitlab.com/act3-ai/asce/go-common v0.0.0-20250131143710-28da888b4134
+	gitlab.com/act3-ai/asce/go-common v0.0.0-20250205183858-ad66b80e46d2
 	go.opentelemetry.io/otel v1.34.0 // indirect
 	go.opentelemetry.io/otel/metric v1.34.0 // indirect
 	go.opentelemetry.io/otel/trace v1.34.0 // indirect
