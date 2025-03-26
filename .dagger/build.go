@@ -94,10 +94,10 @@ func build(ctx context.Context,
 		Build(dagger.GoWithSourceBuildOpts{
 			Pkg:      "./cmd/telemetry",
 			Platform: platform,
-			Tags:     []string{"sqlite_fts5"},
+			Ldflags:  []string{"-s", "-w", fmt.Sprintf("-X 'main.version=%s'", version)},
+			Trimpath: true,
 		}).
 		WithName(name)
-
 }
 
 // binaryName constructs the name of a telemetry executable based on build params.
