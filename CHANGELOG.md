@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.1] - 2025-03-26
+
+### 🐛 Bug Fixes
+
+- *(dagger,build)* Remove sqlite_fts5 flag and add options to reduce binary size
+
 ## [3.1.0] - 2025-03-25
 
 ### 🚀 Features
