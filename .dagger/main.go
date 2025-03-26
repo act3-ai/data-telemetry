@@ -26,7 +26,7 @@ const (
 	// images
 	imageGitlabCLI = "registry.gitlab.com/gitlab-org/cli:latest"
 	imageGitCliff  = "docker.io/orhunp/git-cliff:2.8.0"
-	imageAcedt     = "reg.git.act3-ace.com/ace/data/tool/ace-dt:v1.15.6"
+	imageAcedt     = "reg.git.act3-ace.com/ace/data/tool/ace-dt:v1.15.7"
 	imageGrype     = "anchore/grype:latest"
 	imageSyft      = "anchore/syft:latest"
 	imageUbuntu    = "docker.io/library/ubuntu:24.04"
