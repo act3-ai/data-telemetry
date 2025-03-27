@@ -137,6 +137,20 @@ func (tt *Test) Postgres() *dagger.Service {
 		AsService(dagger.ContainerAsServiceOpts{UseEntrypoint: true})
 }
 
+// ServerWithPostgres starts a telemetry service with postgres.
+//
+// This function makes it easier to expose a telemetry server to the host
+// with less hassle connecting it to postgres.
+func (tt *Test) ServerWithPostgres(ctx context.Context) (*dagger.Service, error) {
+	telemServer := tt.Server(ctx, tt.Postgres())
+	telemServer, err := telemServer.Start(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return telemServer, nil
+}
+
 // TemplateTestData returns a telemetry container after executing
 // `telemetry template` with the testdata directory.
 func (tt *Test) TemplateTestData(ctx context.Context) *dagger.Container {
