@@ -157,19 +157,11 @@ publishImages() {
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$slimRepoRef" | head -n 1)" $extraTags
 
-    # ace hub image (linux/amd64)
-    hubRepoRef="${repo}/hub:${fullVersion}"
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN image-hub --version="$fullVersion" --secret-name act3_token --secretValue env:GITLAB_API_TOKEN publish --address "$hubRepoRef"
-
-    # shellcheck disable=SC2086
-    oras tag "$(oras discover "$hubRepoRef" | head -n 1)" $extraTags
-
     # update artifacts.txt for ace-dt scan, and for documenting
     # TODO: sed would be ideal, try to fix:
     # sed -i 's/\([a-zA-Z0-9_.-\/]*:\)\(.*\)/\1'"$version"'/' artifacts.txt
     echo "$standardRepoRef" > artifacts.txt
     echo "$slimRepoRef" >> artifacts.txt
-    echo "$hubRepoRef" >> artifacts.txt
 }
 
 case $1 in
