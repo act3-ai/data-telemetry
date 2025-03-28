@@ -89,8 +89,7 @@ linters:
       ignore-package-globs:
         - encoding/*
         - sigs.k8s.io/yaml
-        - github.com/go-logr/logr
-        - git.act3-ace.com/*
+        - gitlab.com/*
   exclusions:
     generated: lax
     presets:
@@ -107,7 +106,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - git.act3-ace.com/ace
+        - gitlab.com/act3-ai/asce
   exclusions:
     generated: lax
     paths:
