@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.2] - 2025-03-31
+
+### Deps
+
+- Bump ace-dt image to v1.15.7
+- Bump dagger to v0.17.1
+
 ## [3.1.1] - 2025-03-26
 
 ### 🐛 Bug Fixes
