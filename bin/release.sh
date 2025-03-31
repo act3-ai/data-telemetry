@@ -9,7 +9,14 @@ prepare - prepare a release locally by producing the changelog, notes, assets, e
 approve - commit, tag, and push your approved release.
 publish - publish the release to GitLab by uploading assets, images, helm chart, etc.
 
-Dependencies: dagger, ace-dt, oras, and OCI registry access.
+Dependencies: dagger, oras, and gitlab.com OCI registry access.
+
+Environment Variables with Defaults:
+    - ACE_TELEMETRY_RELEASE_NETRC=~/.netrc
+
+Environment Variables without Defaults:
+    - GITLAB_REG_TOKEN
+    - GITLAB_REG_USER
 EOF
     exit 1
 }
@@ -19,6 +26,10 @@ if [ "$#" != "1" ]; then
 fi
 
 set -x
+
+registry=registry.gitlab.com
+registryRepo=$registry/act3-ai/asce/data/telemetry
+netrcPath=${ACE_TELEMETRY_RELEASE_NETRC:=~/.netrc}
 
 # Extract the major version of a release.
 parseMajor() {
@@ -139,21 +150,19 @@ resolveExtraTags() {
 publishImages() {
     platforms=linux/amd64,linux/arm64
     fullVersion=v$(cat VERSION)
-    registry=registry.gitlab.com
-    registryRepo=$registry/act3-ai/asce/data/telemetry
 
     extraTags=$(resolveExtraTags "$repo" "$fullVersion")
 
     # ipynb image index
     standardRepoRef="${repo}:${fullVersion}"
-    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:$netrcPath image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
 
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$standardRepoRef" | head -n 1)" $extraTags
 
     # slim image index
     slimRepoRef="${repo}/slim:${fullVersion}"
-    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:$netrcPath image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
 
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$slimRepoRef" | head -n 1)" $extraTags
@@ -176,7 +185,7 @@ prepare)
     make deps
 
     # template testdata
-    dagger call with-netrc --netrc=file:~/.netrc test template-test-data directory --path testdata export --path testdata
+    dagger call with-netrc --netrc=file:$netrcPath test template-test-data directory --path testdata export --path testdata
 
     # auto-gen kube api
     dagger call generate export --path=./pkg/apis/config.telemetry.act3-ace.io
@@ -184,7 +193,7 @@ prepare)
     dagger call lint all
 
     # run unit, functional, and webapp tests
-    dagger call with-netrc --netrc=file:~/.netrc test all
+    dagger call with-netrc --netrc=file:$netrcPath test all
 
     # update changelog, release notes, semantic version
     dagger call release prepare export --path=.
@@ -193,17 +202,17 @@ prepare)
     dagger call test chart
 
     # govulncheck
-    dagger call with-netrc --netrc=file:~/.netrc vuln-check
+    dagger call with-netrc --netrc=file:$netrcPath vuln-check
 
     # generate docs
     dagger call swagger export --path=./swagger.yml
     dagger call apidocs export --path=./docs/apis/config.telemetry.act3-ace.io
-    dagger call with-netrc --netrc=file:~/.netrc clidocs export --path=./docs/cli
+    dagger call with-netrc --netrc=file:$netrcPath clidocs export --path=./docs/cli
 
     version=$(cat VERSION)
 
     # build for all supported platforms
-    dagger call with-netrc --netrc=file:~/.netrc build-platforms --version="$version" export --path=./bin
+    dagger call with-netrc --netrc=file:$netrcPath build-platforms --version="$version" export --path=./bin
 
     echo "Please review the local changes, especially releases/$version.md"
     ;;
@@ -231,10 +240,10 @@ publish)
     version=$(cat VERSION)
 
     # publish release
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN release publish --token=env:GITLAB_REG_TOKEN
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN release publish --token=env:GITLAB_REG_TOKEN
 
     # publish helm chart
-    dagger -i call release publish-chart --ociRepo oci://reg.git.act3-ace.com/ace/data/telemetry/charts --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret env:GITLAB_REG_TOKEN
+    dagger -i call release publish-chart --ociRepo oci://$registryRepo/charts --address="$registry" --username="$GITLAB_REG_USER" --secret env:GITLAB_REG_TOKEN
 
     # upload release assets (binaries)
     dagger call release upload-assets --version="$version" --assets=./bin --token=env:GITLAB_REG_TOKEN
@@ -243,7 +252,8 @@ publish)
     publishImages
 
     # scan images with ace-dt
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN scan --sources artifacts.txt
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN scan --sources artifacts.txt
+
     # notify everyone
     # dagger call announce --token=env:MATTERMOST_ACCESS_TOKEN
     ;;
