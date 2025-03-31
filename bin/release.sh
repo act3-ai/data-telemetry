@@ -139,20 +139,21 @@ resolveExtraTags() {
 publishImages() {
     platforms=linux/amd64,linux/arm64
     fullVersion=v$(cat VERSION)
-    repo=reg.git.act3-ace.com/ace/data/telemetry
+    registry=registry.gitlab.com
+    registryRepo=$registry/act3-ai/asce/data/telemetry
 
     extraTags=$(resolveExtraTags "$repo" "$fullVersion")
 
     # ipynb image index
     standardRepoRef="${repo}:${fullVersion}"
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
 
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$standardRepoRef" | head -n 1)" $extraTags
 
     # slim image index
     slimRepoRef="${repo}/slim:${fullVersion}"
-    dagger call with-registry-auth --address=reg.git.act3-ace.com --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:~/.netrc image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
 
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$slimRepoRef" | head -n 1)" $extraTags
