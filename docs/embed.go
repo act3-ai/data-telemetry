@@ -57,7 +57,7 @@ func Embedded(root *cobra.Command) (*embedutil.Documentation, error) {
 		Categories: []*embedutil.Category{
 			embedutil.NewCategory(
 				"api", "API Documentation", root.Name()+"-api", 1,
-				embedutil.LoadMarkdown("api", "API", "apis/config.telemetry.act3-ace.io/v1alpha1.md", apiDocs),
+				embedutil.LoadMarkdown("api", "API", "apis/config.telemetry.act3-ace.io/v1alpha2.md", apiDocs),
 			),
 			embedutil.NewCategory(
 				"cli", "CLI Documentation", root.Name()+"-cli", 1,

@@ -7,8 +7,7 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 )
 
 // Implement the Client interface.
@@ -22,21 +21,6 @@ type MultiClient struct {
 // NewMultiClient creates a MultiClient from an array of Clients.
 func NewMultiClient(clients []Client) *MultiClient {
 	return &MultiClient{clients}
-}
-
-// NewMultiClientConfig will create a MultiClient using slices of config file.
-func NewMultiClientConfig(locations []v1alpha1.Location) *MultiClient {
-	singleClients := make([]Client, 0, len(locations))
-	for _, location := range locations {
-		sc, err := NewSingleClientFromConfig(location)
-		if err != nil {
-			continue
-		}
-
-		// append each return result to the collecting bucket
-		singleClients = append(singleClients, sc)
-	}
-	return NewMultiClient(singleClients)
 }
 
 // SendEvent will send an event to the api using the MultiClient.

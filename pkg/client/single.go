@@ -5,16 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/http/cookiejar"
 	"net/url"
 	"time"
 
 	"github.com/opencontainers/go-digest"
 
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
 )
 
 // ensure Client interface implementation.
@@ -51,42 +48,6 @@ func NewSingleClient(httpClient *http.Client, serverURL string, token string) (*
 		apiURL: u.JoinPath("api"),
 		token:  token,
 	}, nil
-}
-
-// NewSingleClientFromConfig to create a single Client type.
-func NewSingleClientFromConfig(location v1alpha1.Location) (*Single, error) {
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, fmt.Errorf("creating cookie jar: %w", err)
-	}
-
-	c := &Single{}
-	c.client = &http.Client{
-		Jar: jar,
-	}
-
-	// Add cookies (for auth)
-	cookies := make([]*http.Cookie, 0, len(location.Cookies))
-	for k, v := range location.Cookies {
-		cookies = append(cookies, &http.Cookie{
-			Name:   k,
-			Value:  string(v),
-			Secure: true,
-		})
-	}
-	u, err := url.Parse(string(location.URL))
-	if err != nil {
-		return nil, fmt.Errorf("parsing telemetry URL: %w", err)
-	}
-	jar.SetCookies(u, cookies)
-
-	if u.Hostname() != "" {
-		c.token = string(location.Token)
-	}
-
-	c.apiURL = u.JoinPath("api")
-
-	return c, nil
 }
 
 // SendEvent will send an event JSON to the api.

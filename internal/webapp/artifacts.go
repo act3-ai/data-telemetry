@@ -16,7 +16,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/microcosm-cc/bluemonday"
@@ -25,8 +24,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
 )
 
 // TODO consider using GO's filesystem abstraction to build a filesystem for the artifacts based on their path in the bottle
@@ -39,13 +38,13 @@ func (a *WebApp) handleArtifactRaw(w http.ResponseWriter, r *http.Request) error
 	// log := logger.FromContext(ctx)
 	con := middleware.DatabaseFromContext(ctx)
 
-	bottleDigest, err := digest.Parse(chi.URLParam(r, "bottle"))
+	bottleDigest, err := digest.Parse(r.PathValue("bottle"))
 	if err != nil {
 		return httputil.NewHTTPError(err, http.StatusBadRequest, "Invalid bottle parameter")
 	}
 
 	// we use PublicArtifact.Path to lookup the artifact within a bottle
-	artifactPath := chi.URLParam(r, "*")
+	artifactPath := r.PathValue("path")
 
 	artifact, err := db.FindArtifact(con, bottleDigest, artifactPath)
 	if err != nil {
@@ -67,13 +66,13 @@ func (a *WebApp) handleArtifact(w http.ResponseWriter, r *http.Request) error {
 	// log := logger.FromContext(ctx)
 	con := middleware.DatabaseFromContext(ctx)
 
-	bottleDigest, err := digest.Parse(chi.URLParam(r, "bottle"))
+	bottleDigest, err := digest.Parse(r.PathValue("bottle"))
 	if err != nil {
 		return httputil.NewHTTPError(err, http.StatusBadRequest, "Invalid bottle parameter: "+err.Error())
 	}
 
 	// we use PublicArtifact.Path to lookup the artifact within a bottle
-	artifactPath := chi.URLParam(r, "*")
+	artifactPath := r.PathValue("path")
 
 	artifact, err := db.FindArtifact(con, bottleDigest, artifactPath)
 	if err != nil {
@@ -140,14 +139,14 @@ func (a *WebApp) handleArtifactContent(w http.ResponseWriter, r *http.Request) e
 	// log := logger.FromContext(ctx)
 	con := middleware.DatabaseFromContext(ctx)
 
-	bottleDigest, err := digest.Parse(chi.URLParam(r, "bottle"))
+	bottleDigest, err := digest.Parse(r.PathValue("bottle"))
 	if err != nil {
 		return httputil.NewHTTPError(err, http.StatusBadRequest, "Invalid bottle parameter: "+err.Error())
 	}
 
 	// we use PublicArtifact.Path to lookup the artifact within a bottle
 	// artifactPath := vars["artifact"]
-	artifactPath := chi.URLParam(r, "*")
+	artifactPath := r.PathValue("path")
 
 	artifact, err := db.FindArtifact(con, bottleDigest, artifactPath)
 	if err != nil {
@@ -234,7 +233,7 @@ func (a *WebApp) convertNotebook(ctx context.Context, artifact *db.PublicArtifac
 		return nil, fmt.Errorf("populating ipynb templates temp directory: %w", err)
 	}
 
-	// TODO this wont work with assetFS
+	// TODO this won't work with assetFS
 	// probably need to mount the assetFS first
 	cmd := exec.CommandContext(ctx, a.jupyter, "nbconvert", "--to=html", "--stdin", "--stdout",
 		"--HTMLExporter.require_js_url=internal/webapp/assets/static/libs/requirejs/2.3.6/require.min.js",

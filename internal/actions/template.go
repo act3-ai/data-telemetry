@@ -3,8 +3,8 @@ package actions
 import (
 	"path/filepath"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 )
 
 // TemplateRun generates all templates for the given directory.

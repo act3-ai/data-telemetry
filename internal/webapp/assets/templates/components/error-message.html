@@ -1,0 +1,16 @@
+{{/* Pass in a list of error messages */}}
+{{ define "error-message" }}
+<div class="alert alert-danger" role="alert" style="margin-top: 1em; margin-bottom: 1em;">
+    <h5>Try Again?</h5>
+    <div>
+        There was an issue with the search criteria:
+    </div>
+    <ul>
+        {{ with splitList "\n" .Values.Errors }}
+        {{ range .}}
+        <li>{{ . }}</li>
+        {{ end }}
+        {{ end }}
+    </ul>
+</div>
+{{ end }}

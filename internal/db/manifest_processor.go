@@ -13,7 +13,7 @@ import (
 	"gitlab.com/act3-ai/asce/data/schema/pkg/validation"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 )
 
 // ManifestProcessorVersion is the current version of the processor code.  This is incremented after each measurable change to the ManifestProcessor().

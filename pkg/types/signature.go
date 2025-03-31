@@ -3,14 +3,14 @@ package types
 import (
 	"fmt"
 
-	val "gitlab.com/act3-ai/asce/data/schema/pkg/validation"
-
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/notaryproject/notation-core-go/signature/cose"
 	"github.com/notaryproject/notation-core-go/signature/jws"
 	notaryreg "github.com/notaryproject/notation-go/registry"
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
+
+	val "gitlab.com/act3-ai/asce/data/schema/pkg/validation"
 )
 
 const (

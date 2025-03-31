@@ -15,19 +15,18 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/yaml"
 
+	latest "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io/v1"
 	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
 	"gitlab.com/act3-ai/asce/data/schema/pkg/selectors"
 	"gitlab.com/act3-ai/asce/data/schema/pkg/util"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	latest "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io/v1"
-
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
 )
 
-type resultEntry struct {
+type bottleResultEntry struct {
 	db.Bottle
 	db.Digested
 	IsDeprecated bool
@@ -60,150 +59,51 @@ func (a *WebApp) handleAbout(w http.ResponseWriter, r *http.Request) error {
 
 	values := TotalCount{eventsCount, manifestsCount, bottlesCount, artifactsCount, signaturesCount, blobDataBytes}
 
-	return a.executeTemplateAsResponse(ctx, w, "about.html", values, "../")
+	return a.executeTemplateAsResponse(ctx, w, "documentation.html", values, "../")
 }
 
-func (a *WebApp) handleCatalog(w http.ResponseWriter, r *http.Request) error {
-	ctx := r.Context()
+func (a *WebApp) getPageHandler(page string) func(w http.ResponseWriter, r *http.Request) error {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		ctx := r.Context()
 
-	params := bottleRequestParams{
-		Limit: 9,
-	} // set default values here
+		params := bottleRequestParams{
+			Limit: 9,
+		} // set default values here
 
-	type values struct {
-		Params bottleRequestParams
-		Errors string
-	}
+		type values struct {
+			Params bottleRequestParams
+			Errors string
+		}
 
-	errorReply := func(err *httputil.HTTPError) error {
+		errorReply := func(err *httputil.HTTPError) error {
+			v := values{
+				params,
+				err.Error(),
+			}
+			w.WriteHeader(err.StatusCode)
+			// TODO better error handling for this component
+			return a.executeTemplateAsResponse(ctx, w, page, v, "../")
+		}
+
+		if err := params.populateFromURLQuery(r.URL.Query()); err != nil {
+			return errorReply(httputil.NewHTTPError(err, http.StatusUnprocessableEntity, "Invalid query parameters"))
+		}
+
+		// overriding limit if it's 0
+		if params.Limit == 0 {
+			params.Limit = 9
+		}
+
+		if time.Time(params.CreatedBefore).IsZero() {
+			params.CreatedBefore = requestTimestamp(time.Now())
+		}
+
 		v := values{
-			params,
-			err.Error(),
+			params, "",
 		}
-		w.WriteHeader(err.StatusCode)
-		// TODO better error handling for this component
-		return a.executeTemplateAsResponse(ctx, w, "catalog.html", v, "../")
+
+		return a.executeTemplateAsResponse(ctx, w, page, v, "../")
 	}
-
-	if err := params.populateFromURLQuery(r.URL.Query()); err != nil {
-		return errorReply(httputil.NewHTTPError(err, http.StatusUnprocessableEntity, "Invalid query parameters"))
-	}
-
-	// overriding limit if it's 0
-	if params.Limit == 0 {
-		params.Limit = 9
-	}
-
-	if time.Time(params.CreatedBefore).IsZero() {
-		params.CreatedBefore = requestTimestamp(time.Now())
-	}
-
-	v := values{
-		params, "",
-	}
-
-	return a.executeTemplateAsResponse(ctx, w, "catalog.html", v, "../")
-}
-
-func (a *WebApp) handleLeaderboard(w http.ResponseWriter, r *http.Request) error {
-	ctx := r.Context()
-	con := middleware.DatabaseFromContext(ctx)
-
-	type Params struct {
-		Selectors  []string      `schema:"selector"`
-		Metric     string        `schema:"metric"`
-		Limit      int           `schema:"limit"`
-		Descending bool          `schema:"descending"`
-		ParentsOf  digest.Digest `schema:"parents-of"`
-		ChildrenOf digest.Digest `schema:"children-of"`
-		Author     string        `schema:"author"`
-	}
-
-	params := Params{
-		Limit:      9, // default value
-		Descending: true,
-	}
-
-	type values struct {
-		Params
-		Entries      []resultEntry
-		Errors       string
-		TotalResults int
-	}
-
-	errorReply := func(err *httputil.HTTPError) error {
-		v := values{
-			params,
-			[]resultEntry{},
-			err.Error(),
-			0,
-		}
-		w.WriteHeader(err.StatusCode)
-		return a.executeTemplateAsResponse(ctx, w, "leaderboard.html", v, "../")
-	}
-
-	if err := schema.NewDecoder().Decode(&params, r.URL.Query()); err != nil {
-		return errorReply(httputil.NewHTTPError(err, http.StatusBadRequest, "Invalid query parameters"))
-	}
-	var tx *gorm.DB
-
-	// parse order, optional, valid values are ascending or descending
-	order := "DESC"
-	if !params.Descending {
-		order = "ASC"
-	}
-
-	if params.Metric == "" {
-		tx = con.Scopes(db.FilterBySelectors(params.Selectors), db.IncludeNumPulls()).Order("num_pulls " + order)
-	} else {
-		tx = con.
-			Joins("INNER JOIN metrics ON metrics.bottle_id = bottles.id AND metrics.name = ?", params.Metric).
-			Scopes(db.FilterBySelectors(params.Selectors)).Order("AVG(metrics.value) " + order)
-	}
-
-	if len(params.ParentsOf) > 0 {
-		if err := params.ParentsOf.Validate(); err != nil {
-			return errorReply(httputil.NewHTTPError(err, http.StatusBadRequest, "Invalid parents-of digest parameter"))
-		}
-		tx = tx.Scopes(db.ParentsOf([]digest.Digest{params.ParentsOf}))
-	}
-
-	if len(params.ChildrenOf) > 0 {
-		if err := params.ChildrenOf.Validate(); err != nil {
-			return errorReply(httputil.NewHTTPError(err, http.StatusBadRequest, "Invalid children-of digest parameter"))
-		}
-		tx = tx.Scopes(db.ChildrenOf([]digest.Digest{params.ChildrenOf}))
-	}
-
-	// to call the searchbyauthor function
-	tx = tx.Scopes(db.SearchByAuthor(params.Author))
-
-	tx = tx.Table("bottles").
-		Preload("Labels", func(db *gorm.DB) *gorm.DB {
-			return db.Order("labels.key")
-		}).
-		Preload("Authors", func(db *gorm.DB) *gorm.DB {
-			return db.Order("authors.location")
-		}).
-		Preload("Metrics", func(db *gorm.DB) *gorm.DB {
-			return db.Order("metrics.name")
-		}).
-		Select("bottles.id", "bottles.description").
-		Scopes(db.IncludeDigests("bottles"))
-
-	var entries []resultEntry
-	if err := tx.Find(&entries).Error; err != nil {
-		return errorReply(httputil.NewHTTPError(err, http.StatusBadRequest, "Issue retrieving bottle entries"))
-	}
-
-	numResults := len(entries)
-
-	if numResults > params.Limit {
-		entries = entries[:params.Limit]
-	}
-
-	v := values{params, entries, "", numResults}
-	return a.executeTemplateAsResponse(ctx, w, "leaderboard.html", v, "../")
 }
 
 func (a *WebApp) handleBottle(w http.ResponseWriter, r *http.Request) error {
@@ -444,21 +344,22 @@ func (a *WebApp) handleSimilarBottles(w http.ResponseWriter, r *http.Request) er
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 
-	page := "catalog.html"
-	if r.URL.Query().Has("metric") {
-		page = "leaderboard.html"
-	}
 	u := *r.URL
-	u.Scheme = ""
-	u.User = nil
-	u.Path = page
 	qs := u.Query()
 	requirements, exists := qs["requirement"]
 	if exists {
 		qs.Del("requirement")
-		qs.Set("selector", strings.Join(requirements, ","))
+		qs.Set("label-selector", strings.Join(requirements, ","))
 		u.RawQuery = qs.Encode()
 	}
+
+	page := "catalog.html"
+	if r.URL.Query().Has("metric") {
+		page = "leaderboard.html"
+	}
+	u.Scheme = ""
+	u.User = nil
+	u.Path = page
 
 	log.InfoContext(ctx, "Redirecting", "location", u.String())
 	w.Header().Set("Location", u.String())

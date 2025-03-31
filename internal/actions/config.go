@@ -7,7 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // Config is the action for getting the server configuration.
@@ -20,7 +20,7 @@ type Config struct {
 // Run is the action method.
 func (action *Config) Run(ctx context.Context, out io.Writer) error {
 	if action.Sample {
-		_, err := fmt.Fprint(out, v1alpha1.SampleServerConfig)
+		_, err := fmt.Fprint(out, v1alpha2.SampleServerConfig)
 		return err
 	}
 

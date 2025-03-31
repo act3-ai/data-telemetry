@@ -2,6 +2,7 @@ package actions
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -10,11 +11,11 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 	"gitlab.com/act3-ai/asce/go-common/pkg/version"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ServerConfigOverride is a function used to override the server configuration.
-type ServerConfigOverride func(ctx context.Context, c *v1alpha1.ServerConfiguration) error
+type ServerConfigOverride func(ctx context.Context, c *v1alpha2.ServerConfiguration) error
 
 // Telemetry action for all commands.
 type Telemetry struct {
@@ -31,7 +32,7 @@ type Telemetry struct {
 // versionOverride is the optional build version provided by the build system (not necessarily GIT).
 func NewTelemetry(info version.Info) *Telemetry {
 	scheme := runtime.NewScheme()
-	utilruntime.Must(v1alpha1.AddToScheme(scheme))
+	utilruntime.Must(v1alpha2.AddToScheme(scheme))
 
 	return &Telemetry{
 		versionInfo:  info,
@@ -55,12 +56,12 @@ func (action *Telemetry) AddServerConfigOverride(override ...ServerConfigOverrid
 }
 
 // GetServerConfig returns the server configuration.
-func (action *Telemetry) GetServerConfig(ctx context.Context) (*v1alpha1.ServerConfiguration, error) {
+func (action *Telemetry) GetServerConfig(ctx context.Context) (*v1alpha2.ServerConfiguration, error) {
 	log := logger.FromContext(ctx)
 
-	c := &v1alpha1.ServerConfiguration{}
+	c := &v1alpha2.ServerConfiguration{}
 	if err := config.Load(log, action.GetConfigScheme(), c, action.ConfigFiles); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not load config: %w", err)
 	}
 
 	// Loop through override functions, applying each to the configuration
