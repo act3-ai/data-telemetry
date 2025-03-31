@@ -40,7 +40,8 @@ func (t *Telemetry) Scan(ctx context.Context,
 	const cachePath = "/cache/grype"
 
 	acedt := dag.Container().
-		From(imageAcedt).File("/ko-app/ace-dt")
+		From(imageAcedt).
+		File("/usr/local/bin/ace-dt")
 
 	sourcePath := "artifacts.txt"
 	return dag.Container().
