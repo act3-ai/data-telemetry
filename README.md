@@ -1,6 +1,6 @@
-> :warning: This is prerelease software.
-
 # ACE Data Telemetry
+
+> :warning: This is prerelease software.
 
 This telemetry server implements a longitudinal tracking system for ACE Data Bottles.  When `ace-dt bottle push` or `ace-dt bottle pull` is run it pushed the bottle (metadata and data) to the OCI registry that is provided.  In addition those commands also push the metadata to 0 or more telemetry servers configured in ace-dt's configuration file.  In this way the telemetry server can be used to discover and track data bottles.
 

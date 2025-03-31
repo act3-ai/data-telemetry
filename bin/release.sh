@@ -151,18 +151,18 @@ publishImages() {
     platforms=linux/amd64,linux/arm64
     fullVersion=v$(cat VERSION)
 
-    extraTags=$(resolveExtraTags "$repo" "$fullVersion")
+    extraTags=$(resolveExtraTags "$registryRepo" "$fullVersion")
 
     # ipynb image index
-    standardRepoRef="${repo}:${fullVersion}"
-    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:$netrcPath image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
+    standardRepoRef="${registryRepo}:${fullVersion}"
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:"$netrcPath" image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
 
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$standardRepoRef" | head -n 1)" $extraTags
 
     # slim image index
-    slimRepoRef="${repo}/slim:${fullVersion}"
-    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:$netrcPath image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
+    slimRepoRef="${registryRepo}/slim:${fullVersion}"
+    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:"$netrcPath" image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
 
     # shellcheck disable=SC2086
     oras tag "$(oras discover "$slimRepoRef" | head -n 1)" $extraTags
@@ -185,7 +185,7 @@ prepare)
     make deps
 
     # template testdata
-    dagger call with-netrc --netrc=file:$netrcPath test template-test-data directory --path testdata export --path testdata
+    dagger call with-netrc --netrc=file:"$netrcPath" test template-test-data directory --path testdata export --path testdata
 
     # auto-gen kube api
     dagger call generate export --path=./pkg/apis/config.telemetry.act3-ace.io
@@ -193,7 +193,7 @@ prepare)
     dagger call lint all
 
     # run unit, functional, and webapp tests
-    dagger call with-netrc --netrc=file:$netrcPath test all
+    dagger call with-netrc --netrc=file:"$netrcPath" test all
 
     # update changelog, release notes, semantic version
     dagger call release prepare export --path=.
@@ -202,17 +202,17 @@ prepare)
     dagger call test chart
 
     # govulncheck
-    dagger call with-netrc --netrc=file:$netrcPath vuln-check
+    dagger call with-netrc --netrc=file:"$netrcPath" vuln-check
 
     # generate docs
     dagger call swagger export --path=./swagger.yml
     dagger call apidocs export --path=./docs/apis/config.telemetry.act3-ace.io
-    dagger call with-netrc --netrc=file:$netrcPath clidocs export --path=./docs/cli
+    dagger call with-netrc --netrc=file:"$netrcPath" clidocs export --path=./docs/cli
 
     version=$(cat VERSION)
 
     # build for all supported platforms
-    dagger call with-netrc --netrc=file:$netrcPath build-platforms --version="$version" export --path=./bin
+    dagger call with-netrc --netrc=file:"$netrcPath" build-platforms --version="$version" export --path=./bin
 
     echo "Please review the local changes, especially releases/$version.md"
     ;;

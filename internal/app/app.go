@@ -10,8 +10,6 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil/promhttputil"
 	"gorm.io/gorm"
 	"k8s.io/apimachinery/pkg/runtime"
 
@@ -19,6 +17,8 @@ import (
 	mware "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/webapp"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"gitlab.com/act3-ai/asce/go-common/pkg/httputil/promhttputil"
 )
 
 // DatabaseType is the type of the database being used.
