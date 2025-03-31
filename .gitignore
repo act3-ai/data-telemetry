@@ -1,7 +1,8 @@
 *.db
 *.db-journal
 /.vscode
-/bin
+/bin/*
+!/bin/release.sh
 /ci-dist
 /*config.yaml
 /testdata-download
@@ -11,6 +12,8 @@
 /charts/telemetry/charts
 codereport*
 /.gorelease-actual.txt
+*.private
+artifacts.txt
 
 # Useful for ignoring the build tool
 /.go

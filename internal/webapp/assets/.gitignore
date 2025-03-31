@@ -1,2 +1,5 @@
 /.downloads
 /static/libs
+/bin
+.air.toml
+/tmp

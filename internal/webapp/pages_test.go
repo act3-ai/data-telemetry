@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
 
@@ -22,14 +21,14 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/dbtest"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
-	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/webapp"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/client"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/dbtest"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	ttest "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/webapp"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	client "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/client"
 )
 
 // Make sure you run `make template` to ensure that the files are all generated in the testdata directory
@@ -60,38 +59,35 @@ func (s *HandlersTestSuite) SetupSuite() {
 
 	if u.Scheme == "postgres" {
 		// If using postgres, create a temporary database for each test
-		testPgDbDsn, cleanup, err := dbtest.CreateTempPostgresDb(s.T().Name(), u.String())
+		testPgDBDsn, cleanup, err := dbtest.CreateTempPostgresDB(s.T().Name(), u.String())
 		s.NoError(err, "could not create test database in postgres with DSN %s", dsn)
 
-		u, err = url.Parse(testPgDbDsn)
-		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDbDsn)
+		u, err = url.Parse(testPgDBDsn)
+		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDBDsn)
 		s.T().Cleanup(cleanup)
 	}
-	myDB, err := db.Open(ctx, v1alpha1.Database{
+	myDB, err := db.Open(ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(u.String()),
 	}, scheme)
 	s.NoError(err)
 
-	router := chi.NewRouter()
-	router.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
-
 	// create a temporary API so we can load data
-	router.Route("/_api", func(router chi.Router) {
-		a := &api.API{}
-		a.Initialize(router, scheme)
-	})
+	a := &api.API{}
+	apiMux := http.NewServeMux()
+	a.Initialize(apiMux, scheme)
+
+	serveMux := http.NewServeMux()
+	serveMux.Handle("/_api/", http.StripPrefix("/_api", apiMux))
 
 	// create the webapp (the unit under test)
-	webApp, err := webapp.NewWebApp(v1alpha1.WebApp{
+	webApp, err := webapp.NewWebApp(v1alpha2.WebApp{
 		AssetDir: s.assetDir,
 	}, s.log, "test-version")
 	s.NoError(err)
-	webApp.Initialize(router)
+	webApp.Initialize(serveMux)
 
-	s.server = httptest.NewServer(router)
+	wrappedServeMux := httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(serveMux))
+	s.server = httptest.NewServer(wrappedServeMux)
 
 	// upload test data
 	uploadURL, err := url.Parse(s.server.URL + "/_api")

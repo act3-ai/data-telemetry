@@ -26,6 +26,7 @@ telemetry client upload <path> <url> [flags]
 ## Options
 
 ```plaintext
+Options:
       --all        all object types (specify the <path> as the test set directory) (default true)
       --continue   continue uploading after encountering an invalid manifest error
   -h, --help       help for upload
@@ -34,13 +35,14 @@ telemetry client upload <path> <url> [flags]
 ## Options inherited from parent commands
 
 ```plaintext
+Global options:
       --client-config stringArray   client configuration file location (setable with env "ACE_TELEMETRY_CLIENT_CONFIG")
                                     May specify multiple files separated by ":".  
                                     The first configuration file present is used.  Others are ignored.
-                                     (default [ace-telemetry-client-config.yaml,HOMEDIR/.config/ace/telemetry/client-config.yaml,/etc/ace/telemetry/client-config.yaml])
+                                     (default [ace-telemetry-client-config.yaml,/root/.config/ace/telemetry/client-config.yaml,/etc/ace/telemetry/client-config.yaml])
       --config stringArray          server configuration file location (setable with env "ACE_TELEMETRY_CONFIG"). 
                                     The first configuration file present is used.  Others are ignored.
-                                     (default [ace-telemetry-config.yaml,HOMEDIR/.config/ace/telemetry/config.yaml,/etc/ace/telemetry/config.yaml])
+                                     (default [ace-telemetry-config.yaml,/root/.config/ace/telemetry/config.yaml,/etc/ace/telemetry/config.yaml])
   -v, --verbosity strings[=warn]    Logging verbosity level (also setable with environment variable ACE_TELEMETRY_VERBOSITY)
-                                    Aliases: error=0, warn=4, info=8, debug=12 (default [error])
+                                    Aliases: error=0, warn=4, info=8, debug=12 (default [warn])
 ```

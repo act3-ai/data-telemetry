@@ -3,29 +3,28 @@ package client
 import (
 	"context"
 	"log/slog"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/opencontainers/go-digest"
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
 
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	ttest "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/test"
-
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
-	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
 )
 
 type SingleTestSuite struct {
@@ -53,20 +52,16 @@ func (s *SingleTestSuite) SetupTest() {
 
 	// Instead of an env we can use a the "flags" package to create a flag and default it to the env if set or to file::memory: if not
 	dsn := "file::memory:"
-	myDB, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(dsn),
 	}, scheme)
 	s.NoError(err)
 
-	router := chi.NewRouter()
-	router.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
-	router.Route("/api", func(router chi.Router) {
-		a := &api.API{}
-		a.Initialize(router, scheme)
-	})
+	a := &api.API{}
+	apiMux := http.NewServeMux()
+	a.Initialize(apiMux, scheme)
+	serveMux := http.NewServeMux()
+	serveMux.Handle("/api/", http.StripPrefix("/api", httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(apiMux))))
 
 	// process and load the blobs
 	s.blobs = make(map[digest.Digest][]byte)
@@ -75,21 +70,21 @@ func (s *SingleTestSuite) SetupTest() {
 		return nil
 	})
 	s.NoError(err)
-	s.server = httptest.NewServer(router)
+	s.server = httptest.NewServer(serveMux)
 	// Use Client & URL from our local test server
 	sc, err := NewSingleClient(s.server.Client(), s.server.URL, "mycooltoken")
 	s.NoError(err)
 	s.client = sc
 
 	// mockLocation is a mock example of our config file for testing
-	mockLocation := v1alpha1.Location{
+	mockLocation := v1alpha2.Location{
 		Name:    "MyMockConfig",
 		URL:     redact.SecretURL(s.server.URL),
 		Cookies: map[string]redact.Secret{"foo": "bar"},
 		Token:   "mycooltoken",
 	}
 
-	scWithToken, err := NewSingleClientFromConfig(mockLocation)
+	scWithToken, err := NewSingleClient(http.DefaultClient, string(mockLocation.URL), string(mockLocation.Token))
 	s.NoError(err)
 	s.clientB = scWithToken
 }

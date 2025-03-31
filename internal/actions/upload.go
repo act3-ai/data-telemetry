@@ -3,7 +3,7 @@ package actions
 import (
 	"context"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/client"
+	client "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/client"
 )
 
 // Upload is the upload action.
@@ -26,7 +26,7 @@ func (action *Upload) Run(ctx context.Context, path, telemetryServerURL string) 
 		return err
 	}
 
-	c, err := client.NewSingleClientFromConfig(*newconfig)
+	c, err := client.NewSingleClient(authClientOrDefault(ctx, newconfig), telemetryServerURL, "")
 	if err != nil {
 		return err
 	}

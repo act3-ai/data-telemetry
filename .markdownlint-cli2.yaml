@@ -11,3 +11,6 @@ ignores:
   - "charts/telemetry/charts/postgresql/**"
   - "docs/cli/**"
   - "docs/apis/**"
+  - "internal/webapp/assets/.downloads/**"
+  - "internal/webapp/assets/static/libs/**"
+  - "releases/**"

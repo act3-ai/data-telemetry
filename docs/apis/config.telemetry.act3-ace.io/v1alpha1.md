@@ -31,50 +31,6 @@ _Appears in:_
 | `url` _string_ | URL is the full URL for the ACE Hub instance |  |  |
 
 
-#### ACEHubLaunchTemplate
-
-
-
-ACEHubLaunchTemplate is the launch specification for ACE Hub.  It is the same as the PodGroupOptions from ace/hub/api.
-This struct also supports marshalling to URL query parameters with "github.com/hetiansu5/urlquery".
-
-
-
-_Appears in:_
-- [ViewerSpec](#viewerspec)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `hubName` _string_ | HubName is the name of the pod group |  |  |
-| `image` _string_ | Image is the OCI image |  |  |
-| `replicas` _integer_ | Replicas is the number of pods to launch |  |  |
-| `resources` _object (keys:string, values:string)_ | Resources is the number of resources to use (e.g., {"cpu":"4", "memory":"8Gi"}) |  |  |
-| `shm` _string_ | Shm is the amount of shared memory to use (e.g., "1Gi") |  |  |
-| `env` _object (keys:string, values:string)_ | Env |  |  |
-| `proxyType` _string_ | ProxyType straight or normal |  |  |
-| `jupyter` _boolean_ | Jupyter is the flag that enables the jupyter hack to support vanilla jupyter images from jupyter-stack |  |  |
-| `jetBrains` _boolean_ | JetBrains enables the JetBrains hack |  |  |
-| `startScript` _string_ | StartScript is a script (the string is the body of the script) that will run on startup in the main container |  |  |
-| `bottles` _[BottleSpec](#bottlespec) array_ | Bottles to mount into the pod |  |  |
-
-
-#### BottleSpec
-
-
-
-BottleSpec describes a bottle as used in ACE Hub.
-
-
-
-_Appears in:_
-- [ACEHubLaunchTemplate](#acehublaunchtemplate)
-
-| Field | Description | Default | Validation |
-| --- | --- | --- | --- |
-| `name` _string_ | Name is the display name to use for the bottle |  |  |
-| `bottle` _string_ | Bottle is the bottle reference for the bottle (OCI reference or bottleID) |  |  |
-| `selector` _string_ | Selector to use for selecting parts of a bottle.  Different selectors are separated by "\|". |  |  |
-| `ips` _string_ | IPS is the image pull secret to use for pulling bottles where authz is required |  |  |
 
 
 #### ClientConfiguration
@@ -125,6 +81,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `dsn` _[SecretURL](#secreturl)_ | DSN is the database connection string |  |  |
+| `password` _[Secret](#secret)_ | Password is the database account password |  |  |
 
 
 #### Location
@@ -143,8 +100,27 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `name` _string_ | Name is the display name of the telemetry server |  |  |
 | `url` _[SecretURL](#secreturl)_ | URL is the base URL for the telemetry server (does not include the /api) |  |  |
+| `oauth` _[OAuthProvider](#oauthprovider)_ | OAuth defines an OAuth2.0 provider used for authentication. |  |  |
 | `cookies` _object (keys:string, values:[Secret](#secret))_ | Cookies to use for authentication |  |  |
 | `token` _[Secret](#secret)_ | Bearer token to use for authentication |  |  |
+
+
+#### OAuthProvider
+
+
+
+OAuthProvider defines a host and client application ID used for OAuth2.0 Device Grant authentication
+defined by RFC 8628; see https://www.rfc-editor.org/rfc/rfc8628.
+
+
+
+_Appears in:_
+- [Location](#location)
+
+| Field | Description | Default | Validation |
+| --- | --- | --- | --- |
+| `issuer` _string_ | Issuer defines the authorization server. |  |  |
+| `clientID` _string_ | ClientID is the client application identifier. Not a secret.<br />See https://www.rfc-editor.org/rfc/rfc6749#section-2.2 for more info. |  |  |
 
 
 #### ServerConfiguration
@@ -197,7 +173,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `name` _string_ | Name is the name of the view that will be presented to the user |  |  |
 | `accept` _string_ | Accept is the HTTP accept formated string denoting what media types (with priorities) that will be accepted by this viewer. |  |  |
-| `acehub` _[ACEHubLaunchTemplate](#acehublaunchtemplate)_ | ACEHub is the launch template to be launch the viewer |  |  |
+| `acehub` _[HubEnvTemplateSpec](#hubenvtemplatespec)_ | ACEHub is the launch template to be launch the viewer |  |  |
 
 
 #### WebApp

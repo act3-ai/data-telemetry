@@ -21,46 +21,8 @@ LEADER_LINE_VERSION ?= 1.0.7
 MATHJAX_VERSION ?= 3.2.2
 REQUIREJS_VERSION ?= 2.3.6
 
-# Verbosity while running locally
-V ?= 8
-
-# Tool verisons
-CONTROLLER_GEN_VERSION?=v0.14.0
-CRD_REF_DOCS_VERSION?=v0.0.11
-KO_VERSION?=v0.15.2
-GOLANGCILINT_VERSION?=v1.58.2
-
-all: build
-
-.PHONY: generate apidoc
-generate: tool/controller-gen
-	go generate ./...
-
-.PHONY: build
-build: deps
-	@mkdir -p bin
-	go build -tags "sqlite_fts5" -o bin/telemetry ./cmd/telemetry 
-
-.PHONY: build-linux
-build-linux: deps
-	@mkdir -p ci-dist
-	GOOS=linux GOARCH=amd64 go build -o ci-dist/telemetry/linux/amd64/bin/telemetry ./cmd/telemetry
-
-.PHONY: test
-test:
-
-.PHONY: test-go
-test: test-go
-test-go: template
-	go test ./... -tags "sqlite_fts5"
-
-.PHONY: lint
-test: lint
-lint: tool/golangci-lint
-	tool/golangci-lint run
-
 .PHONY: cover
-cover: template
+cover:
 	go clean -testcache
 	- rm coverage.txt
 	go test ./... -coverprofile coverage.txt -coverpkg=$(shell go list)/...
@@ -77,104 +39,9 @@ clean: clean-deps
 	- rm -f testdata/bottle/bottle*.json
 	# go clean -cache
 
-.PHONY: run
-# ./bin/telemetry -v=$(V) serve $(RUN_ARGS) 2> >(jq -j -f log.jq)
-# ./bin/telemetry -v=$(V) serve --logtostderr=false $(RUN_ARGS) | jq -j -f log.jq
-run: build
-	./bin/telemetry -v=$(V) serve $(RUN_ARGS) 2> >(jq -j -f log.jq)
-
-.PHONY: template
-template: build
-	./bin/telemetry -v=$(V) template ./testdata
-
-.PHONY: upload
-upload: template build
-	./bin/telemetry -v=$(V) client upload $(UPLOAD_DIR) $(URL) --all --continue 2> >(jq -j -f log.jq)
-
-# .PHONY: reload
-# reload: template build
-# 	- rm test.db
-# 	./bin/telemetry -v=$(V) client upload $(UPLOAD_DIR) --all 2> >(jq -j -f log.jq)
-	
-.PHONY: download
-download: build
-	@mkdir -p testdata-download
-	./bin/telemetry -v=$(V) client download $(DOWNLOAD_DIR) $(URL) --all --from-latest 2> >(jq -j -f log.jq)
-
-.PHONY: test-webapp
-test-webapp: template
-	hack/test-webapp.sh $(URL)
-
-.PHONY: hub
-hub:
-	@echo "*** Ensure you have an .act3_token file with an ACT3 Gitlab token ***"
-	podman build --secret=id=act3_token,src=.act3_token -t $(IMAGE_REPO)/hub:$(REV) -t $(IMAGE_REPO)/hub:latest .acehub
-	podman push $(IMAGE_REPO)/hub:$(REV)
-	podman push $(IMAGE_REPO)/hub:latest
-
-.PHONY: image
-image: build-linux
-	podman build . -t $(IMAGE_REPO):$(REV) --label version=$(REV)
-	podman push $(IMAGE_REPO):$(REV)
-
 .PHONY: install
 install:
 	go install ./cmd/telemetry
-
-# NOTE This does not support jupyter (we shell out to jupter)
-.PHONY: ko
-ko: tool/ko
-	VERSION=$(REV) KO_DOCKER_REPO=$(IMAGE_REPO) tool/ko build -B --platform=all --image-label version=$(REV) ./cmd/telemetry
-
-tool/controller-gen: tool/.controller-gen.$(CONTROLLER_GEN_VERSION)
-	GOBIN=$(PWD)/tool go install sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_GEN_VERSION)
-
-tool/.controller-gen.$(CONTROLLER_GEN_VERSION):
-	@rm -f tool/.controller-gen.*
-	@mkdir -p tool
-	touch $@
-
-
-tool/crd-ref-docs: tool/.crd-ref-docs.$(CRD_REF_DOCS_VERSION)
-	GOBIN=$(PWD)/tool go install github.com/elastic/crd-ref-docs@$(CRD_REF_DOCS_VERSION)
-
-tool/.crd-ref-docs.$(CRD_REF_DOCS_VERSION):
-	@rm -f tool/.crd-ref-docs.*
-	@mkdir -p tool
-	touch $@
-
-
-tool/ko: tool/.ko.$(KO_VERSION)
-	GOBIN=$(PWD)/tool go install github.com/google/ko@$(KO_VERSION)
-
-tool/.ko.$(KO_VERSION):
-	@rm -f tool/.ko.*
-	@mkdir -p tool
-	touch $@
-
-
-tool/golangci-lint: tool/.golangci-lint.$(GOLANGCILINT_VERSION)
-	GOBIN=$(PWD)/tool go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCILINT_VERSION)
-
-tool/.golangci-lint.$(GOLANGCILINT_VERSION):
-	@rm -f tool/.golangci-lint.*
-	@mkdir -p tool
-	touch $@
-
-
-.PHONY: tool
-tool: tool/controller-gen tool/crd-ref-docs tool/ko tool/golangci-lint
-
-.PHONY: gendoc
-gendoc:
-	- rm docs/cli/*
-	HOME=HOMEDIR ci-dist/telemetry/linux/amd64/bin/telemetry gendocs md --only-commands docs/cli/
-
-.PHONY: apidoc
-apidoc: $(addsuffix .md, $(addprefix docs/apis/config.telemetry.act3-ace.io/, v1alpha1))
-docs/apis/%.md: tool/crd-ref-docs $(wildcard pkg/apis/$*/*_types.go) 
-	@mkdir -p $(@D)
-	tool/crd-ref-docs --config=apidocs.yaml --renderer=markdown --source-path=pkg/apis/$* --output-path=$@
 
 .PHONY: clean-deps
 clean-deps:
@@ -272,12 +139,6 @@ $(ASSET_DIR)/static/libs/requirejs/$(REQUIREJS_VERSION)/require.min.js:
 
 .PHONY: requirejs
 requirejs: $(ASSET_DIR)/static/libs/requirejs/$(REQUIREJS_VERSION)/require.min.js
-
-.PHONY: swagger 
-swagger: #template
-	yq eval --inplace '.paths."/api/bottle".put.requestBody.content."application/json".examples.bottleJSON.value=load_str("testdata/bottle/bottle1.json")' swagger.yml
-	yq eval --inplace '.paths."/api/manifest".put.requestBody.content."application/json".examples.manifestJSON.value=load_str("testdata/manifest/manifest1.json")' swagger.yml
-	yq eval --inplace '.paths."/api/event".put.requestBody.content."application/json".examples.eventJSON.value=load_str("testdata/event/push1.json")' swagger.yml
 
 .PHONY: siggen
 siggen:

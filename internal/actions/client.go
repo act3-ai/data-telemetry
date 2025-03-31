@@ -2,24 +2,28 @@ package actions
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"net/url"
+	"os"
 
-	"github.com/go-chi/chi/v5"
 	"k8s.io/apimachinery/pkg/runtime"
+	"oras.land/oras-go/v2/registry/remote/credentials"
 
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
 	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/oauth2/device"
 )
 
 // ClientConfigOverride is a function used to override the client configuration.
-type ClientConfigOverride func(ctx context.Context, c *v1alpha1.ClientConfiguration) error
+type ClientConfigOverride func(ctx context.Context, c *v1alpha2.ClientConfiguration) error
 
 // Client is the action group for all client commands.
 type Client struct {
@@ -51,13 +55,12 @@ func (action *Client) NewHandler(ctx context.Context) (http.Handler, error) {
 		return nil, err
 	}
 
-	router := chi.NewRouter()
-	router.Use(middleware.DatabaseMiddleware(myDB))
+	serveMux := http.NewServeMux()
 
 	myAPI := api.API{}
-	myAPI.Initialize(router, scheme)
+	myAPI.Initialize(serveMux, scheme)
 
-	return router, nil
+	return middleware.DatabaseMiddleware(myDB)(serveMux), nil
 }
 
 // AddClientConfigOverride adds an override function that will be called in GetConfig to edit config after loading.
@@ -66,12 +69,12 @@ func (action *Client) AddClientConfigOverride(override ...ClientConfigOverride) 
 }
 
 // GetClientConfig returns the client's configuration object.
-func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha1.ClientConfiguration, error) {
+func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha2.ClientConfiguration, error) {
 	log := logger.FromContext(ctx)
 
-	c := &v1alpha1.ClientConfiguration{}
+	c := &v1alpha2.ClientConfiguration{}
 	if err := config.Load(log, action.GetConfigScheme(), c, action.ConfigFiles); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not load config: %w", err)
 	}
 
 	// Loop through override functions, applying each to the configuration
@@ -87,14 +90,52 @@ func (action *Client) GetClientConfig(ctx context.Context) (*v1alpha1.ClientConf
 }
 
 // matchURLConfig will find and return the config file of the url string given and if does not exist create a new config.
-func matchURLConfig(urlString string, clientConfig *v1alpha1.ClientConfiguration) (*v1alpha1.Location, error) {
+func matchURLConfig(urlString string, clientConfig *v1alpha2.ClientConfiguration) (*v1alpha2.Location, error) {
 	for _, location := range clientConfig.Locations {
 		if location.URL == redact.SecretURL(urlString) {
 			return &location, nil
 		}
 	}
-	return &v1alpha1.Location{
+	return &v1alpha2.Location{
 		Name: "",
 		URL:  redact.SecretURL(urlString),
 	}, nil
+}
+
+// authClientOrDefault creates an OAuth *http.Client if necessary, defaulting to
+// the default http client if unnecessary or problems occur.
+func authClientOrDefault(ctx context.Context, loc *v1alpha2.Location) *http.Client {
+	log := logger.FromContext(ctx)
+	httpClient := http.DefaultClient
+	if loc.OAuth.Issuer != "" && loc.OAuth.ClientID != "" {
+		// TODO: Errors here likely should be displayed
+		issuerURL, err := url.Parse(loc.OAuth.Issuer)
+		if err != nil {
+			log.ErrorContext(ctx, "parsing host oauth issuer", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err) //nolint:sloglint
+			goto Recover
+		}
+
+		// promptFn implements device.AuthPromtFn.
+		promptFn := func(ctx context.Context, uri, userCode string) error {
+			_, err := fmt.Fprintf(os.Stderr, "On the device you would like to authenticate, please visit %s?user_code=%s", uri, userCode)
+			return err
+		}
+
+		var credStore credentials.Store
+		credStore, err = credentials.NewStoreFromDocker(credentials.StoreOptions{})
+		if err != nil {
+			log.ErrorContext(ctx, "accessing docker credential store", "error", err)
+			credStore = credentials.NewMemoryStore()
+		}
+
+		authClient, err := device.NewOAuthClient(ctx, issuerURL, string(loc.OAuth.ClientID), credStore, promptFn)
+		if err != nil {
+			log.ErrorContext(ctx, "initializing oauth client", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err) //nolint:sloglint
+			goto Recover
+		}
+		httpClient = authClient
+	}
+
+Recover:
+	return httpClient
 }

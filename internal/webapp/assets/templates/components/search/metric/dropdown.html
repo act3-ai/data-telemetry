@@ -1,0 +1,37 @@
+{{ define "metric-dropdown" }}
+<div class="btn-group">
+    <button class="btn btn-sm btn-primary dropdown-toggle
+    {{ if eq (len .Values.Params.Metrics) (len .Values.MetricNames) }}
+        disabled btn-secondary
+    {{ end }}
+        " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Select a Metric
+    </button>
+
+    <ul id="metric-filter-dropdown" class="dropdown-menu" style="z-index: 1021;">
+        {{ range $i, $metricName := .Values.MetricNames }}
+        {{ $isParameter := false }}
+        {{ range $j, $metricParam := $.Values.Params.Metrics }}
+        {{ $m := regexReplaceAll "(=(.*)|>(.*)|<(.*))" $metricParam "" }}
+        {{ if eq $m $metricName }}
+        {{ $isParameter = true }}
+        {{ break }}
+        {{ end }}
+        {{ end }}
+        {{ if not $isParameter }}
+        <li>
+            <a class="dropdown-item" onclick="onMetricDropdownSelect(this);">{{ trim . }}</a>
+        </li>
+        {{ end }}
+        {{ end }}
+    </ul>
+</div>
+<script>
+    function onMetricDropdownSelect(selectedElement) {
+        selectedElement.dispatchEvent(new CustomEvent("onMetricFilterDropdownSelect", {
+            bubbles: true,
+            detail: { "metricName": selectedElement.innerHTML.trim() },
+        }));
+    }
+</script>
+{{ end }}

@@ -13,9 +13,9 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/version"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/cmd/telemetry/cli/client"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/actions"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/cmd/telemetry/cli/client"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/actions"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // NewTelemetryCmd create a new root command.
@@ -52,13 +52,19 @@ The first configuration file present is used.  Others are ignored.
 }
 
 // ServerConfigurationOverrides applies environment variables to the configuration.
-func ServerConfigurationOverrides(ctx context.Context, c *v1alpha1.ServerConfiguration) error {
+func ServerConfigurationOverrides(ctx context.Context, c *v1alpha2.ServerConfiguration) error {
 	log := logger.FromContext(ctx)
 	// Database overrides
 	name := "ACE_TELEMETRY_DSN"
 	if value, exists := os.LookupEnv(name); exists {
 		log.InfoContext(ctx, "Using environment variable", "name", name)
 		c.DB.DSN = redact.SecretURL(value)
+	}
+
+	name = "ACE_TELEMETRY_DB_PASS"
+	if value, exists := os.LookupEnv(name); exists {
+		log.InfoContext(ctx, "Using environment variable", "name", name)
+		c.DB.Password = redact.Secret(value)
 	}
 
 	// WebApp overrides

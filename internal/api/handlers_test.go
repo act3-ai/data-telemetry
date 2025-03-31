@@ -22,7 +22,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/stretchr/testify/suite"
@@ -35,14 +34,14 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/dbtest"
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/middleware"
-	ttest "gitlab.com/act3-ai/asce/data/telemetry/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/client"
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/types"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/dbtest"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	ttest "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/testing"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	client "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/client"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 )
 
 type HandlersTestSuite struct {
@@ -77,27 +76,24 @@ func (s *HandlersTestSuite) SetupTest() {
 
 	if u.Scheme == "postgres" {
 		// If using postgres, create a temporary database for each test
-		testPgDbDsn, cleanup, err := dbtest.CreateTempPostgresDb(s.T().Name(), u.String())
+		testPgDBDsn, cleanup, err := dbtest.CreateTempPostgresDB(s.T().Name(), u.String())
 		s.NoError(err, "could not create test database in postgres with DNS %s", u.String())
-		u, err = url.Parse(testPgDbDsn)
-		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDbDsn)
+		u, err = url.Parse(testPgDBDsn)
+		s.NoError(err, "could not URL parse test Postgres dsn %s", testPgDBDsn)
 		s.T().Cleanup(cleanup)
 	}
-	myDB, err := db.Open(s.ctx, v1alpha1.Database{
+	myDB, err := db.Open(s.ctx, v1alpha2.Database{
 		DSN: redact.SecretURL(u.String()),
 	}, scheme)
 	s.NoError(err)
 
-	router := chi.NewRouter()
-	router.Use(
-		httputil.LoggingMiddleware(s.log),
-		middleware.DatabaseMiddleware(myDB),
-	)
+	serveMux := http.NewServeMux()
+	wrappedServeMux := httputil.LoggingMiddleware(s.log)(middleware.DatabaseMiddleware(myDB)(serveMux))
 
 	a := &api.API{}
-	a.Initialize(router, scheme)
+	a.Initialize(serveMux, scheme)
 
-	s.server = httptest.NewServer(router)
+	s.server = httptest.NewServer(wrappedServeMux)
 }
 
 func (s *HandlersTestSuite) TearDownTest() {

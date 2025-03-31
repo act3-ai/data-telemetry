@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/pkg/client"
+	client "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/client"
 )
 
 // Download is the action for the download operations.
@@ -39,7 +39,7 @@ func (action *Download) Run(ctx context.Context, path, telemetryServerURL string
 		return err
 	}
 
-	c, err := client.NewSingleClientFromConfig(*newconfig)
+	c, err := client.NewSingleClient(authClientOrDefault(ctx, newconfig), telemetryServerURL, "")
 	if err != nil {
 		return err
 	}

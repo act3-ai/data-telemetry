@@ -26,6 +26,7 @@ telemetry serve [flags]
 ## Options
 
 ```plaintext
+Options:
   -h, --help            help for serve
   -l, --listen string   Interface and port to listen on.
                         Use :8100 to listen all on interfaces on the standard port. (default "localhost:8100")
@@ -34,9 +35,10 @@ telemetry serve [flags]
 ## Options inherited from parent commands
 
 ```plaintext
+Global options:
       --config stringArray         server configuration file location (setable with env "ACE_TELEMETRY_CONFIG"). 
                                    The first configuration file present is used.  Others are ignored.
-                                    (default [ace-telemetry-config.yaml,HOMEDIR/.config/ace/telemetry/config.yaml,/etc/ace/telemetry/config.yaml])
+                                    (default [ace-telemetry-config.yaml,/root/.config/ace/telemetry/config.yaml,/etc/ace/telemetry/config.yaml])
   -v, --verbosity strings[=warn]   Logging verbosity level (also setable with environment variable ACE_TELEMETRY_VERBOSITY)
-                                   Aliases: error=0, warn=4, info=8, debug=12 (default [error])
+                                   Aliases: error=0, warn=4, info=8, debug=12 (default [warn])
 ```

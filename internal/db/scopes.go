@@ -14,7 +14,7 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/internal/features"
+	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/features"
 )
 
 // FilterByDigest will use the digest to filter the query for an object type
@@ -421,5 +421,57 @@ func FilterByParts(partDigests []digest.Digest) func(db *gorm.DB) *gorm.DB {
 		}
 
 		return partFilteredBottleQuery
+	}
+}
+
+// FilterByMetric is a scope that will show bottles that have metrics matching the filter
+// filters may take the form of "MetricName>Value", "MetricName<Value' or just "MetricName".
+func FilterByMetric(metricFilters []string) func(db *gorm.DB) *gorm.DB {
+	return func(con *gorm.DB) *gorm.DB {
+		metricFilteredBottleQuery := con.Joins("INNER JOIN digests ON digests.data_id = bottles.data_id")
+		for _, metric := range metricFilters {
+			var filterValueString string
+			var metricValueFilterQuery string
+
+			metricName := strings.TrimSpace(metric)
+			if strings.Contains(metric, ">") {
+				metricName, filterValueString, _ = strings.Cut(metric, ">")
+				metricValueFilterQuery = "metrics.value > ?"
+			} else if strings.Contains(metric, "<") {
+				metricName, filterValueString, _ = strings.Cut(metric, "<")
+				metricValueFilterQuery = "metrics.value < ?"
+			}
+
+			bottleDigestsWithMetrics := con.Session(&gorm.Session{NewDB: true}).
+				Select("digests.digest").
+				Table("digests").
+				Joins("INNER JOIN bottles ON bottles.data_id = digests.data_id").
+				Joins("INNER JOIN metrics ON metrics.bottle_id = bottles.id").
+				Where("metrics.name = ?", metricName)
+
+			if len(filterValueString) > 0 {
+				f, err := strconv.ParseFloat(filterValueString, 64)
+				if err != nil {
+					con.AddError(fmt.Errorf("metric filter value must be a float for %s: %s", metricName, filterValueString)) //nolint:errcheck
+					return con
+				}
+				bottleDigestsWithMetrics = bottleDigestsWithMetrics.Where(metricValueFilterQuery, f)
+			}
+
+			metricFilteredBottleQuery = metricFilteredBottleQuery.Where("digests.digest IN (?)", bottleDigestsWithMetrics)
+		}
+
+		return metricFilteredBottleQuery
+	}
+}
+
+// SortByMetric is a scope that will sort bottles by a given metric's value.
+func SortByMetric(metricName string, ascending bool) func(db *gorm.DB) *gorm.DB {
+	return func(con *gorm.DB) *gorm.DB {
+		orderBy := "MAX(metrics.value)"
+		if !ascending {
+			orderBy = fmt.Sprintf("%s desc", orderBy)
+		}
+		return con.Joins("JOIN metrics ON metrics.bottle_id = bottles.id AND metrics.name = ?", metricName).Order(orderBy)
 	}
 }

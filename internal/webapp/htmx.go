@@ -32,3 +32,15 @@ func setCurrentURLParams(w http.ResponseWriter, r *http.Request, params *bottleR
 	w.Header().Add("HX-Push-Url", newURL.String())
 	return nil
 }
+
+func removeUnsetURLParams(values *url.Values) url.Values {
+	newValues := url.Values{}
+	for k, vSlice := range *values {
+		if values.Get(k) != "" {
+			for _, v := range vSlice {
+				newValues.Add(k, v)
+			}
+		}
+	}
+	return newValues
+}
