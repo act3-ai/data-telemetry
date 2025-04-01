@@ -111,8 +111,8 @@ func (r *Release) Version(ctx context.Context) (string, error) {
 
 // Generate the initial release notes
 func (r *Release) Notes(ctx context.Context,
-	// helm chart version
-	chartVersion string,
+	// release version
+	version string,
 ) (string, error) {
 	notes, err := r.gitCliffContainer().
 		WithExec([]string{"git-cliff", "--bump", "--unreleased", "--strip=all"}).
@@ -121,10 +121,17 @@ func (r *Release) Notes(ctx context.Context,
 		return "", err
 	}
 
+	// TODO: The helm chart is tagged as '1.2.3' while images are tagged 'v1.2.3', this is a
+	// legacy release process convention that we may want to change.
 	b := &strings.Builder{}
-	b.WriteString("| Component | Helm Chart Version |\n")
-	b.WriteString("| --------- | ------------------ |\n")
-	fmt.Fprintf(b, "| %9s | %18s |\n", "telemetry", chartVersion)
+	b.WriteString("| Charts |\n")
+	b.WriteString("| ----------------------------------------------------- |\n")
+	fmt.Fprintf(b, "| registry.gitlab.com/act3-ai/asce/data/telemetry/charts/telemetry:%s |", version)
+
+	b.WriteString("| Images |\n")
+	b.WriteString("| --------------------------------------------------------- |\n")
+	fmt.Fprintf(b, "| registry.gitlab.com/act3-ai/asce/data/telemetry:%s |\n", "v"+version)
+	fmt.Fprintf(b, "| registry.gitlab.com/act3-ai/asce/data/telemetry/slim:%s |\n", "v"+version)
 
 	b.WriteRune('\n')
 	b.WriteString("### ")
