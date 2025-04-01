@@ -252,7 +252,8 @@ publish)
     publishImages
 
     # scan images with ace-dt
-    dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN scan --sources artifacts.txt
+    # TODO: Uncomment me when we have a suitable public registry for custom artifact types.
+    # dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN scan --sources artifacts.txt
 
     # notify everyone
     # dagger call announce --token=env:MATTERMOST_ACCESS_TOKEN
