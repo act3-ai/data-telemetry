@@ -29,7 +29,6 @@ const (
 	imageAcedt     = "registry.gitlab.com/act3-ai/asce/data/tool:v1.15.9"
 	imageGrype     = "anchore/grype:latest"
 	imageSyft      = "anchore/syft:latest"
-	imageUbuntu    = "docker.io/library/ubuntu:24.04"
 	imageGo        = "golang:latest" // github.com/sagikazarmark/daggerverse/go convention
 	imagePostgres  = "postgres:17-alpine"
 
