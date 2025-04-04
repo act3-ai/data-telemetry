@@ -7,8 +7,6 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
-
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 )
 
@@ -41,6 +39,7 @@ type Database struct {
 }
 
 // WebApp is the configuration for the telemetry web application.
+// Not available to public users.
 type WebApp struct {
 	// ACEHubs is a list of ace hub instances that will be available to users of the web application for viewing bottles
 	ACEHubs []ACEHubInstance `json:"acehubs,omitempty"`
@@ -59,6 +58,7 @@ type WebApp struct {
 }
 
 // ACEHubInstance is an existing instance of ACE Hub that will be offered as a bottle viewer engine.
+// Not available to public users.
 type ACEHubInstance struct {
 	// Name is the name of the instance for display purposes
 	Name string `json:"name"`
@@ -67,22 +67,8 @@ type ACEHubInstance struct {
 	URL string `json:"url"`
 }
 
-// BottleSpec describes a bottle as used in ACE Hub.
-type BottleSpec struct {
-	// Name is the display name to use for the bottle
-	Name string `json:"name" query:"name"`
-
-	// Bottle is the bottle reference for the bottle (OCI reference or bottleID)
-	Bottle string `json:"bottle" query:"bottle"`
-
-	// Selector to use for selecting parts of a bottle.  Different selectors are separated by "|".
-	Selector string `json:"selector" query:"selector"`
-
-	// IPS is the image pull secret to use for pulling bottles where authz is required
-	IPS string `json:"ips" query:"ips"`
-}
-
 // ViewerSpec defines how to launch something in an environment.
+// Not available to public users.
 type ViewerSpec struct {
 	// Name is the name of the view that will be presented to the user
 	Name string `json:"name"`
@@ -91,7 +77,7 @@ type ViewerSpec struct {
 	Accept string `json:"accept"`
 
 	// ACEHub is the launch template to be launch the viewer
-	ACEHub hub.HubEnvTemplateSpec `json:"acehub"`
+	ACEHub HubEnvTemplateSpec `json:"acehub"`
 }
 
 // LogValue implements slog.LogValuer.
@@ -126,6 +112,7 @@ db:
   # To use PostgreSQL
   # dsn: "postgres://tester:myPassword@localhost/test"
 
+# The remaining configuration is not available to public users.
 webapp:
   # path to the jupyter executable
   jupyter: /home/user/env/bin/jupyter
