@@ -9,8 +9,6 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
-
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
@@ -28,11 +26,11 @@ func Test_getViewerURL(t *testing.T) {
 		bottle        digest.Digest
 		partSelectors []string
 	}
-	defaultHub := hub.HubEnvTemplateSpec{
+	defaultHub := v1alpha2.HubEnvTemplateSpec{
 		ServiceAccountName: "test-account",
 		EnvSecretPrefix:    "pfx",
 		QueueName:          "myQueue",
-		GPU: &hub.GPU{
+		GPU: &v1alpha2.GPU{
 			Type:  "myGPU",
 			Count: 2,
 		},
@@ -44,7 +42,7 @@ func Test_getViewerURL(t *testing.T) {
 		},
 		Script:       `#!/bin/bash; echo "Hello World!";`,
 		SharedMemory: &resource.Quantity{},
-		Bottles: []hub.BottleSpec{
+		Bottles: []v1alpha2.BottleSpec{
 			{
 				Name:      "myBottle",
 				BottleRef: bottleSha,
@@ -52,7 +50,7 @@ func Test_getViewerURL(t *testing.T) {
 				IPS:       "myImagePullSecret",
 			},
 		},
-		Ports: []hub.Port{{Name: "myPort", Number: 8080, ProxyType: "normal"}},
+		Ports: []v1alpha2.Port{{Name: "myPort", Number: 8080, ProxyType: "normal"}},
 	}
 
 	defaultArgs := args{
