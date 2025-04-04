@@ -14,8 +14,6 @@ import (
 	"github.com/hetiansu5/urlquery"
 	"github.com/opencontainers/go-digest"
 
-	hub "git.act3-ace.com/ace/hub/api/v6/pkg/apis/hub.act3-ace.io/v1beta1"
-
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
 	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
@@ -126,7 +124,7 @@ func (a *WebApp) FindViewers(specs []v1alpha2.ViewerSpec, bottle digest.Digest, 
 	return viewers
 }
 
-func addArtifactEnvs(newSpec *hub.HubEnvTemplateSpec, artifact *db.PublicArtifact) {
+func addArtifactEnvs(newSpec *v1alpha2.HubEnvTemplateSpec, artifact *db.PublicArtifact) {
 	if newSpec.Env == nil {
 		newSpec.Env = make(map[string]string, 1)
 	}
@@ -146,9 +144,9 @@ func getViewerURL(spec v1alpha2.ViewerSpec, hubInstanceURL string, bottle digest
 
 	// Add the bottle
 	if newSpec.Bottles == nil {
-		newSpec.Bottles = make([]hub.BottleSpec, 0, 1)
+		newSpec.Bottles = make([]v1alpha2.BottleSpec, 0, 1)
 	}
-	newSpec.Bottles = append(newSpec.Bottles, hub.BottleSpec{
+	newSpec.Bottles = append(newSpec.Bottles, v1alpha2.BottleSpec{
 		Name:      HubBottleName,
 		BottleRef: bottle.String(),
 		Selector:  partSelectors,
