@@ -18,8 +18,8 @@ import (
 
 	// "github.com/fsnotify/fsnotify".
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 
 	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )

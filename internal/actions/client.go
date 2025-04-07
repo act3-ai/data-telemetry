@@ -10,10 +10,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"oras.land/oras-go/v2/registry/remote/credentials"
 
+	"github.com/act3-ai/go-common/pkg/config"
+	"github.com/act3-ai/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/redact"
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-	"gitlab.com/act3-ai/asce/go-common/pkg/config"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/api"
 	"github.com/act3-ai/data-telemetry/v3/internal/db"

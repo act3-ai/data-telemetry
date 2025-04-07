@@ -5,7 +5,7 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	"github.com/act3-ai/go-common/pkg/redact"
 )
 
 // +kubebuilder:object:root=true

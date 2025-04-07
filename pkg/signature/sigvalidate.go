@@ -17,7 +17,7 @@ import (
 	"github.com/opencontainers/go-digest"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/logger"
 )
 
 // simpleTrustPolicy creates a basic trust policy for certificate validation.

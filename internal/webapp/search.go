@@ -15,7 +15,7 @@ import (
 	"gorm.io/gorm"
 	"k8s.io/apimachinery/pkg/labels"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/httputil"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/db"
 	"github.com/act3-ai/data-telemetry/v3/internal/middleware"

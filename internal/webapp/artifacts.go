@@ -21,8 +21,8 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/opencontainers/go-digest"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/db"
 	"github.com/act3-ai/data-telemetry/v3/internal/middleware"

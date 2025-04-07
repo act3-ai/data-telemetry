@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/embedutil"
+	"github.com/act3-ai/go-common/pkg/embedutil"
 )
 
 // apiDocs contains documentation for usage of the Telemetry API

@@ -8,8 +8,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/db"
+	"github.com/act3-ai/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 )
 
 // API implements the REST API.

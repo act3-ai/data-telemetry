@@ -15,7 +15,7 @@ import (
 	"oras.land/oras-go/v2/registry/remote/auth"
 	"oras.land/oras-go/v2/registry/remote/credentials"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/logger"
 )
 
 // AuthPromptFn prompts the authorization of a device by providing

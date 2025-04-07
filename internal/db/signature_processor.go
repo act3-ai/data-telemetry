@@ -17,8 +17,8 @@ import (
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 
 	telemsig "github.com/act3-ai/data-telemetry/v3/pkg/signature"
 	"github.com/act3-ai/data-telemetry/v3/pkg/types"

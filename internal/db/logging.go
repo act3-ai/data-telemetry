@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	slogger "gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	slogger "github.com/act3-ai/go-common/pkg/logger"
 )
 
 // NewGormLogger creates a GORM compatible logger that actually logs to the given logr.Logger

@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/act3-ai/data-telemetry/v3/pkg/types"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/httputil"
 )
 
 // EventProcessorVersion is the current version of the processor code.  This is incremented after each measurable change to the EventProcessor().

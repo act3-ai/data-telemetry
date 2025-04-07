@@ -5,6 +5,7 @@ go 1.23.5
 require (
 	code.cloudfoundry.org/bytefmt v0.33.0
 	github.com/Masterminds/sprig/v3 v3.3.0
+	github.com/act3-ai/go-common v0.0.0-20250407153809-0595abfee64d
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
@@ -21,7 +22,6 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/zitadel/oidc/v3 v3.34.1
 	gitlab.com/act3-ai/asce/data/schema v1.2.14
-	gitlab.com/act3-ai/asce/go-common v0.0.0-20250321204844-734a59daa6c2
 	golang.org/x/oauth2 v0.25.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/driver/sqlite v1.5.7

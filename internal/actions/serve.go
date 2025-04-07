@@ -8,9 +8,9 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/app"
 	"github.com/act3-ai/data-telemetry/v3/internal/db"

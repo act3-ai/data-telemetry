@@ -16,7 +16,7 @@ import (
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/logger"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/db"
 )

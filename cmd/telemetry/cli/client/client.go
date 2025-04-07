@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/actions"
-	"gitlab.com/act3-ai/asce/go-common/pkg/config"
+	"github.com/act3-ai/go-common/pkg/config"
 )
 
 // NewClientCmd creates a new "upload" command.
