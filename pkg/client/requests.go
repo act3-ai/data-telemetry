@@ -20,9 +20,9 @@ import (
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 
+	"github.com/act3-ai/bottle-schema/pkg/mediatype"
 	"github.com/act3-ai/go-common/pkg/httputil"
 	"github.com/act3-ai/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
 
 	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"github.com/act3-ai/data-telemetry/v3/pkg/types"

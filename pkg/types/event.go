@@ -6,7 +6,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/opencontainers/go-digest"
 
-	val "gitlab.com/act3-ai/asce/data/schema/pkg/validation"
+	val "github.com/act3-ai/bottle-schema/pkg/validation"
 )
 
 // EventAction is string constant that indicates a type of event, such as push or pull.

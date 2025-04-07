@@ -27,12 +27,12 @@ import (
 	"github.com/stretchr/testify/suite"
 	"k8s.io/apimachinery/pkg/runtime"
 
+	bottle "github.com/act3-ai/bottle-schema/pkg/apis/data.act3-ace.io"
+	"github.com/act3-ai/bottle-schema/pkg/mediatype"
 	"github.com/act3-ai/go-common/pkg/httputil"
 	"github.com/act3-ai/go-common/pkg/logger"
 	"github.com/act3-ai/go-common/pkg/redact"
 	"github.com/act3-ai/go-common/pkg/test"
-	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
 
 	"github.com/act3-ai/data-telemetry/v3/internal/api"
 	"github.com/act3-ai/data-telemetry/v3/internal/db"

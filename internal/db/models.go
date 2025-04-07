@@ -11,8 +11,8 @@ import (
 	"gorm.io/gorm"
 	"k8s.io/apimachinery/pkg/labels"
 
-	"gitlab.com/act3-ai/asce/data/schema/pkg/selectors"
-	"gitlab.com/act3-ai/asce/data/schema/pkg/util"
+	"github.com/act3-ai/bottle-schema/pkg/selectors"
+	"github.com/act3-ai/bottle-schema/pkg/util"
 )
 
 // Model is the base of all records.
