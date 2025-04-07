@@ -20,12 +20,12 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
 	"gitlab.com/act3-ai/asce/go-common/pkg/test"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
-	ttest "gitlab.com/act3-ai/asce/data/telemetry/v3/internal/testing"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
+	"github.com/act3-ai/data-telemetry/v3/internal/api"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/middleware"
+	ttest "github.com/act3-ai/data-telemetry/v3/internal/testing"
+	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 )
 
 type MultiTestSuite struct {

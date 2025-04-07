@@ -12,8 +12,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/app"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/app"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
 )
 
 // Serve is the action for starting the server.

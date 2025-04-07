@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
 )
 
 // CreateTempPostgresDB creates a new database in a postgres instance with a given name and dsn and returns the new dsn and a cleanup function.

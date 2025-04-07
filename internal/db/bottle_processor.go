@@ -10,9 +10,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 
+	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 	latest "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io/v1"
 	"gitlab.com/act3-ai/asce/data/schema/pkg/util"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 )
 

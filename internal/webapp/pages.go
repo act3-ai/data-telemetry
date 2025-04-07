@@ -22,8 +22,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/middleware"
 )
 
 type bottleResultEntry struct {
