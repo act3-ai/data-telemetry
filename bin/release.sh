@@ -191,13 +191,6 @@ prepare)
     # fetch css and js
     make deps
 
-    # template testdata
-    dagger call \
-        test \
-        template-test-data \
-        directory --path testdata \
-        export --path testdata
-
     # auto-gen kube api
     dagger call generate \
         export --path=./pkg/apis/config.telemetry.act3-ace.io
