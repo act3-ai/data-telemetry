@@ -20,8 +20,7 @@ import (
 
 const (
 	// repository information
-	gitlabHost    = "https://gitlab.com"
-	gitlabProject = "act3-ai/asce/data/telemetry"
+	gitRepo = "act3-ai/data-telemetry"
 
 	// images
 	imageGitlabCLI = "registry.gitlab.com/gitlab-org/cli:latest"
