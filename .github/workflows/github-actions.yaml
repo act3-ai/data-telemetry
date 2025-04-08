@@ -18,8 +18,7 @@ jobs:
       - name: Prepare
         run: |
             make deps
-            dagger call generate export --path=./pkg/apis/config.telemetry.act3-ace.io
-
+            
       - name: Lint
         run: dagger call lint all
 
