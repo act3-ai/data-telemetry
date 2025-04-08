@@ -89,7 +89,7 @@ linters:
       ignore-package-globs:
         - encoding/*
         - sigs.k8s.io/yaml
-        - gitlab.com/*
+        - github.com/act3-ai/data-telemetry/*
   exclusions:
     generated: lax
     presets:
@@ -106,7 +106,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - gitlab.com/act3-ai/asce
+        - github.com/act3-ai/data-telemetry
   exclusions:
     generated: lax
     paths:
