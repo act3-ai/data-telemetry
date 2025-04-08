@@ -70,7 +70,7 @@ func bottleURI(hashScheme string, dgst digest.Digest, partSelectors ...string) (
 	// Construct the query parameters
 	partSelectorLabelSet, err := selectors.Parse(partSelectors)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("parsing selectors: %w", err)
 	}
 
 	for _, sel := range partSelectorLabelSet {

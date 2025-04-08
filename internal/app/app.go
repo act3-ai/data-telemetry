@@ -13,12 +13,13 @@ import (
 	"gorm.io/gorm"
 	"k8s.io/apimachinery/pkg/runtime"
 
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/httputil/promhttputil"
+
 	"github.com/act3-ai/data-telemetry/v3/internal/api"
 	mware "github.com/act3-ai/data-telemetry/v3/internal/middleware"
 	"github.com/act3-ai/data-telemetry/v3/internal/webapp"
 	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	"github.com/act3-ai/go-common/pkg/httputil"
-	"github.com/act3-ai/go-common/pkg/httputil/promhttputil"
 )
 
 // DatabaseType is the type of the database being used.

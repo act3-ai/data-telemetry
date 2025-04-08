@@ -12,8 +12,9 @@ import (
 
 	latest "github.com/act3-ai/bottle-schema/pkg/apis/data.act3-ace.io/v1"
 	"github.com/act3-ai/bottle-schema/pkg/util"
-	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 	"github.com/act3-ai/go-common/pkg/httputil"
+
+	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 )
 
 // BottleProcessorVersion is the current version of the processor code.  This is incremented after each measurable change to the BottleProcessor().

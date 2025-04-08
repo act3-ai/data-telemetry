@@ -10,8 +10,9 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 	"github.com/act3-ai/go-common/pkg/logger"
+
+	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 )
 
 // ensure Client interface implementation.

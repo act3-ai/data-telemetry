@@ -46,7 +46,7 @@ func (action *Client) NewHandler(ctx context.Context) (http.Handler, error) {
 
 	scheme := runtime.NewScheme()
 	if err := bottle.AddToScheme(scheme); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("adding bottle to scheme: %w", err)
 	}
 
 	// connect directly to the DB

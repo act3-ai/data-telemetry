@@ -96,7 +96,7 @@ type HubEnvTemplateSpec struct {
 	Ports []Port `json:"ports,omitempty" yaml:"ports,omitempty"`
 }
 
-// ProxyTypes
+// ProxyTypes.
 const (
 	// ProxyTypeStraight is for services that do not support URL rewriting.  This includes Jupyter where they use absolute paths for data.
 	// The service needs to know the relative path prefix used to access the pod, the environment variable $ACE_URL_PREFIX can be utilized.
@@ -105,11 +105,11 @@ const (
 	// ProxyTypeNormal is used when a service has no absolute paths and thus supports being proxied through a URL re-writing HTTP reverse proxy.
 	ProxyTypeNormal = "normal"
 
-	// ProxyTypeSubdoman is used to create a subdomain for the hubenv
+	// ProxyTypeSubdoman is used to create a subdomain for the hubenv.
 	ProxyTypeSubdomain = "subdomain"
 )
 
-// Port describes a listening HTTP server for access to services within the pod
+// Port describes a listening HTTP server for access to services within the pod.
 type Port struct {
 	// Name is used to describe the usage of the port (e.g., tensorboard, vscode, analytics)
 	// +kubebuilder:validation:Required

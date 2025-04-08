@@ -17,9 +17,6 @@ Without Defaults:
     - GITHUB_REG_TOKEN - write:packages access
     - GITHUB_REG_USER  - username of GITHUB_REG_TOKEN owner
 
-With Defaults:
-    - ACE_TELEMETRY_RELEASE_NETRC=~/.netrc
-
 EOF
     exit 1
 }
@@ -32,7 +29,6 @@ set -x
 
 registry=ghcr.io
 registryRepo=$registry/act3-ai/data-telemetry
-netrcPath=${ACE_TELEMETRY_RELEASE_NETRC:=~/.netrc}
 
 # Extract the major version of a release.
 parseMajor() {

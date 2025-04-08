@@ -34,7 +34,7 @@ func (action *Serve) Run(ctx context.Context) error {
 
 	scheme := runtime.NewScheme()
 	if err := bottle.AddToScheme(scheme); err != nil {
-		return err
+		return fmt.Errorf("adding bottle to scheme: %w", err)
 	}
 
 	myDB, err := db.Open(ctx, serverConfig.DB, scheme)

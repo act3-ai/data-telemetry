@@ -4,8 +4,9 @@ package client
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/act3-ai/data-telemetry/v3/internal/actions"
 	"github.com/act3-ai/go-common/pkg/config"
+
+	"github.com/act3-ai/data-telemetry/v3/internal/actions"
 )
 
 // NewClientCmd creates a new "upload" command.
