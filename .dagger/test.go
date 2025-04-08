@@ -86,9 +86,7 @@ func (tt *Test) Functional(ctx context.Context) (string, error) {
 		return downloadResult, err
 	}
 
-	webappResult, err := dag.Go().
-		WithSource(tt.Source).
-		Container().
+	webappResult, err := tt.TemplateTestData(ctx).
 		WithServiceBinding("server", telemServer).
 		WithExec([]string{"hack/test-webapp.sh", telemEndpoint}).
 		Stdout(ctx)
