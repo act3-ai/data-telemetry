@@ -6,7 +6,7 @@ image:
   repository: ghcr.io/act3-ai/data-telemetry
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v3.1.2"
+  tag: "v3.1.3"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

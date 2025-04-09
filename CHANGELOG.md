@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.3] - 2025-04-09
+
+### 🐛 Bug Fixes (chart)
+
+- *(chart)* Image repository default value
+- *(chart)* Update default values repository to ghcr.io
+
+### 🐛 Bug Fixes (config)
+
+- *(config)* Remove private hub/api dependency
+
+### 💼 Other
+
+- Add github actions workflow
+- *(go)* Appease godot
+- *(markdown)* Appease markdownlint
+- Appease various linters
+- *(markdown)* Remove gitlab template exclusion from markdownlint config
+- Enable continue on error for all job steps, after necessary setup
+- Fix release script to build binaries after the release commit is made
+
+### 📦 Dependencies
+
+- Switch ace-dt image to gitlab.com release v1.15.8
+- Bump ace-dt image to v1.15.9
+- Replace references to gitlab.com/act3-ai/asce/go-common with github.com/act3-ai/go-common
+- Replace references to gitlab.com/act3-ai/asce/data/schema with github.com/act3-ai/bottle-schema
+- Bump go-common to 0fe79ee33711
+- Bump code.cloudfoundry.org/bytefmt to v0.36.0
+- Bump github.com/go-echarts/go-echarts/v2 to v2.5.2
+- Bump github.com/prometheus/client_golang to v1.22.0
+- Bump github.com/zitadel/oidc/v3 to v3.37.0
+- Bump golang.org/x/oauth2 to v0.29.0
+- Bump k8s.io/api to v0.32.3
+- Bump github.com/golang-jwt/jwt/v4 to v4.5.2
+
+### 🗡️ Dagger
+
+- Bump to v0.18.0
+- Add table of images to release notes
+- *(release)* Update git-cliff changelong generation to prepend only
+- Bump to v0.18.2
+- *(deps)* Bump golangci-lint module to v0.9.0
+- *(deps)* Bump registry-config module to v0.8.0
+- *(test)* Fix functional testdata templating
+- *(lint)* Add go subcommand for only linting go files
+- Overhaul build, test, and release for github
+- Remove gitlab image const
+- *(release)* Fix formatting of release notes images table
+
 ## [3.1.2] - 2025-03-31
 
 ### Deps

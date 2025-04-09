@@ -1,3 +1,4 @@
+telemetry gendocs markdown
 ---
 title: telemetry gendocs md
 description: Generate documentation in Markdown format
@@ -22,7 +23,6 @@ telemetry gendocs md [dir] [flags]
 ## Aliases
 
 ```plaintext
-telemetry gendocs markdown
 ```
 
 ## Options
