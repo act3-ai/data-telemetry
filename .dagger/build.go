@@ -247,30 +247,6 @@ func (t *Telemetry) ImageIpynbIndex(ctx context.Context,
 		})
 }
 
-// Create an image tailored for ace hub.
-func (t *Telemetry) ImageHub(ctx context.Context,
-	// image version
-	version string,
-	// gitlab api access token name
-	secretName string,
-	// gitlab api access token value
-	secretValue *dagger.Secret,
-) (*dagger.Container, error) {
-	tk, err := secretValue.Plaintext(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("getting plaintext secret value: %w", err)
-	}
-
-	ctr := t.Source.Directory(".acehub").
-		// At this point in time we only publish a linux/amd64 hub image
-		DockerBuild(dagger.DirectoryDockerBuildOpts{
-			Platform: "linux/amd64",
-			Secrets:  []*dagger.Secret{dag.SetSecret(secretName, tk)},
-		})
-
-	return withCommonLabels(ctr, version), nil
-}
-
 // withCommonLabels applies common labels to a container, e.g. maintainers, vendor, etc.
 func withCommonLabels(ctr *dagger.Container, version string) *dagger.Container {
 	return ctr.
