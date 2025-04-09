@@ -216,13 +216,6 @@ prepare)
 
     version=$(cat VERSION)
 
-    # build for all supported platforms
-    assetsDir=bin/release/assets # changes to this path must be reflected in .dagger/release.go Publish()
-    mkdir -p "$assetsDir"
-    dagger call \
-        build-platforms --version="$version" \
-        export --path="$assetsDir"
-
     echo "Please review the local changes, especially releases/$version.md"
     ;;
 
@@ -247,6 +240,13 @@ approve)
 
 publish)
     version=$(cat VERSION)
+
+    # build for all supported platforms
+    assetsDir=bin/release/assets # changes to this path must be reflected in .dagger/release.go Publish()
+    mkdir -p "$assetsDir"
+    dagger call \
+        build-platforms --version="$version" \
+        export --path="$assetsDir"
 
     # publish release, along with release assets
     dagger call \
