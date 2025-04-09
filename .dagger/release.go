@@ -145,7 +145,7 @@ func (r *Release) Notes(ctx context.Context,
 	b := &strings.Builder{}
 	b.WriteString("| Charts |\n")
 	b.WriteString("| ----------------------------------------------------- |\n")
-	fmt.Fprintf(b, "| ghcr.io/act3-ai/data-telemetry/charts/telemetry:%s |", version)
+	fmt.Fprintf(b, "| ghcr.io/act3-ai/data-telemetry/charts/telemetry:%s |\n\n", version)
 
 	b.WriteString("| Images |\n")
 	b.WriteString("| --------------------------------------------------------- |\n")
