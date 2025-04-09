@@ -21,16 +21,12 @@ jobs:
             
       - name: Lint
         run: dagger call lint all
-        continue-on-error: true
 
       - name: Test
         run: dagger call test all
-        continue-on-error: true
     
       - name: VulnCheck
         run: dagger call vuln-check
-        continue-on-error: true
 
       - name: Build
         run: dagger call build-platforms
-        continue-on-error: true
