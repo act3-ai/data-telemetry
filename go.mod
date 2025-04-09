@@ -8,7 +8,7 @@ require (
 	github.com/act3-ai/bottle-schema v1.2.16
 	github.com/act3-ai/go-common v0.0.0-20250408144520-0fe79ee33711
 	github.com/aohorodnyk/mimeheader v0.0.6
-	github.com/go-echarts/go-echarts/v2 v2.3.3
+	github.com/go-echarts/go-echarts/v2 v2.5.2
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gomarkdown/markdown v0.0.0-20250311123330-531bef5e742b
 	github.com/gorilla/schema v1.4.1
