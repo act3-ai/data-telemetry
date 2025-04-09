@@ -7,7 +7,6 @@ globs:
 
 ignores:
   - "CHANGELOG.md"
-  - ".gitlab/issue_templates/**"
   - "charts/telemetry/charts/postgresql/**"
   - "docs/cli/**"
   - "docs/apis/**"
