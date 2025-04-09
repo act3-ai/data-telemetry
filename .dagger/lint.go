@@ -43,11 +43,7 @@ func (l *Lint) All(ctx context.Context,
 	p.Go(func(ctx context.Context) (string, error) {
 		ctx, span := Tracer().Start(ctx, "golangci-lint")
 		defer span.End()
-		return dag.GolangciLint().
-			Run(l.Source, dagger.GolangciLintRunOpts{
-				Timeout: "5m",
-			}).
-			Stdout(ctx)
+		return l.Go(ctx)
 	})
 
 	p.Go(func(ctx context.Context) (string, error) {
@@ -118,4 +114,13 @@ func (l *Lint) Shellcheck(ctx context.Context,
 		return err.Error(), err
 	}
 	return "", nil
+}
+
+// Lint golang files.
+func (l *Lint) Go(ctx context.Context) (string, error) {
+	return dag.GolangciLint().
+		Run(l.Source, dagger.GolangciLintRunOpts{
+			Timeout: "5m",
+		}).
+		Stdout(ctx)
 }

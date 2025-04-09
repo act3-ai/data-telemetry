@@ -11,8 +11,8 @@ import (
 	"github.com/Masterminds/sprig/v3"
 	"github.com/opencontainers/go-digest"
 
-	"gitlab.com/act3-ai/asce/data/schema/pkg/mediatype"
-	"gitlab.com/act3-ai/asce/data/schema/pkg/selectors"
+	"github.com/act3-ai/bottle-schema/pkg/mediatype"
+	"github.com/act3-ai/bottle-schema/pkg/selectors"
 )
 
 func fileSize(filename string) (int64, error) {
@@ -70,7 +70,7 @@ func bottleURI(hashScheme string, dgst digest.Digest, partSelectors ...string) (
 	// Construct the query parameters
 	partSelectorLabelSet, err := selectors.Parse(partSelectors)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("parsing selectors: %w", err)
 	}
 
 	for _, sel := range partSelectorLabelSet {

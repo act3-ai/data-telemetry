@@ -7,7 +7,7 @@ import (
 
 	"github.com/opencontainers/go-digest"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/httputil"
 )
 
 const (

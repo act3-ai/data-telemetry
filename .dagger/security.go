@@ -7,17 +7,10 @@ import (
 
 // Run govulncheck.
 func (t *Telemetry) VulnCheck(ctx context.Context) (string, error) {
-	return dag.Go(
-		dagger.GoOpts{
-			Container: dag.Container().
-				From(imageGo).
-				WithMountedSecret("/root/.netrc", t.Netrc),
-		}).
+	return dag.Go().
 		WithSource(t.Source).
 		WithCgoDisabled().
-		WithEnvVariable("GO_PRIVATE", gitlabHost).
 		Exec([]string{"go", "install", goVulnCheck}).
-		// Container().
 		WithExec([]string{"govulncheck", "./..."}).
 		Stdout(ctx)
 }

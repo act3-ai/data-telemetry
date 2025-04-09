@@ -10,7 +10,7 @@ import (
 	"github.com/opencontainers/go-digest"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 
-	val "gitlab.com/act3-ai/asce/data/schema/pkg/validation"
+	val "github.com/act3-ai/bottle-schema/pkg/validation"
 )
 
 const (

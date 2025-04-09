@@ -11,8 +11,8 @@ import (
 
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 )
 
 type middlewareFunc = func(http.Handler) http.Handler

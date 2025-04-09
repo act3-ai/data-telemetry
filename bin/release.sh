@@ -7,16 +7,16 @@ help() {
 Try using one of the following commands:
 prepare - prepare a release locally by producing the changelog, notes, assets, etc.
 approve - commit, tag, and push your approved release.
-publish - publish the release to GitLab by uploading assets, images, helm chart, etc.
+publish - publish the release by uploading assets, images, helm chart, etc.
 
-Dependencies: dagger, oras, and gitlab.com OCI registry access.
+Dependencies: dagger, oras, make, and git.
 
-Environment Variables with Defaults:
-    - ACE_TELEMETRY_RELEASE_NETRC=~/.netrc
+Required Environment Variables:
+Without Defaults:
+    - GITHUB_API_TOKEN - repo access
+    - GITHUB_REG_TOKEN - write:packages access
+    - GITHUB_REG_USER  - username of GITHUB_REG_TOKEN owner
 
-Environment Variables without Defaults:
-    - GITLAB_REG_TOKEN
-    - GITLAB_REG_USER
 EOF
     exit 1
 }
@@ -27,9 +27,8 @@ fi
 
 set -x
 
-registry=registry.gitlab.com
-registryRepo=$registry/act3-ai/asce/data/telemetry
-netrcPath=${ACE_TELEMETRY_RELEASE_NETRC:=~/.netrc}
+registry=ghcr.io
+registryRepo=$registry/act3-ai/data-telemetry
 
 # Extract the major version of a release.
 parseMajor() {
@@ -156,8 +155,7 @@ publishImages() {
     # ipynb image index
     standardRepoRef="${registryRepo}:${fullVersion}"
     dagger call \
-        with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN \
-        with-netrc --netrc=file:"$netrcPath" \
+        with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         image-ipynb-index --version="$fullVersion" --platforms="$platforms" --address "$standardRepoRef"
 
     # shellcheck disable=SC2086
@@ -166,8 +164,7 @@ publishImages() {
     # slim image index
     slimRepoRef="${registryRepo}/slim:${fullVersion}"
     dagger call \
-        with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN \
-        with-netrc --netrc=file:"$netrcPath" \
+        with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         image-index --version="$fullVersion" --address "$slimRepoRef" --platforms="$platforms"
 
     # shellcheck disable=SC2086
@@ -190,14 +187,6 @@ prepare)
     # fetch css and js
     make deps
 
-    # template testdata
-    dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
-        test \
-        template-test-data \
-        directory --path testdata \
-        export --path testdata
-
     # auto-gen kube api
     dagger call generate \
         export --path=./pkg/apis/config.telemetry.act3-ace.io
@@ -206,7 +195,6 @@ prepare)
 
     # run unit, functional, and webapp tests
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         test all
 
     # update changelog, release notes, semantic version
@@ -217,24 +205,23 @@ prepare)
 
     # govulncheck
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         vuln-check
 
     # generate docs
     dagger call swagger export --path=./swagger.yml
     dagger call apidocs export --path=./docs/apis/config.telemetry.act3-ace.io
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         clidocs \
         export --path=./docs/cli
 
     version=$(cat VERSION)
 
     # build for all supported platforms
+    assetsDir=bin/release/assets # changes to this path must be reflected in .dagger/release.go Publish()
+    mkdir -p "$assetsDir"
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         build-platforms --version="$version" \
-        export --path=./bin
+        export --path="$assetsDir"
 
     echo "Please review the local changes, especially releases/$version.md"
     ;;
@@ -261,26 +248,23 @@ approve)
 publish)
     version=$(cat VERSION)
 
-    # publish release
+    # publish release, along with release assets
     dagger call \
-        with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN \
+        with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         release \
-        publish --token=env:GITLAB_REG_TOKEN
+        publish --token=env:GITHUB_API_TOKEN
 
     # publish helm chart
     dagger call \
         release \
-        publish-chart --ociRepo oci://$registryRepo/charts --address="$registry" --username="$GITLAB_REG_USER" --secret env:GITLAB_REG_TOKEN
-
-    # upload release assets (binaries)
-    dagger call release upload-assets --version="$version" --assets=./bin --token=env:GITLAB_REG_TOKEN
+        publish-chart --ociRepo oci://$registryRepo/charts --address="$registry" --username="$GITHUB_REG_USER" --secret env:GITHUB_REG_TOKEN
 
     # publish slim, ipynb, and hub images
     publishImages
 
     # scan images with ace-dt
     # TODO: Uncomment me when we have a suitable public registry for custom artifact types.
-    # dagger call with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN scan --sources artifacts.txt
+    # dagger call with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN scan --sources artifacts.txt
 
     # notify everyone
     # dagger call announce --token=env:MATTERMOST_ACCESS_TOKEN

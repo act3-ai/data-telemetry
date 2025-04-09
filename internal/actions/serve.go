@@ -8,12 +8,12 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 
-	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	bottle "github.com/act3-ai/bottle-schema/pkg/apis/data.act3-ace.io"
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/app"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/app"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
 )
 
 // Serve is the action for starting the server.
@@ -34,7 +34,7 @@ func (action *Serve) Run(ctx context.Context) error {
 
 	scheme := runtime.NewScheme()
 	if err := bottle.AddToScheme(scheme); err != nil {
-		return err
+		return fmt.Errorf("adding bottle to scheme: %w", err)
 	}
 
 	myDB, err := db.Open(ctx, serverConfig.DB, scheme)

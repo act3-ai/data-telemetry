@@ -10,16 +10,16 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"oras.land/oras-go/v2/registry/remote/credentials"
 
-	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-	"gitlab.com/act3-ai/asce/go-common/pkg/config"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	bottle "github.com/act3-ai/bottle-schema/pkg/apis/data.act3-ace.io"
+	"github.com/act3-ai/go-common/pkg/config"
+	"github.com/act3-ai/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/redact"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/api"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/oauth2/device"
+	"github.com/act3-ai/data-telemetry/v3/internal/api"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/middleware"
+	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-telemetry/v3/pkg/oauth2/device"
 )
 
 // ClientConfigOverride is a function used to override the client configuration.
@@ -46,7 +46,7 @@ func (action *Client) NewHandler(ctx context.Context) (http.Handler, error) {
 
 	scheme := runtime.NewScheme()
 	if err := bottle.AddToScheme(scheme); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("adding bottle to scheme: %w", err)
 	}
 
 	// connect directly to the DB

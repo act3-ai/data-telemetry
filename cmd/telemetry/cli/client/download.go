@@ -3,7 +3,7 @@ package client
 import (
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/actions"
+	"github.com/act3-ai/data-telemetry/v3/internal/actions"
 )
 
 // NewDownloadCmd creates a new "upload" command.

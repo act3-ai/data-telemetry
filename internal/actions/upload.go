@@ -3,7 +3,7 @@ package actions
 import (
 	"context"
 
-	client "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/client"
+	client "github.com/act3-ai/data-telemetry/v3/pkg/client"
 )
 
 // Upload is the upload action.

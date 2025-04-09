@@ -14,8 +14,8 @@ import (
 	"github.com/hetiansu5/urlquery"
 	"github.com/opencontainers/go-digest"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // ViewerSpecList is just a list of ViewerSpecs.

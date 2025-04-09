@@ -13,12 +13,13 @@ import (
 	echartsOpts "github.com/go-echarts/go-echarts/v2/opts"
 	echartsRender "github.com/go-echarts/go-echarts/v2/render"
 	echartsTemplates "github.com/go-echarts/go-echarts/v2/templates"
+	echartTypes "github.com/go-echarts/go-echarts/v2/types"
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
 )
 
 // extendedAncestors represents a collection of ancestors that include all types.
@@ -130,7 +131,7 @@ var graphCategories = map[graphCategoryID]*echartsOpts.GraphCategory{
 	graphCategoryMainBottle: {
 		Name: "Main Bottle",
 		Label: &echartsOpts.Label{
-			Show:      false,
+			Show:      echartsOpts.Bool(false),
 			Color:     "green",
 			Formatter: " ",
 		},
@@ -138,7 +139,7 @@ var graphCategories = map[graphCategoryID]*echartsOpts.GraphCategory{
 	graphCategoryBottleRelative: {
 		Name: "Bottle Relative",
 		Label: &echartsOpts.Label{
-			Show:      false,
+			Show:      echartsOpts.Bool(false),
 			Color:     "blue",
 			Formatter: " ",
 		},
@@ -146,7 +147,7 @@ var graphCategories = map[graphCategoryID]*echartsOpts.GraphCategory{
 	graphCategoryExternalBottle: {
 		Name: "External Bottle Relative",
 		Label: &echartsOpts.Label{
-			Show:      false,
+			Show:      echartsOpts.Bool(false),
 			Color:     "yellow",
 			Formatter: " ",
 		},
@@ -154,7 +155,7 @@ var graphCategories = map[graphCategoryID]*echartsOpts.GraphCategory{
 	graphCategoryExternalURL: {
 		Name: "External URL",
 		Label: &echartsOpts.Label{
-			Show:      false,
+			Show:      echartsOpts.Bool(false),
 			Color:     "white",
 			Formatter: " ",
 		},
@@ -246,7 +247,7 @@ func GetAncestryGraphHTML(ctx context.Context, con *gorm.DB, bottle *db.BottleRe
 	graph.JSAssets.Values = []string{"/www/static/js/echarts.min.js"}
 	graph.SetGlobalOptions(
 		echarts.WithLegendOpts(echartsOpts.Legend{
-			Show:      true,
+			Show:      echartsOpts.Bool(true),
 			Type:      "plain",
 			Top:       "top",
 			TextStyle: &echartsOpts.TextStyle{Color: "white"},
@@ -266,12 +267,12 @@ func GetAncestryGraphHTML(ctx context.Context, con *gorm.DB, bottle *db.BottleRe
 	graph.AddSeries("lineage", graphNodes, graphLinks, echarts.WithGraphChartOpts(
 		echartsOpts.GraphChart{
 			Layout:           "none",
-			Roam:             false,
+			Roam:             echartsOpts.Bool(false),
 			EdgeSymbol:       []string{"none", "arrow"},
 			EdgeSymbolSize:   20,
 			Categories:       categories,
-			EdgeLabel:        &echartsOpts.EdgeLabel{Show: true, Color: "white"},
-			SymbolKeepAspect: true,
+			EdgeLabel:        &echartsOpts.EdgeLabel{Show: echartsOpts.Bool(true), Color: "white"},
+			SymbolKeepAspect: echartsOpts.Bool(true),
 		},
 	))
 	log.DebugContext(ctx, "graph config generated", "json", graph.JSON())
@@ -568,14 +569,14 @@ func getGraphNodesAndLinks(ctx context.Context, bgData []graphNodeData, template
 			X:          bgd.horizontalOffsetFactor*horizontalOffsetUnit + 250,
 			Y:          bgd.verticalOffsetFactor*verticalOffsetUnit + 250,
 			Value:      0,
-			Fixed:      false,
+			Fixed:      echartsOpts.Bool(false),
 			Category:   bgd.category,
 			Symbol:     bgd.symbolSVG,
 			SymbolSize: []int{int(bgd.sizeMultiplier * symbolSizeScaleUnit), int(bgd.sizeMultiplier * symbolSizeScaleUnit)},
 			ItemStyle:  &echartsOpts.ItemStyle{},
 			Tooltip: &echartsOpts.Tooltip{
-				Show:      true,
-				Formatter: tooltipFormatter(bgd.displayData),
+				Show:      echartsOpts.Bool(true),
+				Formatter: echartTypes.FuncStr(tooltipFormatter(bgd.displayData)),
 			},
 		})
 
@@ -585,7 +586,7 @@ func getGraphNodesAndLinks(ctx context.Context, bgData []graphNodeData, template
 				Target: bgdLink.Name,
 				Value:  0,
 				Label: &echartsOpts.EdgeLabel{
-					Show:      true,
+					Show:      echartsOpts.Bool(true),
 					Position:  "middle",
 					Formatter: " " + truncateStringField(15, linkName),
 					FontSize:  14,

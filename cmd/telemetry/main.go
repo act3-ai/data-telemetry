@@ -8,13 +8,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	commands "gitlab.com/act3-ai/asce/go-common/pkg/cmd"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/go-common/pkg/runner"
-	vv "gitlab.com/act3-ai/asce/go-common/pkg/version"
+	commands "github.com/act3-ai/go-common/pkg/cmd"
+	"github.com/act3-ai/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/runner"
+	vv "github.com/act3-ai/go-common/pkg/version"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/cmd/telemetry/cli"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/docs"
+	"github.com/act3-ai/data-telemetry/v3/cmd/telemetry/cli"
+	"github.com/act3-ai/data-telemetry/v3/docs"
 )
 
 // getVersionInfo retreives the proper version information for this executable.

@@ -12,11 +12,11 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	bottle "gitlab.com/act3-ai/asce/data/schema/pkg/apis/data.act3-ace.io"
-	"gitlab.com/act3-ai/asce/data/schema/pkg/selectors"
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
+	bottle "github.com/act3-ai/bottle-schema/pkg/apis/data.act3-ace.io"
+	"github.com/act3-ai/bottle-schema/pkg/selectors"
+	"github.com/act3-ai/go-common/pkg/redact"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 type ScopesTestSuite struct {

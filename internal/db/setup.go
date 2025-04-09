@@ -11,10 +11,10 @@ import (
 	"gorm.io/gorm"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/features"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-telemetry/v3/internal/features"
+	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // MigrateDB migrates the DB to the new schema and reprocesses bottles.

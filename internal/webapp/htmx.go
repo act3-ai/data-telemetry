@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/schema"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/httputil"
 )
 
 func setCurrentURLParams(w http.ResponseWriter, r *http.Request, params *bottleRequestParams) *httputil.HTTPError {

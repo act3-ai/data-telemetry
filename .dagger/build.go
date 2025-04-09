@@ -81,15 +81,9 @@ func build(ctx context.Context,
 	_, span := Tracer().Start(ctx, fmt.Sprintf("Build %s", name))
 	defer span.End()
 
-	return dag.Go(
-		dagger.GoOpts{
-			Container: dag.Container().
-				From(imageGo).                            // same as dag.Go, but...
-				WithMountedSecret("/root/.netrc", netrc), // allows us to mount this secret
-		}).
+	return dag.Go().
 		WithSource(src).
 		WithCgoDisabled().
-		WithEnvVariable("GO_PRIVATE", gitlabHost).
 		WithEnvVariable("GOFIPS140", fipsMode).
 		Build(dagger.GoWithSourceBuildOpts{
 			Pkg:      "./cmd/telemetry",
@@ -284,6 +278,6 @@ func withCommonLabels(ctr *dagger.Container, version string) *dagger.Container {
 		WithLabel("org.opencontainers.image.vendor", "AFRL ACT3").
 		WithLabel("org.opencontainers.image.version", version).
 		WithLabel("org.opencontainers.image.title", "Telemetry").
-		WithLabel("org.opencontainers.image.url", path.Join(gitlabHost, gitlabProject)).
+		WithLabel("org.opencontainers.image.url", "ghcr.io/act3-ai/data-telemetry").
 		WithLabel("org.opencontainers.image.description", "ACE Data Tool Telemetry Server")
 }

@@ -5,7 +5,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/util/duration"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
 )
 
 func toAge(t time.Time) string {

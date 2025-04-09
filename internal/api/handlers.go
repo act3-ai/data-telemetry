@@ -13,12 +13,12 @@ import (
 	"github.com/opencontainers/go-digest"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/httputil"
+	"github.com/act3-ai/go-common/pkg/logger"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/db"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/middleware"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
+	"github.com/act3-ai/data-telemetry/v3/internal/db"
+	"github.com/act3-ai/data-telemetry/v3/internal/middleware"
+	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 )
 
 func handleGetBottlesFromMetric(w http.ResponseWriter, r *http.Request) error {

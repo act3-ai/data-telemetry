@@ -8,14 +8,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/config"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
-	"gitlab.com/act3-ai/asce/go-common/pkg/version"
+	"github.com/act3-ai/go-common/pkg/config"
+	"github.com/act3-ai/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/redact"
+	"github.com/act3-ai/go-common/pkg/version"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/cmd/telemetry/cli/client"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/internal/actions"
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-telemetry/v3/cmd/telemetry/cli/client"
+	"github.com/act3-ai/data-telemetry/v3/internal/actions"
+	"github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 )
 
 // NewTelemetryCmd create a new root command.

@@ -10,10 +10,10 @@ import (
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"gorm.io/gorm"
 
-	"gitlab.com/act3-ai/asce/data/schema/pkg/validation"
-	"gitlab.com/act3-ai/asce/go-common/pkg/httputil"
+	"github.com/act3-ai/bottle-schema/pkg/validation"
+	"github.com/act3-ai/go-common/pkg/httputil"
 
-	"gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/types"
+	"github.com/act3-ai/data-telemetry/v3/pkg/types"
 )
 
 // ManifestProcessorVersion is the current version of the processor code.  This is incremented after each measurable change to the ManifestProcessor().
