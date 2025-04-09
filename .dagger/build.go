@@ -255,5 +255,6 @@ func withCommonLabels(ctr *dagger.Container, version string) *dagger.Container {
 		WithLabel("org.opencontainers.image.version", version).
 		WithLabel("org.opencontainers.image.title", "Telemetry").
 		WithLabel("org.opencontainers.image.url", "ghcr.io/act3-ai/data-telemetry").
-		WithLabel("org.opencontainers.image.description", "ACE Data Tool Telemetry Server")
+		WithLabel("org.opencontainers.image.description", "ACE Data Tool Telemetry Server").
+		WithLabel("org.opencontainers.image.source", "https://github.com/act3-ai/data-telemetry")
 }
