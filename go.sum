@@ -14,8 +14,8 @@ github.com/Masterminds/sprig/v3 v3.3.0 h1:mQh0Yrg1XPo6vjYXgtf5OtijNAKJRNcTdOOGZe
 github.com/Masterminds/sprig/v3 v3.3.0/go.mod h1:Zy1iXRYNqNLUolqCpL4uhk6SHUMAOSCzdgBfDb35Lz0=
 github.com/act3-ai/bottle-schema v1.2.16 h1:+RaslZXbuCDFucYu+hf8gVSU7Vi1bmcFX5iEMkXFWow=
 github.com/act3-ai/bottle-schema v1.2.16/go.mod h1:Rvn48aCU4e3VCzQlBmXCcB/FcMZdTPf98uqZWV42kUw=
-github.com/act3-ai/go-common v0.0.0-20250407153809-0595abfee64d h1:MxoB25LQ11f/LjOmJxK86/JYDad5sPrXkfSSxYZL/3k=
-github.com/act3-ai/go-common v0.0.0-20250407153809-0595abfee64d/go.mod h1:5XGwEVLkirOK400u1TyYvS/G6LU5RcoTMEzliTDfUiI=
+github.com/act3-ai/go-common v0.0.0-20250408144520-0fe79ee33711 h1:c03OyONIoUOYikmKUYUn/nrupwhhYsKcqziSP64uf4A=
+github.com/act3-ai/go-common v0.0.0-20250408144520-0fe79ee33711/go.mod h1:5XGwEVLkirOK400u1TyYvS/G6LU5RcoTMEzliTDfUiI=
 github.com/adrg/xdg v0.5.3 h1:xRnxJXne7+oWDatRhR1JLnvuccuIeCoBu2rtuLqQB78=
 github.com/adrg/xdg v0.5.3/go.mod h1:nlTsY+NNiCBGCK2tpm09vRqfVzrc2fLmXGpBLF0zlTQ=
 github.com/alexbrainman/sspi v0.0.0-20231016080023-1a75b4708caa h1:LHTHcTQiSGT7VVbI0o4wBRNQIgn917usHWOd6VAffYI=

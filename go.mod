@@ -6,7 +6,7 @@ require (
 	code.cloudfoundry.org/bytefmt v0.33.0
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/act3-ai/bottle-schema v1.2.16
-	github.com/act3-ai/go-common v0.0.0-20250407153809-0595abfee64d
+	github.com/act3-ai/go-common v0.0.0-20250408144520-0fe79ee33711
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
