@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: registry.gitlab.com/act3-ai/asce/data/telemetry
+  repository: ghcr.io/act3-ai/data-telemetry
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v3.1.2"
