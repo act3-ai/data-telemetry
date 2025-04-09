@@ -7,7 +7,7 @@ help() {
 Try using one of the following commands:
 prepare - prepare a release locally by producing the changelog, notes, assets, etc.
 approve - commit, tag, and push your approved release.
-publish - publish the release to GitLab by uploading assets, images, helm chart, etc.
+publish - publish the release by uploading assets, images, helm chart, etc.
 
 Dependencies: dagger, oras, make, and git.
 
