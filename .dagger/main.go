@@ -24,7 +24,7 @@ const (
 
 	// images
 	imageGitCliff = "docker.io/orhunp/git-cliff:2.8.0"
-	imageAcedt    = "registry.gitlab.com/act3-ai/asce/data/tool:v1.15.9"
+	imageAcedt    = "ghcr.io/act3-ai/data-tool:v1.15.10"
 	imageGrype    = "anchore/grype:latest"
 	imageSyft     = "anchore/syft:latest"
 	imageGo       = "golang:latest" // github.com/sagikazarmark/daggerverse/go convention
