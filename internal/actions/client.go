@@ -111,7 +111,7 @@ func authClientOrDefault(ctx context.Context, loc *v1alpha2.Location) *http.Clie
 		// TODO: Errors here likely should be displayed
 		issuerURL, err := url.Parse(loc.OAuth.Issuer)
 		if err != nil {
-			log.ErrorContext(ctx, "parsing host oauth issuer", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err) //nolint:sloglint
+			log.ErrorContext(ctx, "parsing host oauth issuer", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err)
 			goto Recover
 		}
 
@@ -130,7 +130,7 @@ func authClientOrDefault(ctx context.Context, loc *v1alpha2.Location) *http.Clie
 
 		authClient, err := device.NewOAuthClient(ctx, issuerURL, string(loc.OAuth.ClientID), credStore, promptFn)
 		if err != nil {
-			log.ErrorContext(ctx, "initializing oauth client", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err) //nolint:sloglint
+			log.ErrorContext(ctx, "initializing oauth client", "issuer", loc.OAuth.Issuer, "clientID", loc.OAuth.ClientID, "error", err)
 			goto Recover
 		}
 		httpClient = authClient
