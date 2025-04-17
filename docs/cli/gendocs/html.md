@@ -1,5 +1,3 @@
-telemetry gendocs web
-telemetry gendocs webpage
 ---
 title: telemetry gendocs html
 description: Generate documentation in HTML format
@@ -24,6 +22,8 @@ telemetry gendocs html [dir] [flags]
 ## Aliases
 
 ```plaintext
+telemetry gendocs web
+telemetry gendocs webpage
 ```
 
 ## Options

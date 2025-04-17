@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.4] - 2025-04-17
+
+### 💼 Other
+
+- Fix build stage to enable snapshot builds by @nathan-joslin
+
+### 📦 Dependencies
+
+- Bump go-common digest by @nathan-joslin
+
+### 🗡️ Dagger
+
+- Remove unused image-hub build by @nathan-joslin
+- Add label for connecting github repository to package by @nathan-joslin
+- *(deps)* Switch ace-dt container from registry.gitlab.com to ghcr.io by @nathan-joslin
+- Use goreleaser for builds and releases by @nathan-joslin
+- *(deps)* Bump ace-dt image to v1.15.33 by @nathan-joslin
+- *(deps)* Remove unused gh cli module by @nathan-joslin
+
 ## [3.1.3] - 2025-04-09
 
 ### 🐛 Bug Fixes (chart)

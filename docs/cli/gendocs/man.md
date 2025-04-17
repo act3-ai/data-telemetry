@@ -1,5 +1,3 @@
-telemetry gendocs manpage
-telemetry gendocs manpages
 ---
 title: telemetry gendocs man
 description: Generate documentation in manpage format
@@ -24,6 +22,8 @@ telemetry gendocs man [dir] [flags]
 ## Aliases
 
 ```plaintext
+telemetry gendocs manpage
+telemetry gendocs manpages
 ```
 
 ## Options
