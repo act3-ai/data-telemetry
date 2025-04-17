@@ -14,7 +14,7 @@ const (
 
 // Generate CLI documentation.
 func (t *Telemetry) CLIDocs(ctx context.Context) *dagger.Directory {
-	telem := t.Build(ctx, "linux/amd64", "", "")
+	telem := t.Build(ctx, "linux/amd64", false)
 
 	cliDocsPath := "docs/cli"
 	return dag.Go().

@@ -8,45 +8,21 @@ import (
 	"strings"
 
 	"github.com/sourcegraph/conc/pool"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	"oras.land/oras-go/pkg/registry"
 )
 
 // Generate a directory of telemetry executables built for all supported platforms, concurrently.
 func (t *Telemetry) BuildPlatforms(ctx context.Context,
-	// release version
+	// snapshot build, skip goreleaser validations
 	// +optional
-	version string,
-) (*dagger.Directory, error) {
-	// build matrix
-	gooses := []string{"linux", "windows", "darwin"}
-	goarches := []string{"amd64", "arm64"}
-
-	ctx, span := Tracer().Start(ctx, "Build Platforms", trace.WithAttributes(attribute.StringSlice("GOOS", gooses), attribute.StringSlice("GOARCH", goarches)))
-	defer span.End()
-
-	buildsDir := dag.Directory()
-	p := pool.NewWithResults[*dagger.File]().WithContext(ctx)
-
-	for _, goos := range gooses {
-		for _, goarch := range goarches {
-			p.Go(func(ctx context.Context) (*dagger.File, error) {
-				platform := fmt.Sprintf("%s/%s", goos, goarch)
-				bin := t.Build(ctx, dagger.Platform(platform), version, "latest")
-				return bin, nil
-			})
-		}
-	}
-
-	bins, err := p.Wait()
-	if err != nil {
-		return nil, err
-	}
-	return buildsDir.WithFiles(".", bins), nil
+	snapshot bool,
+) *dagger.Directory {
+	return GoReleaser(t.Source).
+		WithExec([]string{"goreleaser", "build", "--clean", "--auto-snapshot", "--timeout=10m", fmt.Sprintf("--snapshot=%v", snapshot)}).
+		Directory("dist")
 }
 
-// Build an executable for the specified platform, named "telemetry-v{VERSION}-{GOOS}-{GOARCH}".
+// Build an executable for the specified platform, named "telemetry-{GOOS}-{GOARCH}".
 //
 // Supported Platform Matrix:
 //
@@ -57,54 +33,37 @@ func (t *Telemetry) Build(ctx context.Context,
 	// +optional
 	// +default="linux/amd64"
 	platform dagger.Platform,
-	// Release version, included in file name
+	// snapshot build, skip goreleaser validations
 	// +optional
-	version string,
-	// value of GOFIPS140, accepts modes "off", "latest", and "v1.0.0"
-	// +optional
-	// +default="latest"
-	fipsMode string,
+	snapshot bool,
 ) *dagger.File {
-	return build(ctx, t.Source, t.Netrc, platform, version, fipsMode)
+	return build(ctx, t.Source, platform, snapshot)
 }
 
 func build(ctx context.Context,
 	src *dagger.Directory,
-	netrc *dagger.Secret,
 	platform dagger.Platform,
-	version string,
-	fipsMode string,
+	// snapshot build, skip goreleaser validations
+	snapshot bool,
 ) *dagger.File {
-	// only name the result "fips" if it
-	name := binaryName(string(platform), version)
+	name := binaryName(string(platform))
 
 	_, span := Tracer().Start(ctx, fmt.Sprintf("Build %s", name))
 	defer span.End()
 
-	return dag.Go().
-		WithSource(src).
-		WithCgoDisabled().
-		WithEnvVariable("GOFIPS140", fipsMode).
-		Build(dagger.GoWithSourceBuildOpts{
-			Pkg:      "./cmd/telemetry",
-			Platform: platform,
-			Ldflags:  []string{"-s", "-w", fmt.Sprintf("-X 'main.version=%s'", version)},
-			Trimpath: true,
-		}).
-		WithName(name)
+	os, arch, _ := strings.Cut(string(platform), "/")
+	return GoReleaser(src).
+		WithEnvVariable("GOOS", os).
+		WithEnvVariable("GOARCH", arch).
+		WithExec([]string{"goreleaser", "build", "--auto-snapshot", "--timeout=10m", "--single-target", "--output", name, fmt.Sprintf("--snapshot=%v", snapshot)}).
+		File(name)
 }
 
 // binaryName constructs the name of a telemetry executable based on build params.
 // All arguments are optional, building up to "telemetry-v{VERSION}-fips-{GOOS}-{GOARCH}".
-func binaryName(platform string, version string) string {
+func binaryName(platform string) string {
 	str := strings.Builder{}
-	str.Grow(35) // est. max = len("telemetry-v1.11.11-fips-linux-amd64")
 	str.WriteString("telemetry")
-
-	if version != "" {
-		str.WriteString("-v")
-		str.WriteString(version)
-	}
 
 	if platform != "" {
 		platform = strings.ReplaceAll(string(platform), "/", "-")
@@ -127,7 +86,7 @@ func (t *Telemetry) Image(ctx context.Context,
 	// ensure to copy files, not mount them; else they won't be in the final image
 	ctr := dag.Container(dagger.ContainerOpts{Platform: platform}).
 		From("cgr.dev/chainguard/static").
-		WithFile("/usr/local/bin/telemetry", t.Build(ctx, platform, "", "latest")).
+		WithFile("/usr/local/bin/telemetry", t.Build(ctx, platform, false)).
 		WithEntrypoint([]string{"telemetry"}).
 		WithExposedPort(8100).
 		WithWorkdir("/").
@@ -201,7 +160,7 @@ func (t *Telemetry) ImageIpynb(ctx context.Context,
 		WithEnvVariable("PYTHONUNBUFFERED", "1").
 		WithEnvVariable("PATH", "/opt/venv/bin:$PATH", dagger.ContainerWithEnvVariableOpts{Expand: true}).
 		WithEnvVariable("ACE_TELEMETRY_JUPYTER", "/opt/venv/bin/jupyter").
-		WithFile("/usr/local/bin/telemetry", t.Build(ctx, platform, "", "latest")).
+		WithFile("/usr/local/bin/telemetry", t.Build(ctx, platform, false)).
 		WithDirectory("/opt/venv", venv).
 		WithEntrypoint([]string{"telemetry"}).
 		WithExposedPort(8100).
