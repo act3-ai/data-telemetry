@@ -35,7 +35,7 @@ archives:
 release:
   github:
     owner: act3-ai
-    name: data-tool
+    name: data-telemetry
   ids:
     - telemetry-archives
   make_latest: envOrDefault "RELEASE_LATEST" "true"
