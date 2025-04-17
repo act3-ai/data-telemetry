@@ -1,0 +1,51 @@
+version: 2
+
+builds:
+  - id: telemetry
+    binary: telemetry
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.build={{.Version}}
+    env:
+      - CGO_ENABLED=0
+      - GOFIPS140=latest
+    main: ./cmd/telemetry/
+
+archives:
+  - id: telemetry-archives
+    ids:
+      - telemetry
+    formats: ["tar.gz"]
+    builds_info:
+      mode: 755
+    name_template: "telemetry-v{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    files:
+      - LICENSE
+      - src: releases/v{{ .Version }}.md
+        strip_parent: true
+
+release:
+  github:
+    owner: act3-ai
+    name: data-tool
+  ids:
+    - telemetry-archives
+  make_latest: envOrDefault "RELEASE_LATEST" "true"
+  mode: replace # if we need to re-release, don't duplicate the release notes
+  skip_upload: false
+
+checksum:
+  name_template: "telemetry-v{{ .Version }}-checksums.txt"
+  algorithm: sha256
+  ids:
+    - telemetry-archives
+  disable: false
+

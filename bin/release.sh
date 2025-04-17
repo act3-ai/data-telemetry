@@ -241,18 +241,10 @@ approve)
 publish)
     version=$(cat VERSION)
 
-    # build for all supported platforms
-    assetsDir=bin/release/assets # changes to this path must be reflected in .dagger/release.go Publish()
-    mkdir -p "$assetsDir"
-    dagger call \
-        build-platforms --version="$version" \
-        export --path="$assetsDir"
-
     # publish release, along with release assets
     dagger call \
-        with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         release \
-        publish --token=env:GITHUB_API_TOKEN
+        publish --token=env:GITHUB_API_TOKEN --ssh-private-key=env:SSH_PRIVATE_KEY --author=env:RELEASE_AUTHOR --email=env:RELEASE_AUTHOR_EMAIL
 
     # publish helm chart
     dagger call \
@@ -263,11 +255,7 @@ publish)
     publishImages
 
     # scan images with ace-dt
-    # TODO: Uncomment me when we have a suitable public registry for custom artifact types.
-    # dagger call with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN scan --sources artifacts.txt
-
-    # notify everyone
-    # dagger call announce --token=env:MATTERMOST_ACCESS_TOKEN
+    dagger call with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN scan --sources artifacts.txt
     ;;
 
 *)

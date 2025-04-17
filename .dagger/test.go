@@ -152,7 +152,7 @@ func (tt *Test) ServerWithPostgres(ctx context.Context) (*dagger.Service, error)
 // TemplateTestData returns a telemetry container after executing
 // `telemetry template` with the testdata directory.
 func (tt *Test) TemplateTestData(ctx context.Context) *dagger.Container {
-	bin := build(ctx, tt.Source, tt.Netrc, "linux/amd64", "", "latest")
+	bin := build(ctx, tt.Source, "linux/amd64", true)
 
 	return dag.Go().
 		WithSource(tt.Source).
